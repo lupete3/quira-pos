@@ -1,0 +1,506 @@
+
+
+{{-- <!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System - Dashboard</title>
+    {{-- <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     --}}
+    {{-- @vite(['resources/assets/js/tailwind.js', 'resources/assets/css/tailwind.css']) --}}
+    @include('partials.head')
+
+    <style>
+        .sidebar:hover {
+            width: 250px;
+        }
+
+        .sidebar:hover .menu-text {
+            display: inline;
+        }
+
+        .menu-text {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+
+            .menu-text {
+                display: inline;
+            }
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .drawer {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .drawer.closed {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-blue-800 text-white flex flex-col fixed h-full transition-all duration-300 z-10">
+            <div class="p-4 flex items-center space-x-3 border-b border-blue-700">
+                <i class="fas fa-cash-register text-2xl"></i>
+                <span class="menu-text text-xl font-bold">POS System</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto py-4">
+                <div class="px-4 space-y-2">
+                    <div class="menu-item active">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span class="menu-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="menu-text">Ventes</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-boxes"></i>
+                            <span class="menu-text">Inventaire & Achats</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-truck"></i>
+                            <span class="menu-text">Fournisseurs</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-text">Clients</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-user-tie"></i>
+                            <span class="menu-text">RH</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-tools"></i>
+                            <span class="menu-text">Services</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-chart-bar"></i>
+                            <span class="menu-text">Rapports</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-blue-700">
+                <div class="flex items-center space-x-3">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User" alt="User" class="w-8 h-8 rounded-full">
+                    <div class="menu-text">
+                        <div class="font-medium">Admin User</div>
+                        <div class="text-xs text-blue-200">Administrateur</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden ml-0 lg:ml-[250px]">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between px-4 py-3">
+                    <div class="flex items-center space-x-4">
+                        <button class="lg:hidden text-gray-600">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Rechercher..."
+                                class="pl-10 pr-4 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                        </div>
+                        <button class="text-gray-600 relative">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Ventes Aujourd'hui</p>
+                                <h3 class="text-2xl font-bold">{{ number_format($todaySales, 2, ',', ' ') }}€</h3>
+                                <p
+                                    class="{{ $salesGrowth >= 0 ? 'text-green-500' : 'text-red-500' }} text-sm flex items-center">
+                                    <i class="fas {{ $salesGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                                    {{ number_format($salesGrowth, 1) }}% vs hier
+                                </p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-shopping-cart text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Clients Nouveaux</p>
+                                <h3 class="text-2xl font-bold">{{ $newClientsToday }}</h3>
+                                <p
+                                    class="{{ $clientGrowth >= 0 ? 'text-green-500' : 'text-red-500' }} text-sm flex items-center">
+                                    <i class="fas {{ $clientGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                                    {{ number_format($clientGrowth, 1) }}% vs hier
+                                </p>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-users text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Produits en Stock</p>
+                                <h3 class="text-2xl font-bold">{{ $productsInStock }}</h3>
+                                <p class="text-red-500 text-sm flex items-center">
+                                    <i class="fas fa-arrow-down mr-1"></i> {{ $productGrowth }}% vs hier
+                                </p>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <i class="fas fa-boxes text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Commandes en Attente</p>
+                                <h3 class="text-2xl font-bold">{{ $pendingOrders }}</h3>
+                                <p
+                                    class="{{ $pendingGrowth >= 0 ? 'text-green-500' : 'text-red-500' }} text-sm flex items-center">
+                                    <i
+                                        class="fas {{ $pendingGrowth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
+                                    {{ number_format($pendingGrowth, 1) }}% vs hier
+                                </p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-clipboard-list text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Fournisseurs Actifs</p>
+                                <h3 class="text-2xl font-bold">{{ $activeSuppliers }}</h3>
+                                <p class="text-green-500 text-sm flex items-center">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    {{ $newSuppliersThisMonth }} ce mois
+                                </p>
+                            </div>
+                            <div class="bg-orange-100 p-3 rounded-full">
+                                <i class="fas fa-truck text-orange-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts and Recent Sales -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <!-- Sales Chart -->
+                    <div class="bg-white rounded-lg shadow p-4 lg:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold">Ventes Hebdomadaires</h2>
+                            <select class="border rounded px-3 py-1 text-sm">
+                                <option>Cette Semaine</option>
+                                <option>La Semaine Dernière</option>
+                                <option>Ce Mois</option>
+                            </select>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Sales -->
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <h2 class="text-lg font-semibold mb-4">Ventes Récentes</h2>
+                        <div class="space-y-4">
+                            @foreach ($recentSales as $sale)
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="bg-blue-100 p-2 rounded-full">
+                                            <i class="fas fa-receipt text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">#INV-{{ $sale->id }}</p>
+                                            <p class="text-xs text-gray-500">{{ $sale->sale_date }}</p>
+                                        </div>
+                                    </div>
+                                    <span
+                                        class="font-semibold">{{ number_format($sale->total_amount, 2, ',', ' ') }}€</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products and Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Top Products -->
+                    <div class="bg-white rounded-lg shadow p-4 lg:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold">Produits Populaires</h2>
+                            <button class="text-blue-600 text-sm font-medium">Voir Tout</button>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            @foreach ($popularProducts as $product)
+                                <div class="product-card bg-white border rounded-lg p-3 text-center">
+                                    <div class="bg-gray-100 rounded-lg h-24 mb-2 flex items-center justify-center">
+                                        <img src="https://via.placeholder.com/80" alt="{{ $product->name }}"
+                                            class="h-16 object-contain">
+                                    </div>
+                                    <h3 class="font-medium text-sm">{{ $product->name }}</h3>
+                                    <p class="text-blue-600 font-semibold">
+                                        {{ number_format($product->sale_price, 2, ',', ' ') }}€</p>
+                                    <div class="text-xs text-gray-500 mt-1">Stock: {{ $product->stock_quantity }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <h2 class="text-lg font-semibold mb-4">Actions Rapides</h2>
+                        <div class="grid grid-cols-2 gap-3">
+                            <a href="{{ route('pos.index') }}" wire:navigate
+                                class="bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-lg flex flex-col items-center justify-center transition-colors">
+                                <i class="fas fa-cash-register text-2xl mb-2"></i>
+                                <span>Nouvelle Vente</span>
+                            </a>
+
+                            <a href="{{ route('clients.index') }}" wire:navigate
+                                class="bg-green-100 hover:bg-green-200 text-green-800 p-4 rounded-lg flex flex-col items-center justify-center transition-colors">
+                                <i class="fas fa-user-plus text-2xl mb-2"></i>
+                                <span>Nouveau Client</span>
+                            </a>
+
+                            <a href="{{ route('products.index') }}" wire:navigate
+                                class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 p-4 rounded-lg flex flex-col items-center justify-center transition-colors">
+                                <i class="fas fa-box-open text-2xl mb-2"></i>
+                                <span>Ajouter Stock</span>
+                            </a>
+                            <a href="{{ route('purchases.index') }}" wire:navigate
+                                class="bg-orange-100 hover:bg-orange-200 text-orange-800 p-4 rounded-lg flex flex-col items-center justify-center transition-colors">
+                                <i class="fas fa-shopping-basket text-2xl mb-2"></i>
+                                <span>Nouvel Achat</span>
+                            </a>
+
+                            <a href="{{ route('reports.sales') }}" wire:navigate
+                                class="bg-purple-100 hover:bg-purple-200 text-purple-800 p-4 rounded-lg flex flex-col items-center justify-center transition-colors">
+                                <i class="fas fa-file-invoice-dollar text-2xl mb-2"></i>
+                                <span>Générer Rapport</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- POS Drawer (hidden by default) -->
+        <div class="drawer fixed right-0 top-0 h-full w-full lg:w-1/3 bg-white shadow-lg z-20 overflow-y-auto closed">
+            <div class="p-4 border-b">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold">Nouvelle Vente</h2>
+                    <button class="text-gray-500 hover:text-gray-700" onclick="toggleDrawer()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <div class="flex mb-4">
+                    <div class="flex-1 mr-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Rechercher Produit</label>
+                        <div class="relative">
+                            <input type="text" placeholder="Code-barres ou nom"
+                                class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-barcode mr-2"></i>Scanner
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-medium">Panier (3 articles)</h3>
+                        <button class="text-red-500 text-sm">
+                            <i class="fas fa-trash-alt mr-1"></i>Vider
+                        </button>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <div>
+                                <p class="font-medium">Smartphone X</p>
+                                <p class="text-sm text-gray-500">1 × 599€</p>
+                            </div>
+                            <div class="flex items-center">
+                                <button class="text-gray-500 px-2">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="mx-2">1</span>
+                                <button class="text-gray-500 px-2">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <span class="font-medium ml-4">599€</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <div>
+                                <p class="font-medium">Écouteurs Pro</p>
+                                <p class="text-sm text-gray-500">2 × 129€</p>
+                            </div>
+                            <div class="flex items-center">
+                                <button class="text-gray-500 px-2">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="mx-2">2</span>
+                                <button class="text-gray-500 px-2">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <span class="font-medium ml-4">258€</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t">
+                        <div class="flex justify-between mb-1">
+                            <span>Sous-total:</span>
+                            <span>857€</span>
+                        </div>
+                        <div class="flex justify-between mb-1">
+                            <span>Taxe (20%):</span>
+                            <span>171.40€</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg mt-2">
+                            <span>Total:</span>
+                            <span>1,028.40€</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-lg font-medium transition-colors">
+                        <i class="fas fa-save mr-2"></i>Enregistrer
+                    </button>
+                    <button
+                        class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors">
+                        <i class="fas fa-credit-card mr-2"></i>Payer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @json($weeklySales->keys()->map(fn($w) => 'Semaine ' . $w)),
+                datasets: [{
+                    label: 'Ventes (€)',
+                    data: @json($weeklySales->values()),
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: value => value + '€'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        // Toggle mobile sidebar
+        document.querySelector('.lg\\:hidden').addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Toggle POS drawer
+        function toggleDrawer() {
+            const drawer = document.querySelector('.drawer');
+            drawer.classList.toggle('closed');
+        }
+
+        // Simulate clicking a product card to open POS drawer
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', function() {
+                toggleDrawer();
+            });
+        });
+
+        // Simulate clicking "Nouvelle Vente" button
+        document.querySelector('.bg-blue-100').addEventListener('click', function() {
+            toggleDrawer();
+        });
+    </script>
+</body>
+
+</html> --}}
