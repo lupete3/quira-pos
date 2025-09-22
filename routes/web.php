@@ -81,6 +81,10 @@ Route::middleware(['auth'])->group(function () {
   // Users
   Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
 
+  // Transfers
+  Route::get('transferts', [\App\Http\Controllers\TransferController::class, 'index'])->name('transfers.index');
+  Route::get('transferts-create', [\App\Http\Controllers\TransferController::class, 'create'])->name('transfers.create');
+
   // Inventories
   Route::get('inventories', [\App\Http\Controllers\InventoryController::class, 'index'])->name('inventories.index');
   Route::get('inventories/create', [\App\Http\Controllers\InventoryController::class, 'create'])->name('inventories.create');

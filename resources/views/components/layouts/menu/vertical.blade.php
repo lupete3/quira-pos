@@ -41,7 +41,8 @@
     </li>
 
     <!-- Produits -->
-    <li class="menu-item {{ request()->is('categories*') || request()->is('units*') || request()->is('brands*') || request()->is('products*') ? 'active open' : '' }}">
+    <li class="menu-item {{ request()->is('categories*') || request()->is('units*') || request()->is('brands*')
+      || request()->is('products*') || request()->is('transfers*') ? 'active open' : '' }}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-package"></i>
         <div class="text-truncate">{{ __('Produits') }}</div>
@@ -59,6 +60,9 @@
         <li class="menu-item {{ request()->routeIs('products.index') ? 'active' : '' }}">
           <a class="menu-link" href="{{ route('products.index') }}" wire:navigate>{{ __('Produits') }}</a>
         </li>
+        {{-- <li class="menu-item {{ request()->routeIs('transfers.index') ? 'active' : '' }}">
+          <a class="menu-link" href="{{ route('transfers.index') }}" wire:navigate>{{ __('Transfert Produits') }}</a>
+        </li> --}}
       </ul>
     </li>
 

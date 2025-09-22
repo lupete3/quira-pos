@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class TransferItem extends Model
 {
-    protected $fillable = ['transfer_id', 'product_id', 'quantity'];
+    protected $fillable = [
+        'transfer_id',
+        'product_id',
+        'quantity',
+    ];
 
     public function transfer()
     {

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transfert;
+use App\Models\Transfer;
 use Illuminate\Http\Request;
 
-class TransfertController extends Controller
+class TransferController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('transfers.index');
     }
 
     /**
@@ -20,7 +20,7 @@ class TransfertController extends Controller
      */
     public function create()
     {
-        //
+        return view('transfers.create');
     }
 
     /**
@@ -34,7 +34,7 @@ class TransfertController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Transfert $transfert)
+    public function show(Transfer $transfer)
     {
         //
     }
@@ -42,7 +42,7 @@ class TransfertController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Transfert $transfert)
+    public function edit(Transfer $transfer)
     {
         //
     }
@@ -50,7 +50,7 @@ class TransfertController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transfert $transfert)
+    public function update(Request $request, Transfer $transfer)
     {
         //
     }
@@ -58,7 +58,7 @@ class TransfertController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transfert $transfert)
+    public function destroy(Transfer $transfer)
     {
         //
     }
