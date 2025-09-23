@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('cash_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cash_register_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['sale', 'expense', 'deposit', 'withdrawal']);
-            $table->decimal('amount', 12, 2);
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->enum('type', ['in', 'out']); // entrée ou sortie
+            $table->string('category')->nullable(); // exemples : "vente", "remboursement client", "dépense", "décaissement"
+            $table->decimal('amount', 15, 2);
             $table->string('description')->nullable();
             $table->timestamps();
         });

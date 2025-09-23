@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cash_registers', function (Blueprint $table) {
+        Schema::create('cash_withdrawals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->constrained()->onDelete('cascade');
-            $table->decimal('opening_balance', 15, 2)->default(0); // solde initial
-            $table->decimal('current_balance', 15, 2)->default(0); // solde courant (calculé dynamiquement)
+            $table->foreignId('cash_register_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->decimal('amount', 15, 2);
+            $table->string('reason')->nullable(); // ex : dépôt banque
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cash_registers');
+        Schema::dropIfExists('cash_withdrawals');
     }
 };

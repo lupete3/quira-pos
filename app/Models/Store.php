@@ -53,4 +53,9 @@ class Store extends Model
     {
         return $this->hasMany(Inventory::class);
     }
+
+    public function cashRegister()
+    {
+        return $this->hasOne(CashRegister::class);
+    }
 }

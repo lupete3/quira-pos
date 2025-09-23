@@ -100,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
   Route::get('reports/suppliers', [\App\Http\Controllers\ReportController::class, 'suppliers'])->name('reports.suppliers');
   Route::get('reports/stock', [\App\Http\Controllers\ReportController::class, 'stock'])->name('reports.stock');
   Route::get('reports/expenses', [\App\Http\Controllers\ReportController::class, 'expense'])->name('reports.expense');
+  Route::get('reports/cashregister', [\App\Http\Controllers\ReportController::class, 'cash'])->name('reports.cash');
   Route::get('reports/profitloss', [\App\Http\Controllers\ReportController::class, 'prfitLoss'])->name('reports.profitloss');
 
   Route::get('/settings/company', [DashboardController::class, 'settings'])->name('company.settings');

@@ -25,6 +25,7 @@
                     <th>{{ __('Magasin') }}</th>
                     <th>{{ __('Montant') }}</th>
                     <th>{{ __('Description') }}</th>
+                    <th>{{ __('Statut') }}</th>
                     <th>{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -37,6 +38,18 @@
                         <td>{{ number_format($expense->amount, 2, ',', ' ') }} {{ company()->devise }}</td>
                         <td>{{ Str::limit($expense->description, 50) }}</td>
                         <td>
+                          @switch($expense->status)
+                              @case('pending')
+                                  <span class="badge bg-label-warning me-1">En attente</span>
+                              @break
+                            @case('validated')
+                                  <span class="badge bg-label-success me-1">Validé</span>
+                              @break
+                            @default
+                                  <span class="badge bg-label-danger me-1">Annulé</span>
+                          @endswitch
+                        </td>
+                        <td>
                             <div class="dropdown">
                                 <button type="button"
                                         class="btn p-0 dropdown-toggle hide-arrow"
@@ -44,6 +57,19 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu">
+                                    @if ($expense->status == 'pending')
+
+                                    <a class="dropdown-item"
+                                       href="#"
+                                       wire:click="confirmValidate({{ $expense->id }}, 'validated')">
+                                        <i class="bx bx-check me-1"></i> {{ __('Valider') }}
+                                    </a>
+                                    <a class="dropdown-item"
+                                       href="#"
+                                       wire:click="confirmValidate({{ $expense->id }}, 'cancelled')">
+                                        <i class="bx bx-x me-1"></i> {{ __('Rejeter') }}
+                                    </a>
+
                                     <a class="dropdown-item"
                                        href="#"
                                        wire:click="edit({{ $expense->id }})"
@@ -56,13 +82,21 @@
                                        wire:click="confirmDelete({{ $expense->id }})">
                                         <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
                                     </a>
+
+                                    @else
+
+                                    <a class="dropdown-item text-danger" href="#">
+                                         {{ __('Aucune Action') }}
+                                    </a>
+
+                                    @endif
                                 </div>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">{{ __('Aucune dépense trouvée.') }}</td>
+                        <td colspan="7" class="text-center">{{ __('Aucune dépense trouvée.') }}</td>
                     </tr>
                 @endforelse
             </tbody>

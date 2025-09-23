@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('currency', 3)->default('USD'); // ou 'CDF'
             $table->date('expense_date');
             $table->text('description')->nullable();
+            $table->enum('status', ['validated', 'pending', 'cancelled'])->default('pending');
             $table->timestamps();
         });
     }

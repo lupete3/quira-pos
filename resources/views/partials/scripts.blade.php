@@ -40,15 +40,33 @@
             });
         });
 
-        Livewire.on('show-delete-confirmation', () => {
+        Livewire.on('show-validate-confirmation', () => {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: 'Etes-vous sûr ?',
+                text: "Vous êtes au point d'appliquer cette action !",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Oui',
+                cancelButtonText: 'Annuler',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('validateConfirmed');
+                }
+            });
+        });
+
+        Livewire.on('show-delete-confirmation', () => {
+            Swal.fire({
+                title: 'Etes-vous sûr ?',
+                text: "Vous êtes au point de supprimer cette opération !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, Supprimer',
+                cancelButtonText: 'Annuler',
             }).then((result) => {
                 if (result.isConfirmed) {
                     Livewire.dispatch('deleteConfirmed');

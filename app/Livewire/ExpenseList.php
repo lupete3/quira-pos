@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Models\CashTransaction;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Store;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -25,7 +27,9 @@ class ExpenseList extends Component
     public $date;
     public $isEditMode = false;
 
-    protected $listeners = ['deleteConfirmed' => 'delete'];
+    public $operationType;
+
+    protected $listeners = ['deleteConfirmed' => 'delete', 'validateConfirmed' => 'validateExpense'];
 
     protected function rules()
     {
@@ -92,6 +96,68 @@ class ExpenseList extends Component
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
+    }
+
+    public function confirmValidate($id, string $type)
+    {
+        $this->operationType = $type;
+        $this->expenseId = $id;
+        $this->dispatch('show-validate-confirmation');
+    }
+
+    public function validateExpense()
+    {
+        if ($this->operationType == 'cancelled') {
+          $expense = Expense::findOrFail($this->expenseId)->update([
+            'status' => $this->operationType
+          ]);
+          notyf()->warning('Dépense annulée.');
+          $this->dispatch('close-validate-confirmation');
+          return;
+        }
+
+        if ($this->operationType == 'validated') {
+          DB::transaction(function () {
+            try {
+
+              $expense = Expense::findOrFail($this->expenseId);
+              // Enregistrer l'entrée en caisse
+              $store = Auth::user()->stores()->first();
+              $cashRegister = $store->cashRegister;
+
+              if ($expense->amount > 0 && $cashRegister && $cashRegister->current_balance >= $expense->amount) {
+                  // Création de la transaction OUT
+                  CashTransaction::create([
+                      'cash_register_id' => $cashRegister->id,
+                      'type' => 'out',
+                      'amount' => $expense->amount,
+                      'description' => $expense->description. ' Dépense #' . $expense->id,
+                      'user_id' => Auth::id(),
+                  ]);
+
+                  // Mise à jour du solde de la caisse
+                  $cashRegister->decrement('current_balance', $expense->amount);
+                  $expense->update(['status' => $this->operationType]);
+                  $expense->save();
+                  $this->dispatch('close-validate-confirmation');
+                  notyf()->success('Dépense validée.');
+
+              }else{
+                DB::rollBack();
+                throw new \Exception("Le montant dépensé est supérieur au solde de la caisse.");
+                notyf()->error('Le montant dépensé est supérieur au solde de la caisse.');
+              }
+
+            } catch (\Throwable $th) {
+              DB::rollBack();
+              dd($th);
+              notyf()->error('Une erreur est survenue lors de la validation.');
+            }
+          });
+
+          DB::commit();
+          $this->dispatch('close-validate-confirmation');
+        }
     }
 
     public function confirmDelete($id)

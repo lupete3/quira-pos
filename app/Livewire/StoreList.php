@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\CashRegister;
 use App\Models\Store;
 use App\Models\User;
 use Livewire\Component;
@@ -77,6 +78,15 @@ class StoreList extends Component
                 'location' => $this->location,
                 'phone' => $this->phone,
                 'email' => $this->email,
+            ]
+        );
+
+        // ⚡ Création ou mise à jour de la caisse associée
+        CashRegister::updateOrCreate(
+            ['store_id' => $store->id],
+            [
+                'opening_balance' => $store->cashRegister->opening_balance ?? 0,
+                'current_balance' => $store->cashRegister->current_balance ?? 0,
             ]
         );
 

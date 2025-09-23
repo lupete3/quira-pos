@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CashTransaction extends Model
+class CashWithdrawal extends Model
 {
     protected $fillable = [
-        'cash_register_id', 'user_id', 'type', 'category', 'amount', 'description'
+        'cash_register_id', 'user_id', 'amount', 'reason'
     ];
 
     public function cashRegister()

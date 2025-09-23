@@ -172,6 +172,7 @@
         <li class="menu-item {{ request()->routeIs('reports.suppliers') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.suppliers') }}" wire:navigate>{{ __('Fournisseurs') }}</a></li>
         <li class="menu-item {{ request()->routeIs('reports.stock') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.stock') }}" wire:navigate>{{ __('Stock') }}</a></li>
         <li class="menu-item {{ request()->routeIs('reports.expense') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.expense') }}" wire:navigate>{{ __('Dépenses') }}</a></li>
+        <li class="menu-item {{ request()->routeIs('reports.cash') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.cash') }}" wire:navigate>{{ __('Caisses') }}</a></li>
         <li class="menu-item {{ request()->routeIs('reports.profitloss') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.profitloss') }}" wire:navigate>{{ __('Profits & Pertes') }}</a></li>
       </ul>
     </li>

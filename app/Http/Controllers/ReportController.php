@@ -63,6 +63,14 @@ class ReportController extends Controller
     }
 
     /**
+     * Display the cashes report view.
+     */
+    public function cash()
+    {
+        return view('reports.cashs');
+    }
+
+    /**
      * Display the Profit/Loss report view.
      */
     public function prfitLoss()

@@ -274,8 +274,8 @@
                     datasets: [{
                         label: 'Ventes ({{ company()?->devise }})',
                         data: dataVals,
-                        backgroundColor: 'rgba(105,108,255,0.3)', // Sneat primary with alpha
-                        borderColor: 'rgba(105,108,255,1)',
+                        backgroundColor: '#6EB8F1', // Sneat primary with alpha
+                        borderColor: '#6EB8F4',
                         borderWidth: 1,
                         borderRadius: 6,
                         maxBarThickness: 40
@@ -327,8 +327,8 @@
                     datasets: [{
                         label: 'Ventes ({{ company()?->devise }})',
                         data: dataVals,
-                        backgroundColor: 'rgba(105,108,255,0.3)', // Sneat primary with alpha
-                        borderColor: 'rgba(105,108,255,1)',
+                        backgroundColor: '#6EB8F1', // Sneat primary with alpha
+                        borderColor: '#6EB8F4',
                         borderWidth: 1,
                         borderRadius: 6,
                         maxBarThickness: 40

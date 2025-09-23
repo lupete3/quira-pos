@@ -16,7 +16,7 @@
         .text-start { text-align: left; }
         .table { width: 100%; border-collapse: collapse; margin: 10px 0; }
         .table td, .table th { border: 1px solid #000; padding: 4px; }
-        th { background-color: #7c8efe; }
+        th { background-color: #6EB8F1; }
         .badge {
             display: inline-block; padding: 2px 6px; border-radius: 4px;
             font-size: 9px; font-weight: bold;
@@ -59,7 +59,7 @@
                 </td>
             </tr>
         </table>
-        <hr style="margin: 10px 0; border-bottom: 2px solid #5664e8;">
+        <hr style="margin: 10px 0; border-bottom: 2px solid #6EB8F1;">
         <h3 class="text-center" style="text-decoration: underline; margin-bottom: 2px;">
             @yield('report-title', __('RAPPORT'))
         </h3>

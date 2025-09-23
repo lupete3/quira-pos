@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Brand;
+use App\Models\CashTransaction;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Product;
@@ -185,6 +186,24 @@ class Pos extends Component
         if ($debt > 0) {
           $client->increment('debt', $debt);
         }
+      }
+
+      // Enregistrer l'entrée en caisse
+      $store = Auth::user()->stores()->first();
+      $cashRegister = $store->cashRegister;
+
+      if ($this->total_paid > 0) {
+          // Création de la transaction IN
+          CashTransaction::create([
+              'cash_register_id' => $cashRegister->id,
+              'type' => 'in',
+              'amount' => $this->total_paid,
+              'description' => 'Vente #' . $sale->id,
+              'user_id' => Auth::id(),
+          ]);
+
+          // Mise à jour du solde de la caisse
+          $cashRegister->increment('current_balance', $this->total_paid);
       }
 
       DB::commit();

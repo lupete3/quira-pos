@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Models\CashTransaction;
 use App\Models\Client;
 use App\Models\ClientDebt as Debt;
 use App\Models\ClientJournal;
 use App\Models\Sale;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -61,6 +63,11 @@ class ClientDebtList extends Component
         // si le montant proposé > restant, on limite
         $amountToPay = min($this->payment_amount, $remaining);
 
+        if ($this->payment_amount > $amountToPay) {
+           notyf()->error("Le montant proposé dépasse le reste à payer.");
+           return;
+        }
+
         DB::transaction(function () use ($sale, $amountToPay) {
             // enregistrement trace dette
             $debtRecord = Debt::create([
@@ -84,6 +91,25 @@ class ClientDebtList extends Component
 
             // maj dette globale client
             $this->selectedClient->decrement('debt', $amountToPay);
+
+            // Enregistrer l'entrée en caisse
+            $store = Auth::user()->stores()->first();
+            $cashRegister = $store->cashRegister;
+
+            if ($amountToPay > 0) {
+                // Création de la transaction IN
+                CashTransaction::create([
+                    'cash_register_id' => $cashRegister->id,
+                    'type' => 'in',
+                    'amount' => $amountToPay,
+                    'description' => 'Paiement effectué sur la vente #' . $sale->id,
+                    'user_id' => Auth::id(),
+                ]);
+
+                // Mise à jour du solde de la caisse
+                $cashRegister->increment('current_balance', $amountToPay);
+
+            }
         });
 
         session()->flash('message', 'Paiement enregistré avec succès.');
