@@ -32,7 +32,7 @@ class UserList extends Component
             ->paginate(10);
 
         if (Auth::user()->role_id != 4) {
-            $roles = Role::where('name', '=', 'Admin')->orWhere('name', '=', 'Manager')->orWhere('name', '=', 'Caissier')->get();
+            $roles = Role::where('name', '=', 'Admin')->orWhere('name', '=', 'Gérant');
         }else{
           $roles = Role::where('name', '=', 'Super Admin')->get();
         }

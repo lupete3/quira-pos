@@ -1,7 +1,7 @@
 <div>
   {{-- 🔹 Statistiques globales selon l’onglet --}}
   <div class="row mb-3">
-    <div class="col-md-3">
+    <div class="col-md-3 mb-2">
       <div class="card text-center shadow-sm">
         <div class="card-body">
           <h5 class="card-title">Valeur</h5>
@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 mb-2">
       <div class="card text-center shadow-sm">
         <div class="card-body">
           <h5 class="card-title">Total {{ $stats['title'] }}</h5>
@@ -20,7 +20,7 @@
     </div>
 
     @if($filter === 'subscriptions')
-      <div class="col-md-2">
+      <div class="col-md-2 mb-2">
         <div class="card text-center shadow-sm">
           <div class="card-body">
             <h5 class="card-title">Expirant (7j)</h5>
@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div class="col-md-2">
+      <div class="col-md-2 mb-2">
         <div class="card text-center shadow-sm">
           <div class="card-body">
             <h5 class="card-title">Expirés</h5>
@@ -38,7 +38,7 @@
         </div>
       </div>
 
-      <div class="col-md-2">
+      <div class="col-md-2 mb-2">
         <div class="card text-center shadow-sm">
           <div class="card-body">
             <h5 class="card-title">Plan Populaire</h5>
@@ -93,7 +93,7 @@
           <thead><tr><th>Nom</th><th>Prix</th><th>Durée</th></tr></thead>
           <tbody>
             @foreach($items as $plan)
-              <tr><td>{{ $plan->name }}</td><td>{{ $plan->price }} $</td><td>{{ $plan->duration }} jrs</td></tr>
+              <tr><td>{{ $plan->name }}</td><td>{{ $plan->price }} $</td><td>{{ $plan->duration >= 10000 ? 'Illimité' : $plan->duration }} jrs</td></tr>
             @endforeach
           </tbody>
         </table>

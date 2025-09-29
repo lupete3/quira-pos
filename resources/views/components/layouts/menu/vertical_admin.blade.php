@@ -52,7 +52,7 @@
     <li class="menu-item {{ request()->routeIs('overviewsuperadmin.index') ? 'active' : '' }}">
         <a class="menu-link" href="{{ route('overviewsuperadmin.index') }}" wire:navigate>
             <i class="menu-icon tf-icons bx bx-receipt"></i> <!-- 🧾 Icône statistique -->
-            <div class="text-truncate">{{ __('Statistique') }}</div>
+            <div class="text-truncate">{{ __('Statistiques') }}</div>
         </a>
     </li>
 

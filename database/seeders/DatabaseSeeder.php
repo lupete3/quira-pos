@@ -18,8 +18,7 @@ class DatabaseSeeder extends Seeder
         // 1️⃣ Créer les rôles
         $roles = [
             ['name' => 'Admin', 'description' => 'Admin d’un tenant (propriétaire de supermarché)'],
-            ['name' => 'Manager', 'description' => 'Gestion des ventes et produits'],
-            ['name' => 'Caissier', 'description' => 'Enregistrement des ventes'],
+            ['name' => 'Gérant', 'description' => 'Gestion des ventes et produits'],
             ['name' => 'Super Admin', 'description' => 'Gestion globale du SaaS'],
         ];
 
