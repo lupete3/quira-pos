@@ -74,12 +74,6 @@ Route::middleware(['auth', 'verified', 'check.subscription'])->group(function ()
   // Supplier Debts
   Route::get('supplier-debts', [\App\Http\Controllers\SupplierDebtController::class, 'index'])->name('supplierdebts.index');
 
-  // Client Journal
-  Route::get('client-journal', [\App\Http\Controllers\ClientJournalController::class, 'index'])->name('clientjournal.index');
-
-  // Supplier Journal
-  Route::get('supplier-journal', [\App\Http\Controllers\SupplierJournalController::class, 'index'])->name('supplierjournal.index');
-
   // Roles
   Route::get('roles', [\App\Http\Controllers\RoleController::class, 'index'])->name('roles.index');
 
@@ -101,7 +95,6 @@ Route::middleware(['auth', 'verified', 'check.subscription'])->group(function ()
   Route::get('inventories-export/{inventory}', [\App\Http\Controllers\InventoryController::class, 'export'])->name('inventories.export');
 
   // Reports
-
   Route::get('reports/products', [\App\Http\Controllers\ReportController::class, 'products'])->name('reports.products');
   Route::get('reports/sales', [\App\Http\Controllers\ReportController::class, 'sales'])->name('reports.sales');
   Route::get('reports/purchases', [\App\Http\Controllers\ReportController::class, 'purchases'])->name('reports.purchases');

@@ -87,9 +87,9 @@
                                 <span class="badge bg-secondary">{{ $sub->plan?->name }}</span>
                                 <div class="small text-muted mt-1">
                                     Montant: {{ number_format($sub->amount, 2) }} $ | 
-                                    Durée: {{ $sub->plan?->duration_days }} jours | 
+                                    Durée: {{ $sub->plan?->duration_days >= 10000 ? 'Illimité' : $sub->plan?->duration_days.' jours' }} | 
                                     Début: {{ $sub->start_date }} | 
-                                    Fin: {{ $sub->end_date }} |
+                                    Fin: {{ $sub->plan?->duration_days >= 10000 ? 'Illimité' : $sub->end_date }} |
                                     Users max: {{ $sub->plan?->max_users ?? 'Illimité' }} |
                                     Stores max: {{ $sub->plan?->max_stores ?? 'Illimité' }}
                                 </div>

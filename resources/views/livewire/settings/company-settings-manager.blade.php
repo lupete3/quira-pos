@@ -138,16 +138,16 @@
                                     <span class="fw-bold">{{ $sub->plan?->name }}</span><br>
                                     <small class="text-muted">{{ number_format($sub->price, 2) }} $</small>
                                 </td>
-                                <td>{{ $sub->plan?->duration_days }} jours</td>
+                                <td>{{ $sub->plan?->duration_days >= 10000 ? 'Illimité' : $sub->plan?->duration_days.' jours' }}</td>
                                 <td>{{ $sub->start_date }}</td>
                                 <td>
-                                    {{ $sub->end_date }}
+                                    {{ $sub->plan?->duration_days >= 10000 ? 'Illimité' : $sub->end_date }}
                                     @if(now()->diffInDays($sub->end_date, false) <= 7 && now()->lt($sub->end_date))
                                         <span class="badge bg-warning ms-2">⚠️ Bientôt expiré</span>
                                     @endif
                                 </td>
-                                <td>{{ $sub->plan?->max_stores ?? '∞' }}</td>
-                                <td>{{ $sub->plan?->max_users ?? '∞' }}</td>
+                                <td>{{ $sub->plan?->max_stores ?? 'Illimité' }}</td>
+                                <td>{{ $sub->plan?->max_users ?? 'Illimité' }}</td>
                                 <td>
                                     @if($sub->end_date >= now())
                                         <span class="badge bg-success">Actif</span>

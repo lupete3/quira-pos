@@ -174,7 +174,6 @@
       </ul>
     </li>
 
-
     <!-- Rapports -->
     <li class="menu-item {{ request()->is('reports*') ? 'active open' : '' }}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -198,23 +197,6 @@
         @endif
       </ul>
     </li>
-
-    <!-- Journaux -->
-    {{-- <li class="menu-item {{ request()->is('clientjournal*') || request()->is('supplierjournal*') ? 'active open' : '' }}">
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-book"></i>
-        <div class="text-truncate">{{ __('Journaux') }}</div>
-      </a>
-      <ul class="menu-sub">
-        <li class="menu-item {{ request()->routeIs('clientjournal.index') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('clientjournal.index') }}" wire:navigate>{{ __('Clients') }}</a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('supplierjournal.index') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('supplierjournal.index') }}" wire:navigate>{{ __('Fournisseurs') }}</a>
-        </li>
-      </ul>
-    </li> --}}
-
 
     @if (Auth::user()->role_id == 1)
 
