@@ -23,4 +23,11 @@ class DashboardController extends Controller
     {
         return view('settings.index');
     }
+
+    public function superAdminOverview()
+    {
+        return view('superadmin.overview.index');
+    }
+
+
 }

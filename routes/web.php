@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified', 'check.subscription'])->group(function ()
     Route::get('plans', [PlanController::class, 'index'])->name('plan.index');
     Route::get('tenants', [TenantController::class, 'index'])->name('tenant.index');
     Route::get('souscription', [SubscriptionController::class, 'index'])->name('souscription.index');
+    Route::get('clients-overview', [DashboardController::class, 'superAdminOverview'])->name('overviewsuperadmin.index');
 });
 
 Route::middleware(['auth', 'verified', 'check.subscription'])->group(function () {
