@@ -113,6 +113,12 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">Montant</label>
+                            <input type="number" wire:model="amount" class="form-control">
+                            @error('amount') <span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label">Date de début</label>
                             <input type="date" wire:model="start_date" class="form-control">
                             @error('start_date') <span class="text-danger">{{ $message }}</span>@enderror

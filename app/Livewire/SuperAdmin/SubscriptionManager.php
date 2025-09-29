@@ -18,6 +18,7 @@ class SubscriptionManager extends Component
     public $subscriptionId;
     public $tenant_id;
     public $plan_id;
+    public $amount = 0;
     public $start_date;
     public $end_date;
     public $is_active = true;
@@ -55,6 +56,7 @@ class SubscriptionManager extends Component
         $this->subscriptionId = $id;
         $this->tenant_id = $sub->tenant_id;
         $this->plan_id = $sub->plan_id;
+        $this->amount = $sub->amount;
         $this->start_date = $sub->start_date;
         $this->end_date = $sub->end_date;
         $this->is_active = (bool) $sub->is_active;
@@ -66,6 +68,7 @@ class SubscriptionManager extends Component
         $this->validate([
             'tenant_id' => 'required|exists:tenants,id',
             'plan_id' => 'required|exists:plans,id',
+            'amount' => 'required|numeric|min:0',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
@@ -77,7 +80,7 @@ class SubscriptionManager extends Component
             [
                 'tenant_id' => $this->tenant_id,
                 'plan_id' => $this->plan_id,
-                'amount' => $plan->price,
+                'amount' => $this->amount,
                 'start_date' => $this->start_date,
                 'end_date' => $this->end_date,
                 'is_active' => $this->is_active,
@@ -108,6 +111,7 @@ class SubscriptionManager extends Component
         $this->subscriptionId = null;
         $this->tenant_id = '';
         $this->plan_id = '';
+        $this->amount = 0;
         $this->start_date = '';
         $this->end_date = '';
         $this->is_active = true;

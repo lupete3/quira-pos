@@ -136,7 +136,7 @@
                             <tr>
                                 <td>
                                     <span class="fw-bold">{{ $sub->plan?->name }}</span><br>
-                                    <small class="text-muted">{{ number_format($sub->price, 2) }} $</small>
+                                    <small class="text-muted">{{ number_format($sub->amount, 2) }} $</small>
                                 </td>
                                 <td>{{ $sub->plan?->duration_days >= 10000 ? 'Illimité' : $sub->plan?->duration_days.' jours' }}</td>
                                 <td>{{ $sub->start_date }}</td>
