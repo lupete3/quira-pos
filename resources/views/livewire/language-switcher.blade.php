@@ -12,14 +12,24 @@
 
   <div class="navbar-nav-right d-flex align-items-center justify-content-end" id="navbar-collapse">
     <!-- Search -->
-    <div class="navbar-nav align-items-center me-auto">
+    <div class="navbar-nav align-items-center me-auto ">
       <div class="nav-item d-flex align-items-center">
-        <span class="w-px-22 h-px-22"><i class="icon-base bx bx-search icon-md"></i></span>
-        <input
-          type="text"
-          class="form-control border-0 shadow-none ps-1 ps-sm-2 d-md-block d-none"
-          placeholder="{{ __('Rechercher...') }}"
-          aria-label="{{ __('Rechercher...') }}" />
+        <h3 class="text-primary mt-4">
+          @php
+            if(Auth::check()){
+              if (Auth::user()->role_id == 1) {
+                echo company()?->name ?? config('app.name');
+              } else {
+                $store = Auth::user()->stores()->first();
+                if($store){
+                  echo __('Point de Vente: ').$store?->name ?? company()?->name;
+                }
+              }
+            } else{
+              echo __('Quira POS');
+            }
+          @endphp
+        </h3>
       </div>
     </div>
     <!-- /Search -->
@@ -57,8 +67,8 @@
                     </div>
                   </div>
                   <div class="flex-grow-1">
-                    <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                    <small class="text-body-secondary">{{ Auth::user()->role->name ?? __('Utilisateur') }}</small>
+                    <h6 class="mb-0">{{ Auth::user()?->name }}</h6>
+                    <small class="text-body-secondary">{{ Auth::user()->role?->name ?? __('Utilisateur') }}</small>
                   </div>
                 </div>
               </a>

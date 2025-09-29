@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sale_returns', function (Blueprint $table) {
                 $table->id();
+                $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
                 $table->foreignId('sale_id')->constrained();
                 $table->foreignId('product_id')->constrained();
                 $table->foreignId('store_id')->constrained()->cascadeOnDelete();

@@ -1,12 +1,18 @@
 <?php
 
 use App\Models\User;
+use App\Models\Tenant;
+use App\Models\Store;
+use App\Models\Role;
+use App\Models\Plan;
+use App\Models\Subscription;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Carbon\Carbon;
 
 new #[Layout('components.layouts.auth')] class extends Component {
     public string $name = '';
@@ -15,9 +21,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $password_confirmation = '';
     public bool $terms = false;
 
-    /**
-     * Gérer une demande d'inscription.
-     */
     public function register(): void
     {
         $validated = $this->validate([
@@ -29,13 +32,63 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered(($user = User::create($validated))));
+        // 1️⃣ Création du tenant
+        $tenant = Tenant::create([
+            'name'         => $this->name,
+            'contact_name' => $this->name,
+            'email'        => $this->email,
+            'phone'        => null,
+            'address'      => null,
+            'is_active'    => true,
+        ]);
 
+        // 2️⃣ Création du magasin par défaut
+        $store = Store::create([
+            'tenant_id' => $tenant->id,
+            'name'      => 'Magasin Principal',
+            'location'   => 'Adresse par défaut',
+            'is_active' => true,
+        ]);
+
+        // 3️⃣ Rôle Admin (créé si inexistant)
+        $adminRole = Role::firstOrCreate(
+            ['name' => 'Admin'],
+            ['description' => 'Administrateur du tenant']
+        );
+
+        // 4️⃣ Création du user (propriétaire)
+        $user = User::create([
+            'tenant_id' => $tenant->id,
+            'store_id'  => $store->id,
+            'role_id'   => $adminRole->id,
+            'name'      => $this->name,
+            'email'     => $this->email,
+            'password'  => $validated['password'],
+            'is_active' => true,
+        ]);
+
+        event(new Registered($user));
+
+        // 5️⃣ Assigner une souscription gratuite
+        $freePlan = Plan::where('price', 0)->first(); // ⚡ ton plan gratuit seedé
+        if ($freePlan) {
+            Subscription::create([
+                'tenant_id' => $tenant->id,
+                'plan_id'   => $freePlan->id,
+                'amount'     => 0,
+                'start_date'=> Carbon::now(),
+                'end_date'  => Carbon::now()->addDays($freePlan->duration_days),
+                'status'    => 'active',
+            ]);
+        }
+
+        // 6️⃣ Connexion auto
         Auth::login($user);
 
         $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
     }
 };
+
 ?>
 
 @section('title', __('Page d’inscription'))

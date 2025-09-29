@@ -12,6 +12,7 @@ class SaleItem extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'tenant_id',
         'sale_id',
         'product_id',
         'quantity',
@@ -28,5 +29,10 @@ class SaleItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

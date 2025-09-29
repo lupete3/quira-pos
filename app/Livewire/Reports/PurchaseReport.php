@@ -9,6 +9,7 @@ use App\Models\Purchase;
 use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseReport extends Component
 {
@@ -24,7 +25,8 @@ class PurchaseReport extends Component
 
     public function render()
     {
-        $query = Purchase::with('supplier','user');
+        $query = Purchase::with('supplier','user')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         // 🔍 Filtrer par fournisseur
         if ($this->supplier_id) {
@@ -58,7 +60,7 @@ class PurchaseReport extends Component
 
         return view('livewire.reports.purchase-report', [
             'purchases' => $purchases,
-            'suppliers' => Supplier::all(),
+            'suppliers' => Supplier::where('tenant_id', Auth::user()->tenant_id)->get(),
             'total_purchases' => $total_purchases,
             'total_amount' => $total_amount,
             'total_paid' => $total_paid,
@@ -68,7 +70,8 @@ class PurchaseReport extends Component
 
     public function exportPdf()
     {
-        $query = Purchase::with('supplier','user');
+        $query = Purchase::with('supplier','user')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->supplier_id) $query->where('supplier_id', $this->supplier_id);
         if ($this->status) $query->where('status', $this->status);

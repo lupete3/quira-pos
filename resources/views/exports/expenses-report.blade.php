@@ -30,7 +30,7 @@
                 <tr>
                     <td>{{ $exp->id }}</td>
                     <td>{{ $exp->description }}</td>
-                    <td>{{ number_format($exp->amount, 2) }} {{ company()->devise }}</td>
+                    <td>{{ number_format($exp->amount, 2) }} {{ company()?->devise }}</td>
                     <td>{{ $exp->category?->name ?? '-' }}</td>
                     <td>{{ $exp->store?->name ?? '-' }}</td>
                     <td>{{ $exp->user?->name ?? '-' }}</td>
@@ -42,7 +42,7 @@
             <tr>
                 <th colspan="2" class="text-end">{{ __('Total Dépenses') }}</th>
                 <th colspan="5" class="text-danger">
-                    {{ number_format($total_amount, 2) }} {{ company()->devise }}
+                    {{ number_format($total_amount, 2) }} {{ company()?->devise }}
                 </th>
             </tr>
         </tfoot>

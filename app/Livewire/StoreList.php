@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\CashRegister;
 use App\Models\Store;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -29,11 +31,12 @@ class StoreList extends Component
     public function render()
     {
         $stores = Store::with('users')
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('name', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate(10);
 
-        $allUsers = User::orderBy('name')->get();
+        $allUsers = User::where('tenant_id', Auth::user()->tenant_id)->orderBy('name')->get();
 
         return view('livewire.store-list', [
             'stores' => $stores,
@@ -62,8 +65,43 @@ class StoreList extends Component
 
     public function save()
     {
+        $user = Auth::user();
+        $tenant = $user->tenant;
+
+        // ⚡ Récupérer la souscription active
+        $subscription = $tenant->subscriptions()
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->latest()
+            ->first();
+
+        if (!$subscription) {
+            notyf()->error(__("Vous devez avoir une souscription active pour créer un point de vente."));
+            return;
+        }
+
+        $plan = $subscription->plan;
+
+        // Vérifier la limite des magasins (si le plan n'est pas illimité)
+        if (!empty($plan->max_stores) && $plan->max_stores > 0) {
+            $currentStoresCount = $tenant->stores()->count();
+
+            // Seulement si on crée un nouveau magasin (pas en édition)
+            if (!$this->storeId && $currentStoresCount >= $plan->max_stores) {
+                notyf()->error(__("Votre plan ne permet pas de créer plus de {$plan->max_stores} magasins."));
+                return;
+            }
+        }
+
         $rules = [
-            'name' => 'required|string|max:150|unique:stores,name,' . $this->storeId,
+            'name' => [
+                'required',
+                'string',
+                'max:150',
+                Rule::unique('stores', 'name')
+                    ->ignore($this->storeId)
+                    ->where(fn($q) => $q->where('tenant_id', $tenant->id)),
+            ],
             'location' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:100',
@@ -78,6 +116,7 @@ class StoreList extends Component
                 'location' => $this->location,
                 'phone' => $this->phone,
                 'email' => $this->email,
+                'tenant_id' => $tenant->id,
             ]
         );
 
@@ -85,6 +124,7 @@ class StoreList extends Component
         CashRegister::updateOrCreate(
             ['store_id' => $store->id],
             [
+                'tenant_id' => $tenant->id,
                 'opening_balance' => $store->cashRegister->opening_balance ?? 0,
                 'current_balance' => $store->cashRegister->current_balance ?? 0,
             ]
@@ -97,7 +137,7 @@ class StoreList extends Component
         }
         $store->users()->sync($syncData);
 
-        notyf()->success($this->isEditMode ? 'Point de vente mis à jour.' : 'Point de vente créé.');
+        notyf()->success(__($this->isEditMode ? 'Point de vente mis à jour.' : 'Point de vente créé.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -115,7 +155,7 @@ class StoreList extends Component
         $store->users()->detach();
         $store->delete();
 
-        notyf()->success('Point de vente supprimé.');
+        notyf()->success(__('Point de vente supprimé.'));
     }
 
     private function resetInputFields()

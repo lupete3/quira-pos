@@ -4,17 +4,26 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TenantController;
 
 Route::get('/', function () {
-  return redirect()->route('dashboard');
+  return redirect()->route('login');
 })->name('home');
 
 Route::get('dashboard', [DashboardController::class, 'index'])
-  ->middleware(['auth', 'verified'])
+  ->middleware(['auth', 'verified', 'check.subscription'])
   ->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified', 'check.subscription'])->group(function () {
+    Route::get('plans', [PlanController::class, 'index'])->name('plan.index');
+    Route::get('tenants', [TenantController::class, 'index'])->name('tenant.index');
+    Route::get('souscription', [SubscriptionController::class, 'index'])->name('souscription.index');
+});
+
+Route::middleware(['auth', 'verified', 'check.subscription'])->group(function () {
   Route::redirect('settings', 'settings/profile');
 
   Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
@@ -104,6 +113,10 @@ Route::middleware(['auth'])->group(function () {
   Route::get('reports/profitloss', [\App\Http\Controllers\ReportController::class, 'prfitLoss'])->name('reports.profitloss');
 
   Route::get('/settings/company', [DashboardController::class, 'settings'])->name('company.settings');
+});
+
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });
 
 require __DIR__ . '/auth.php';

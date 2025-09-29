@@ -4,7 +4,12 @@
     Tableau de bord
   </x-slot:title>
 
-  <livewire:dashboard.dashboard />
+  @if (Auth::user()->role_id == 4)
+    <livewire:super-admin.dashboard />
+  @else
+    <livewire:dashboard.dashboard />
+  @endif
+  
 
 </x-layouts.app>
 

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('cash_transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->foreignId('cash_register_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->enum('type', ['in', 'out']); // entrée ou sortie

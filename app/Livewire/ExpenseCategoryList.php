@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\ExpenseCategory;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -29,7 +30,8 @@ class ExpenseCategoryList extends Component
 
     public function render()
     {
-        $categories = ExpenseCategory::where('name', 'like', '%' . $this->search . '%')
+        $categories = ExpenseCategory::where('tenant_id', Auth::user()->tenant_id)
+            ->where('name', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate(10);
 
@@ -60,12 +62,13 @@ class ExpenseCategoryList extends Component
         ExpenseCategory::updateOrCreate(
             ['id' => $this->categoryId],
             [
+                'tenant_id' => Auth::user()->tenant_id,
                 'name' => $this->name,
                 'description' => $this->description,
             ]
         );
 
-        notyf()->success($this->isEditMode ? 'Catégorie mise à jour.' : 'Catégorie créée.');
+        notyf()->success(__($this->isEditMode ? 'Catégorie mise à jour avec succès.' : 'Catégorie créée avec succès.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -80,7 +83,7 @@ class ExpenseCategoryList extends Component
     public function delete()
     {
         ExpenseCategory::findOrFail($this->categoryId)->delete();
-        notyf()->success('Catégorie supprimée.');
+        notyf()->success(__('Catégorie supprimée.'));
         $this->dispatch('close-delete-confirmation');
     }
 

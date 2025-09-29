@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Expense extends Model
 {
     protected $fillable = [
+        'tenant_id',
         'store_id',
         'expense_category_id',
         'user_id',
@@ -35,5 +36,10 @@ class Expense extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

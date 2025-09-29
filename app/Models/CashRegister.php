@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class CashRegister extends Model
 {
     protected $fillable = [
-        'store_id', 'opening_balance', 'current_balance'
+        'tenant_id', 'store_id', 'opening_balance', 'current_balance'
     ];
 
     public function store()
@@ -28,9 +29,14 @@ class CashRegister extends Model
     // 🔹 Recalcul automatique du solde
     public function recalcBalance()
     {
-        $in = $this->transactions()->where('type', 'in')->sum('amount');
-        $out = $this->transactions()->where('type', 'out')->sum('amount');
+        $in = $this->transactions()->where('type', 'in')->where('tenant_id', Auth::user()->tenant_id)->sum('amount');
+        $out = $this->transactions()->where('type', 'out')->where('tenant_id', Auth::user()->tenant_id)->sum('amount');
         $this->current_balance = $this->opening_balance + $in - $out;
         $this->save();
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Brand;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,7 +20,8 @@ class BrandList extends Component
 
     public function render()
     {
-        $brands = Brand::where('name', 'like', '%' . $this->search . '%')
+        $brands = Brand::where('tenant_id', Auth::user()->tenant_id)
+            ->where('name', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate(10);
 
@@ -52,10 +54,13 @@ class BrandList extends Component
 
         Brand::updateOrCreate(
             ['id' => $this->brandId],
-            ['name' => $this->name]
+            [
+              'tenant_id' => Auth::user()->tenant_id,
+              'name' => $this->name
+            ]
         );
 
-        notyf()->success($this->isEditMode ? 'Brand updated successfully.' : 'Brand created successfully.');
+        notyf()->success(__($this->isEditMode ? 'Marque mise à jour avec succès.' : 'Marque ajoutée avec succès.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -70,7 +75,7 @@ class BrandList extends Component
     public function delete()
     {
         Brand::find($this->brandId)->delete();
-        notyf()->success('Brand deleted successfully.');
+        notyf()->success(__('Marque supprimée avec succès'));
     }
 
     private function resetInputFields()

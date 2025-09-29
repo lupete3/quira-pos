@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->string('reference', 50)->unique();
             $table->string('name');
             $table->foreignId('category_id')->constrained();
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->decimal('purchase_price', 10, 2);
             $table->decimal('sale_price', 10, 2);
             $table->integer('min_stock')->default(0);
+            $table->date('expiration_date')->nullable();
             $table->timestamps();
         });
     }

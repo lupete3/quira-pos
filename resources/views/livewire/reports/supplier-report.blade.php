@@ -40,10 +40,10 @@
                             <td>{{ $supplier->name }}</td>
                             <td>{{ $supplier->phone }}</td>
                             <td>{{ $supplier->purchases->count() }}</td>
-                            <td>{{ number_format($totalAchats, 2, ',', ' ') }} {{ company()->devise }}</td>
-                            <td>{{ number_format($totalPaye, 2, ',', ' ') }} {{ company()->devise }}</td>
+                            <td>{{ number_format($totalAchats, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                            <td>{{ number_format($totalPaye, 2, ',', ' ') }} {{ company()?->devise }}</td>
                             <td class="{{ $solde > 0 ? 'text-danger fw-bold' : 'text-success' }}">
-                                {{ number_format($solde, 2, ',', ' ') }} {{ company()->devise }}
+                                {{ number_format($solde, 2, ',', ' ') }} {{ company()?->devise }}
                             </td>
                         </tr>
                     @empty

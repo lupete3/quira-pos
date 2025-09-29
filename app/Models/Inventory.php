@@ -10,6 +10,7 @@ class Inventory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'user_id',
         'inventory_date',
         'status',
@@ -29,5 +30,10 @@ class Inventory extends Model
     public function items()
     {
         return $this->hasMany(InventoryItem::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

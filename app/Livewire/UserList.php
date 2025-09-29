@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -22,12 +23,19 @@ class UserList extends Component
     public function render()
     {
         $users = User::with('role')
-            ->where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('email', 'like', '%' . $this->search . '%')
+            ->where('tenant_id', Auth::user()->tenant_id)
+            ->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%');
+            })
             ->latest()
             ->paginate(10);
-        
-        $roles = Role::all();
+
+        if (Auth::user()->role_id != 4) {
+            $roles = Role::where('name', '=', 'Admin')->orWhere('name', '=', 'Manager')->orWhere('name', '=', 'Caissier')->get();
+        }else{
+          $roles = Role::where('name', '=', 'Super Admin')->get();
+        }
 
         return view('livewire.user-list', compact('users', 'roles'));
     }
@@ -50,6 +58,33 @@ class UserList extends Component
 
     public function save()
     {
+        $tenant = Auth::user()->tenant;
+
+        // ⚡ Récupérer la souscription active
+        $subscription = $tenant->subscriptions()
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->latest()
+            ->first();
+
+        if (!$subscription) {
+            notyf()->error(__('Aucune souscription active.'));
+            return;
+        }
+
+        $plan = $subscription->plan;
+
+        // Vérifier la limite des utilisateurs (si le plan n'est pas illimité)
+        if (!empty($plan->max_users) && $plan->max_users > 0) {
+            $currentUsersCount = $tenant->users()->count();
+
+            // Seulement si on crée un nouvel utilisateur (pas en édition)
+            if (!$this->userId && $currentUsersCount >= $plan->max_users) {
+                notyf()->error(__('La limite de nombre d\'utilisateurs a été atteinte.'));
+                return;
+            }
+        }
+
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $this->userId,
@@ -63,16 +98,16 @@ class UserList extends Component
             'name' => $this->name,
             'email' => $this->email,
             'role_id' => $this->role_id,
+            'tenant_id' => $tenant->id,
         ];
 
         if (!empty($this->password)) {
             $data['password'] = Hash::make($this->password);
         }
 
-
         User::updateOrCreate(['id' => $this->userId], $data);
 
-        notyf()->success($this->isEditMode ? 'User updated successfully.' : 'User created successfully.');
+        notyf()->success(__($this->isEditMode ? 'Utilisateur mis à jour.' : 'Utilisateur créé avec succès.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -87,7 +122,7 @@ class UserList extends Component
     public function delete()
     {
         User::find($this->userId)->delete();
-        notyf()->success('User deleted successfully.');
+        notyf()->success(__('Utilisateur supprimé avec succès.'));
     }
 
     private function resetInputFields()

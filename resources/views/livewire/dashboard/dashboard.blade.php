@@ -1,6 +1,7 @@
 <div>
     <div class="flex-grow-1">
 
+      @if (Auth::user()->role_id == 1)
         <div class="mb-4 col-md-4">
             <label for="storeFilter" class="form-label">Filtrer par Magasin</label>
             <select wire:model.lazy="storeId" id="storeFilter" class="form-select">
@@ -10,6 +11,7 @@
                 @endforeach
             </select>
         </div>
+      @endif
 
         <!-- ===== Stats Cards ===== -->
         <div class="row g-4 mb-4">
@@ -97,8 +99,8 @@
                     <div class="card-body">
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="content-left">
-                                <span class="d-block text-muted mb-1">Produits en Stock</span>
-                                <h3 class="card-title mb-2">{{ $totalProductsInStock }}</h3>
+                                <span class="d-block text-muted mb-1">Solde en caisse</span>
+                                <h3 class="card-title mb-2">{{ $current_balance }} {{ company()?->devise }}</h3>
                             </div>
                             <div class="avatar flex-shrink-0">
                                 <span class="avatar-initial rounded bg-label-info">
@@ -133,7 +135,7 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
-                            @foreach ($recentSales as $sale)
+                            @forelse ($recentSales as $sale)
                                 <li class="list-group-item d-flex align-items-center justify-content-between px-0">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar me-3">
@@ -148,7 +150,11 @@
                                     <span
                                         class="fw-semibold">{{ number_format($sale->total_paid, 2, ',', ' ') }}{{ company()?->devise }}</span>
                                 </li>
-                            @endforeach
+                            @empty
+                                <span class="badge rounded-pill bg-label-info">
+                                      <p class="text-muted mb-0">Aucune ventes effectuée pour le moment.</p>
+                                  </span>
+                            @endforelse
                         </ul>
                     </div>
                 </div>
@@ -166,21 +172,39 @@
                     </div>
                     <div class="card-body">
                         <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
-                            @foreach ($popularProducts as $product)
+                            @forelse ($popularProducts as $product)
                                 <div class="col">
                                     <div class="card h-100 border-1 product-card">
                                         <div class="card-body text-center">
+                                            {{-- Nom du produit --}}
                                             <h6 class="card-title mb-1 text-truncate" title="{{ $product->name }}">
-                                                {{ $product->name }}</h6>
+                                                {{ $product->name }}
+                                            </h6>
+
+                                            {{-- Prix de vente --}}
                                             <div class="text-primary fw-semibold mb-1">
                                                 {{ number_format($product->sale_price, 2, ',', ' ') }}{{ company()?->devise }}
                                             </div>
-                                            <small class="text-muted">Stock :
-                                                {{ $product->stores->sum('pivot.quantity') }}</small>
+
+                                            {{-- Stock actuel dans tous les magasins --}}
+                                            <small class="text-muted d-block">
+                                                Stock : {{ $product->stores->sum('pivot.quantity') }}
+                                            </small>
+
+                                            {{-- Quantité totale vendue --}}
+                                            <small class="text-success d-block fw-semibold">
+                                                Vendus : {{ $product->total_sold ?? 0 }}
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            @empty
+                                <div class="col-12 text-center">
+                                  <span class="badge rounded-pill bg-label-info">
+                                      <p class="text-muted mb-0">Aucun produit vendu pour le moment.</p>
+                                  </span>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -194,7 +218,7 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
-                            @foreach ($recentPurchases as $purchase)
+                            @forelse ($recentPurchases as $purchase)
                                 <li class="list-group-item d-flex align-items-center justify-content-between px-0">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar me-3">
@@ -209,7 +233,12 @@
                                     <span
                                         class="fw-semibold">{{ number_format($purchase->total_paid, 2, ',', ' ') }}{{ company()?->devise }}</span>
                                 </li>
-                            @endforeach
+
+                            @empty
+                                <span class="badge rounded-pill bg-label-info">
+                                      <p class="text-muted mb-0">Aucun achat effectué pour le moment.</p>
+                                </span>
+                            @endforelse
                         </ul>
                     </div>
                 </div>
@@ -237,6 +266,7 @@
                                     <span>Nouveau Client</span>
                                 </a>
                             </div>
+                            @if (Auth::user()->role_id == 1)
                             <div class="col-3">
                                 <a href="{{ route('products.index') }}"
                                     class="btn btn-outline-warning w-100 d-flex flex-column align-items-center py-3">
@@ -251,6 +281,7 @@
                                     <span>Nouvel Achat</span>
                                 </a>
                             </div>
+                            @endif
                         </div>
                     </div>
                 </div>

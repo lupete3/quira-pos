@@ -1,10 +1,11 @@
 <?php
 
 use App\Models\CompanySetting;
+use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('company')) {
     function company()
     {
-        return CompanySetting::first();
+        return CompanySetting::where('tenant_id', Auth::user()->tenant_id)->first();
     }
 }

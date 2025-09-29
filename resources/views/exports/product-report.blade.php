@@ -33,9 +33,9 @@
                     <td>{{ $prod->category?->name ?? '-' }}</td>
                     <td>{{ $prod->brand?->name ?? '-' }}</td>
                     <td>{{ $storeStock }}</td>
-                    <td>{{ number_format($prod->purchase_price, 2, ',', ' ') }} {{ company()->devise }}</td>
-                    <td>{{ number_format($prod->sale_price, 2, ',', ' ') }} {{ company()->devise }}</td>
-                    <td>{{ number_format($storeStock * $prod->sale_price, 2, ',', ' ') }} {{ company()->devise }}</td>
+                    <td>{{ number_format($prod->purchase_price, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($prod->sale_price, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($storeStock * $prod->sale_price, 2, ',', ' ') }} {{ company()?->devise }}</td>
                 </tr>
             @endforeach
         </tbody>

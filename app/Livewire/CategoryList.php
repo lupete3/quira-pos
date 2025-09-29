@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -21,7 +22,6 @@ class CategoryList extends Component
 
     protected $listeners = ['deleteConfirmed' => 'delete'];
 
-
     protected $rules = [
         'name' => 'required|string|max:100|unique:categories,name',
         'description' => 'nullable|string',
@@ -29,7 +29,8 @@ class CategoryList extends Component
 
     public function render()
     {
-        $categories = Category::where('name', 'like', '%' . $this->search . '%')
+        $categories = Category::where('tenant_id', Auth::user()->tenant_id)
+          ->where('name', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate(10);
 
@@ -65,12 +66,13 @@ class CategoryList extends Component
         Category::updateOrCreate(
             ['id' => $this->categoryId],
             [
+                'tenant_id' => Auth::user()->tenant_id,
                 'name' => $this->name,
                 'description' => $this->description,
             ]
         );
 
-        notyf()->success($this->isEditMode ? 'Category updated successfully.' : 'Category created successfully.');
+        notyf()->success(__($this->isEditMode ? 'Catégorie mise à jour avec succès.' : 'Catégorie créée avec succès.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -85,7 +87,7 @@ class CategoryList extends Component
     public function delete()
     {
         Category::find($this->categoryId)->delete();
-        notyf()->success('Category deleted successfully.');
+        notyf()->success(__('Catégorie supprimée avec succès.'));
         $this->dispatch('close-delete-confirmation');
     }
 

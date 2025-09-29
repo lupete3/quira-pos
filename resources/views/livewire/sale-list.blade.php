@@ -4,6 +4,7 @@
         <div class="col-md-4">
             <input type="text" class="form-control" placeholder="{{ __('Rechercher par ID de vente ou nom du client...') }}" wire:model.live.debounce.300ms="search">
         </div>
+        @if (Auth::user()->role_id == 1)
         <div class="col-md-4">
             <select name="store_id" wire:model.lazy="store_id" class="form-select">
               <option value="">Tous les magasins</option>
@@ -14,6 +15,7 @@
               @endforelse
             </select>
         </div>
+        @endif
     </div>
 
     {{-- Tableau des ventes --}}
@@ -37,8 +39,8 @@
                         <td>{{ $sale->id }}</td>
                         <td>{{ $sale->client->name ?? __('N/A') }}</td>
                         <td>{{ $sale->sale_date }}</td>
-                        <td>{{ number_format($sale->total_amount, 2) }} {{ company()->devise }}</td>
-                        <td>{{ number_format($sale->total_paid, 2) }} {{ company()->devise }}</td>
+                        <td>{{ number_format($sale->total_amount, 2) }} {{ company()?->devise }}</td>
+                        <td>{{ number_format($sale->total_paid, 2) }} {{ company()?->devise }}</td>
                         <td>
                           @if ($sale->total_amount - $sale->total_paid <= 0)
                             <span class="badge bg-label-success me-1">{{ __('Payé') }}</span>
@@ -87,9 +89,9 @@
                                 <p><strong>{{ __('Magasin:') }}</strong> {{ $selectedSale->store->name }}</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>{{ __('Montant total:') }}</strong> {{ number_format($selectedSale->total_amount, 2) }} {{ company()->devise }}</p>
-                                <p><strong>{{ __('Montant payé:') }}</strong> {{ number_format($selectedSale->total_paid, 2) }} {{ company()->devise }}</p>
-                                <p><strong>{{ __('Reste à payer:') }}</strong> {{ number_format($selectedSale->total_amount - $selectedSale->total_paid, 2) }} {{ company()->devise }}</p>
+                                <p><strong>{{ __('Montant total:') }}</strong> {{ number_format($selectedSale->total_amount, 2) }} {{ company()?->devise }}</p>
+                                <p><strong>{{ __('Montant payé:') }}</strong> {{ number_format($selectedSale->total_paid, 2) }} {{ company()?->devise }}</p>
+                                <p><strong>{{ __('Reste à payer:') }}</strong> {{ number_format($selectedSale->total_amount - $selectedSale->total_paid, 2) }} {{ company()?->devise }}</p>
                                 <p>
                                   @if ($selectedSale->total_amount - $selectedSale->total_paid <= 0)
                                     <span class="badge bg-label-success me-1">{{ __('Payé') }}</span>
@@ -117,8 +119,8 @@
                                 <tr>
                                     <td>{{ $item->product->name }}</td>
                                     <td>{{ $item->quantity }}</td>
-                                    <td>{{ number_format($item->unit_price, 2) }} {{ company()->devise }}</td>
-                                    <td>{{ number_format($item->total_price, 2) }} {{ company()->devise }}</td>
+                                    <td>{{ number_format($item->unit_price, 2) }} {{ company()?->devise }}</td>
+                                    <td>{{ number_format($item->total_price, 2) }} {{ company()?->devise }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

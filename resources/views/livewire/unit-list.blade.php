@@ -21,9 +21,9 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($units as $unit)
+                @forelse ($units as $index => $unit)
                     <tr wire:key="{{ $unit->id }}">
-                        <td>{{ $unit->id }}</td>
+                        <td>{{ $index+1 }}</td>
                         <td><strong>{{ $unit->name }}</strong></td>
                         <td>{{ $unit->abbreviation }}</td>
                         <td>

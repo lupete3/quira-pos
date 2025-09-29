@@ -10,7 +10,11 @@
       <div class="layout-container">
 
         <!-- Layout Content -->
-        <x-layouts.menu.vertical :title="$title ?? null"></x-layouts.menu.vertical>
+        @if (Auth::user()->role_id == 4)
+          <x-layouts.menu.vertical_admin :title="$title ?? null"></x-layouts.menu.vertical_adm>
+        @else
+          <x-layouts.menu.vertical :title="$title ?? null"></x-layouts.menu.vertical>
+        @endif
         <!--/ Layout Content -->
 
         <!-- Layout container -->

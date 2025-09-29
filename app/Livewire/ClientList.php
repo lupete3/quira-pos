@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Client;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,7 +20,8 @@ class ClientList extends Component
 
     public function render()
     {
-        $clients = Client::where('name', 'like', '%' . $this->search . '%')
+        $clients = Client::where('tenant_id', Auth::user()->tenant_id)
+            ->where('name', 'like', '%' . $this->search . '%')
             ->orWhere('email', 'like', '%' . $this->search . '%')
             ->orWhere('phone', 'like', '%' . $this->search . '%')
             ->latest()
@@ -61,6 +63,7 @@ class ClientList extends Component
         Client::updateOrCreate(
             ['id' => $this->clientId],
             [
+                'tenant_id' => Auth::user()->tenant_id,
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => $this->phone,
@@ -69,7 +72,7 @@ class ClientList extends Component
             ]
         );
 
-        notyf()->success($this->isEditMode ? 'Client updated successfully.' : 'Client created successfully.');
+        notyf()->success(__($this->isEditMode ? 'Client mis à jour avec succès.' : 'Client crée avec succès.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -84,7 +87,7 @@ class ClientList extends Component
     public function delete()
     {
         Client::find($this->clientId)->delete();
-        notyf()->success('Client deleted successfully.');
+        notyf()->success(__('Client supprimé avec succès'));
     }
 
     private function resetInputFields()

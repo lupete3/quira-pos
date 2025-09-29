@@ -105,7 +105,7 @@
                 {{-- Totals --}}
                 <h4 class="d-flex justify-content-between mt-3">
                     <span>{{ __('Total') }}</span>
-                    <strong>{{ number_format($total, 2) }} {{ company()->devise }}</strong>
+                    <strong>{{ number_format($total, 2) }} {{ company()?->devise }}</strong>
                 </h4>
 
                 <hr>

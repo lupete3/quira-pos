@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Purchase;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -17,6 +18,7 @@ class PurchaseList extends Component
     public function render()
     {
         $purchases = Purchase::with(['supplier', 'store'])
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where(function ($query) {
                 $query->where('id', 'like', '%' . $this->search . '%')
                     ->orWhereHas('supplier', function ($q) {

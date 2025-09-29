@@ -24,9 +24,22 @@ class ClientDebtList extends Component
     public $payment_amount;
     public $payment_description;
 
+    public $storeId;
+
+    public function mount()
+    {
+      if (Auth::user()->role_id == 1) {
+        $this->storeId = null;
+      } else {
+          $store = Auth::user()->stores()->first();
+        $this->storeId = $store->id;
+      }
+    }
+
     public function render()
     {
-        $clients = Client::where('name', 'like', '%' . $this->search . '%')
+        $clients = Client::where('tenant_id', Auth::user()->tenant_id)
+            ->where('name', 'like', '%' . $this->search . '%')
             ->where('debt', '>', 0)
             ->latest()
             ->paginate(10);
@@ -39,9 +52,10 @@ class ClientDebtList extends Component
         $this->selectedClient = Client::find($clientId);
 
         // ventes non totalement payées
-        $this->salesUnpaid = Sale::where('client_id', $clientId)
-            ->whereColumn('total_paid', '<', 'total_amount')
-            ->get();
+        $this->salesUnpaid = Sale::where('tenant_id', Auth::user()->tenant_id)->where('client_id', $clientId)
+          ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+          ->whereColumn('total_paid', '<', 'total_amount')
+          ->get();
 
         $this->selectedSale = null;
         $this->payment_amount = null;
@@ -64,13 +78,14 @@ class ClientDebtList extends Component
         $amountToPay = min($this->payment_amount, $remaining);
 
         if ($this->payment_amount > $amountToPay) {
-           notyf()->error("Le montant proposé dépasse le reste à payer.");
+           notyf()->error(__("Le montant proposé dépasse le reste à payer."));
            return;
         }
 
         DB::transaction(function () use ($sale, $amountToPay) {
             // enregistrement trace dette
             $debtRecord = Debt::create([
+                'tenant_id' => Auth::user()->tenant_id,
                 'client_id'   => $this->selectedClient->id,
                 'amount'      => $amountToPay,
                 'description' => 'Paiement partiel pour la vente #' . $sale->id . '. ' . $this->payment_description,
@@ -99,6 +114,7 @@ class ClientDebtList extends Component
             if ($amountToPay > 0) {
                 // Création de la transaction IN
                 CashTransaction::create([
+                    'tenant_id' => Auth::user()->tenant_id,
                     'cash_register_id' => $cashRegister->id,
                     'type' => 'in',
                     'amount' => $amountToPay,
@@ -112,7 +128,7 @@ class ClientDebtList extends Component
             }
         });
 
-        session()->flash('message', 'Paiement enregistré avec succès.');
+        notyf()->success(__('Paiement enregistré avec succès.'));
         $this->dispatch('close-modal');
         $this->reset(['selectedClient','salesUnpaid','selectedSale','payment_amount','payment_description']);
     }

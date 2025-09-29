@@ -9,6 +9,7 @@ use App\Models\CashTransaction;
 use App\Models\Store;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CashOverviewReport extends Component
 {
@@ -27,12 +28,13 @@ class CashOverviewReport extends Component
     {
         $this->start_date = now()->startOfMonth()->format('Y-m-d');
         $this->end_date = now()->endOfMonth()->format('Y-m-d');
-        $this->stores = Store::all();
+        $this->stores = Store::where('tenant_id', Auth::user()->tenant_id)->get();
     }
 
     public function render()
     {
-        $query = CashTransaction::with('cashRegister.store','user');
+        $query = CashTransaction::with('cashRegister.store','user')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->store_id) {
             $query->whereHas('cashRegister', fn($q) => $q->where('store_id', $this->store_id));
@@ -67,11 +69,11 @@ class CashOverviewReport extends Component
         if ($this->store_id) {
             $store = Store::find($this->store_id);
             if ($store) {
-                $cashRegister = CashRegister::where('store_id', $store->id)->first();
+                $cashRegister = CashRegister::where('tenant_id', Auth::user()->tenant_id)->where('store_id', $store->id)->first();
                 $current_balance = $cashRegister?->current_balance ?? 0;
             }
         }else {
-            $current_balance = CashRegister::get()->sum('current_balance'); // Prendre la première caisse trouvée
+            $current_balance = CashRegister::where('tenant_id', Auth::user()->tenant_id)->get()->sum('current_balance'); // Prendre la première caisse trouvée
         }
 
         return view('livewire.reports.cash-overview-report', [
@@ -87,7 +89,8 @@ class CashOverviewReport extends Component
 
     public function exportPdf()
     {
-        $query = CashTransaction::with('cashRegister.store','user');
+        $query = CashTransaction::with('cashRegister.store','user')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->store_id) {
             $query->whereHas('cashRegister', fn($q) => $q->where('store_id', $this->store_id));
@@ -123,7 +126,7 @@ class CashOverviewReport extends Component
             $cashRegister = CashRegister::where('store_id', $store->id)->first();
             $current_balance = $cashRegister?->current_balance ?? 0;
         }else {
-            $current_balance = CashRegister::get()->sum('current_balance'); // Prendre la première caisse trouvée
+            $current_balance = CashRegister::where('tenant_id', Auth::user()->tenant_id)->get()->sum('current_balance'); // Prendre la première caisse trouvée
         }
 
         $pdf = Pdf::loadView('exports.cash-overview-report', [

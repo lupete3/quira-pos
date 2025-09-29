@@ -20,7 +20,7 @@ class InventoryForm extends Component
     public function mount()
     {
         // Charger tous les magasins une seule fois
-        $this->stores = Store::all();
+        $this->stores = Store::where('tenant_id', Auth::user()->tenant_id)->get();
     }
 
     public function updatedSelectedStoreId($value)
@@ -55,7 +55,7 @@ class InventoryForm extends Component
     {
         // Assurez-vous qu'un magasin est sélectionné avant de sauvegarder
         if (!$this->selectedStoreId) {
-            notyf()->error('Veuillez sélectionner un magasin.');
+            notyf()->error(__('Veuillez sélectionner un magasin.'));
             return;
         }
 
@@ -65,6 +65,7 @@ class InventoryForm extends Component
 
         DB::transaction(function () {
             $inventory = Inventory::create([
+                'tenant_id' => Auth::user()->tenant_id,
                 'user_id' => Auth::id(),
                 'store_id' => $this->selectedStoreId,
                 'inventory_date' => now(),
@@ -92,7 +93,7 @@ class InventoryForm extends Component
             }
         });
 
-        notyf()->success('Inventaire du magasin validé et stock mis à jour avec succès.');
+        notyf()->success(__('Inventaire du magasin validé et stock mis à jour avec succès.'));
         return redirect()->route('inventories.index');
     }
 }

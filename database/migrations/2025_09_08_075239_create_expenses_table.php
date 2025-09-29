@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->foreignId('expense_category_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // Qui a enregistré la dépense

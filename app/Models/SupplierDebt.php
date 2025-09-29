@@ -12,6 +12,7 @@ class SupplierDebt extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'tenant_id',
         'supplier_id',
         'amount',
         'description',
@@ -23,5 +24,10 @@ class SupplierDebt extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

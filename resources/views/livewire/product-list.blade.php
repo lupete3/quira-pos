@@ -17,7 +17,7 @@
                     <th>{{ __('Réf.') }}</th>
                     <th>{{ __('Nom') }}</th>
                     <th>{{ __('Catégorie') }}</th>
-                    <th>{{ __('Prix de vente') }} ({{ company()->devise }})</th>
+                    <th>{{ __('Prix de vente') }} ({{ company()?->devise }})</th>
                     <th>{{ __('Stock') }}</th>
                     <th>{{ __('Actions') }}</th>
                 </tr>
@@ -28,7 +28,7 @@
                         <td>{{ $product->reference }}</td>
                         <td><strong>{{ $product->name }}</strong></td>
                         <td>{{ $product->category->name ?? __('N/A') }}</td>
-                        <td>{{ $product->sale_price }} {{ company()->devise }}</td>
+                        <td>{{ $product->sale_price }} {{ company()?->devise }}</td>
                         <td>
                             @foreach($product->stores as $store)
                                 <span class="badge bg-label-{{ $store->pivot->quantity <= $product->min_stock ? 'danger' : 'primary' }}">
@@ -82,7 +82,7 @@
                                   <label class="form-label">{{ $store->name }} (Stock)</label>
                                   <input type="number" class="form-control"
                                         wire:model="storeQuantities.{{ $store->id }}"
-                                        placeholder="0">
+                                        placeholder="0" value="0">
                               </div>
                           @endforeach
                       </div>

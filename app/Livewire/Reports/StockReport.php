@@ -7,6 +7,7 @@ use App\Models\Store;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class StockReport extends Component
 {
@@ -16,12 +17,24 @@ class StockReport extends Component
     public $search = '';
     public $perPage = 10;
     public $store_id;
+    public $stores = [];
+
+    public function mount()
+    {
+        $this->stores = Store::all();
+
+        if (Auth::user()->role_id != 1) {
+          $store = Auth::user()->stores()->first();
+          $this->store_id = $store?->id; // sécurisation si pas de magasin
+        }
+    }
 
     public function render()
     {
-        $stores = Store::all();
+        $stores = Store::where('tenant_id', Auth::user()->tenant_id)->get();
 
         $query = Product::query()
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('name', 'like', "%{$this->search}%")
             ->with('category');
 
@@ -47,6 +60,7 @@ class StockReport extends Component
     public function exportPDF()
     {
         $query = Product::query()
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('name', 'like', "%{$this->search}%")
             ->with('category');
 

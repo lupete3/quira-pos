@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\PurchaseReturn;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -35,7 +36,9 @@ class PurchaseReturnList extends Component
 
     public function render()
     {
-        $purchaseReturns = PurchaseReturn::with('product')->orderBy('return_date', 'DESC')->paginate(10);
+        $purchaseReturns = PurchaseReturn::with('product')
+          ->where('tenant_id', Auth::user()->tenant_id)
+          ->orderBy('return_date', 'DESC')->paginate(10);
         return view('livewire.purchase-return-list', compact('purchaseReturns'));
     }
 
@@ -54,13 +57,14 @@ class PurchaseReturnList extends Component
         ]);
 
         $purchaseItem = PurchaseItem::where('purchase_id', $this->purchase_id)
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->where('product_id', $this->product_id)
             ->first();
 
         $this->firstDebt = $purchaseItem->purchase->total_amount - $purchaseItem->purchase->total_paid;
 
         if (!$purchaseItem || $this->quantity > $purchaseItem->quantity) {
-            $this->addError('quantity', 'La quantité retournée ne peut pas dépasser la quantité achetée.');
+            $this->addError('quantity', __('La quantité retournée ne peut pas dépasser la quantité achetée.'));
             return;
         }
 
@@ -69,6 +73,7 @@ class PurchaseReturnList extends Component
 
             // 🔹 1. Enregistrer le retour
             PurchaseReturn::create([
+                'tenant_id' => Auth::user()->tenant_id,
                 'purchase_id' => $this->purchase_id,
                 'product_id'  => $this->product_id,
                 'store_id'    => $purchase->store_id,
@@ -119,7 +124,7 @@ class PurchaseReturnList extends Component
             }
         });
 
-        notyf()->success('Retour d’achat enregistré avec succès.');
+        notyf()->success(__('Retour d’achat enregistré avec succès.'));
         $this->dispatch('close-modal');
         $this->resetInputFields();
     }

@@ -22,7 +22,7 @@
                     <tr wire:key="{{ $supplier->id }}">
                         <td>{{ $supplier->id }}</td>
                         <td><strong>{{ $supplier->name }}</strong></td>
-                        <td>{{ number_format($supplier->debt, 2) }} {{ company()->devise }}</td>
+                        <td>{{ number_format($supplier->debt, 2) }} {{ company()?->devise }}</td>
                         <td>
                             <button class="btn btn-success btn-sm" wire:click="selectSupplier({{ $supplier->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal">
                                 <i class="bx bx-dollar me-1"></i> {{ __('Ajouter un paiement') }}
@@ -54,7 +54,7 @@
                 <form wire:submit.prevent="savePayment">
                     <div class="modal-body">
                         @if($selectedSupplier)
-                            <p><strong>{{ __('Dette actuelle :') }}</strong> {{ number_format($selectedSupplier->debt, 2) }} {{ company()->devise }}</p>
+                            <p><strong>{{ __('Dette actuelle :') }}</strong> {{ number_format($selectedSupplier->debt, 2) }} {{ company()?->devise }}</p>
 
                             {{-- Sélection facture --}}
                             <div class="mb-3">
@@ -68,7 +68,7 @@
                                         <option value="{{ $purchase->id }}">
                                             Facture #{{ $purchase->id }} - Total: {{ number_format($purchase->total_amount,2) }} /
                                             Payé: {{ number_format($purchase->total_paid,2) }} /
-                                            Reste: {{ number_format($reste,2) }} {{ company()->devise }}
+                                            Reste: {{ number_format($reste,2) }} {{ company()?->devise }}
                                         </option>
                                     @endforeach
                                 </select>

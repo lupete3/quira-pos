@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
-    protected $fillable = ['name', 'location', 'phone', 'email'];
+    protected $fillable = ['tenant_id', 'name', 'location', 'phone', 'email'];
 
     // Produits disponibles dans ce magasin
     public function products()
@@ -57,5 +57,10 @@ class Store extends Model
     public function cashRegister()
     {
         return $this->hasOne(CashRegister::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

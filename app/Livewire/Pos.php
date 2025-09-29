@@ -68,7 +68,7 @@ class Pos extends Component
       $products = $query->orderBy('name')->paginate(9);
     }
 
-    $clients = Client::all();
+    $clients = Client::where('tenant_id', Auth::user()->tenant_id)->get();
 
     $this->calculateTotals();
 
@@ -81,7 +81,7 @@ class Pos extends Component
     $product = Product::findOrFail($productId);
 
     if ($product->stores()->where('store_id', Auth::user()->stores()->first()->id)->first()->pivot->quantity <= 0) {
-      notyf()->error('Product is out of stock.');
+      notyf()->error(__('Produit non disponible en stock'));
       return;
     }
 
@@ -100,7 +100,7 @@ class Pos extends Component
       ];
     }
 
-    notyf()->success('Produit ajouté au panier.');
+    notyf()->success(__('Produit ajouté au panier.'));
   }
 
   public function updateQuantity($index, $quantity)
@@ -114,7 +114,7 @@ class Pos extends Component
     $product = Product::find($this->cart[$index]['id']);
     if ($quantity > $product->stores()->where('store_id', Auth::user()->stores()->first()->id)->first()->pivot->quantity) {
       $this->cart[$index]['quantity'] = $product->stores()->where('store_id', Auth::user()->stores()->first()->id)->first()->pivot->quantity;
-      notyf()->error('Not enough stock for ' . $product->name);
+      notyf()->error(__('Quantité non disponible pour ') . $product->name);
     } else {
       $this->cart[$index]['quantity'] = $quantity;
     }
@@ -152,6 +152,7 @@ class Pos extends Component
     try {
       $customer_id = $this->client_id ?? Client::first()->id;
       $sale = Sale::create([
+        'tenant_id' => Auth::user()->tenant_id,
         'client_id'   => $customer_id,
         'user_id'     => Auth::id(),
         'store_id'    => Auth::user()->stores()->first()->id, // ✅ on enregistre le magasin
@@ -163,6 +164,7 @@ class Pos extends Component
 
       foreach ($this->cart as $item) {
         SaleItem::create([
+          'tenant_id' => Auth::user()->tenant_id,
           'sale_id' => $sale->id,
           'product_id' => $item['id'],
           'quantity' => $item['quantity'],
@@ -195,6 +197,7 @@ class Pos extends Component
       if ($this->total_paid > 0) {
           // Création de la transaction IN
           CashTransaction::create([
+              'tenant_id' => Auth::user()->tenant_id,
               'cash_register_id' => $cashRegister->id,
               'type' => 'in',
               'amount' => $this->total_paid,
@@ -208,13 +211,12 @@ class Pos extends Component
 
       DB::commit();
 
-      notyf()->success('Sale completed successfully.');
+      notyf()->success(__('Vente effectuée avec succès.'));
       $this->clearCart();
       $this->dispatch('facture-validee', url: route('invoice.print', ['sale' => $sale->id]));
     } catch (\Throwable $th) {
       DB::rollBack();
-      dd($th);
-      notyf()->error(__($th . 'Une erreur est survenue lors de la vente.'));
+      notyf()->error(__('Une erreur est survenue lors de la vente.'));
     }
   }
 

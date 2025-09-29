@@ -26,21 +26,23 @@ class PurchaseForm extends Component
     {
         $products = [];
         if (strlen($this->search) >= 2) {
-            $products = Product::where('name', 'like', '%' . $this->search . '%')
+            $products = Product::where('tenant_id', Auth::user()->tenant_id)
+                ->where('name', 'like', '%' . $this->search . '%')
                 ->orWhere('reference', 'like', '%' . $this->search . '%')
                 ->take(5)
                 ->get();
+          if ($products->empty()) {
+            notyf()->error(__('Aucun produit trouvé.'));
+          }
         }
 
-        $suppliers = Supplier::all();
-        $stores = Store::all(); // ✅ l’utilisateur ne voit que ses magasins
-        // $stores = Auth::user()->stores; // ✅ l’utilisateur ne voit que ses magasins
+        $suppliers = Supplier::where('tenant_id', Auth::user()->tenant_id)->get();
+        $stores = Store::where('tenant_id', Auth::user()->tenant_id)->get(); // ✅ l’utilisateur ne voit que ses magasins
 
         $this->calculateTotal();
 
         return view('livewire.purchase-form', compact('products', 'suppliers', 'stores'));
     }
-
 
     public function addItem($productId)
     {
@@ -102,12 +104,13 @@ class PurchaseForm extends Component
         ]);
 
         if (empty($this->cart)) {
-            session()->flash('error', 'Cart is empty.');
+            notyf()->error(__('Ajouter des produits avant de valider la commande.'));
             return;
         }
 
         DB::transaction(function () {
             $purchase = Purchase::create([
+                'tenant_id' => Auth::user()->tenant_id,
                 'supplier_id' => $this->supplier_id,
                 'store_id' => $this->store_id,  // ✅ lié au magasin
                 'user_id' => Auth::id(),
@@ -119,6 +122,7 @@ class PurchaseForm extends Component
 
             foreach ($this->cart as $item) {
                 PurchaseItem::create([
+                    'tenant_id' => Auth::user()->tenant_id,
                     'purchase_id' => $purchase->id,
                     'product_id' => $item['id'],
                     'quantity' => $item['quantity'],
@@ -142,7 +146,7 @@ class PurchaseForm extends Component
             }
         });
 
-        notyf()->success('Purchase completed successfully.');
+        notyf()->success(__('Achat enregistré avec succès.'));
         $this->clearCart();
     }
 

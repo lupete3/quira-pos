@@ -59,7 +59,7 @@ class RoleList extends Component
             ]
         );
 
-        notyf()->success($this->isEditMode ? 'Role updated successfully.' : 'Role created successfully.');
+        notyf()->success(__($this->isEditMode ? 'Rôle mise à jour avec succès.' : 'Rôle crée avec succès.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -74,7 +74,7 @@ class RoleList extends Component
     public function delete()
     {
         Role::find($this->roleId)->delete();
-        notyf()->success('Role deleted successfully.');
+        notyf()->success(__('Rôle supprimé avec succès.'));
     }
 
     private function resetInputFields()

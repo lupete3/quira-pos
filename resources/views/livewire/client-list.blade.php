@@ -23,13 +23,13 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($clients as $client)
+                @forelse ($clients as $index => $client)
                     <tr wire:key="{{ $client->id }}">
-                        <td>{{ $client->id }}</td>
+                        <td>{{ $index+1 }}</td>
                         <td><strong>{{ $client->name }}</strong></td>
                         <td>{{ $client->email }}</td>
                         <td>{{ $client->phone }}</td>
-                        <td>{{ $client->debt }} {{ company()->devise }}</td>
+                        <td>{{ $client->debt }} {{ company()?->devise }}</td>
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -39,9 +39,11 @@
                                     <a class="dropdown-item" href="#" wire:click="edit({{ $client->id }})" data-bs-toggle="modal" data-bs-target="#clientModal">
                                         <i class="bx bx-edit-alt me-1"></i> {{ __('Modifier') }}
                                     </a>
-                                    <a class="dropdown-item" href="#" wire:click="confirmDelete({{ $client->id }})">
-                                        <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
-                                    </a>
+                                    @if (Auth::user()->role_id == 1)
+                                      <a class="dropdown-item" href="#" wire:click="confirmDelete({{ $client->id }})">
+                                          <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
+                                      </a>
+                                    @endif
                                 </div>
                             </div>
                         </td>
@@ -90,7 +92,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="debt" class="form-label">{{ __('Dette initiale') }}</label>
-                                <input type="number" step="0.01" class="form-control @error('debt') is-invalid @enderror" wire:model="debt" placeholder="0.00">
+                                <input type="number" step="0.01" class="form-control @error('debt') is-invalid @enderror" wire:model="debt" placeholder="0.00" readonly >
                                 @error('debt') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>

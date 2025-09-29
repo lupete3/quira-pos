@@ -4,6 +4,8 @@ namespace App\Livewire\Settings;
 
 
 use App\Models\CompanySetting;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -18,7 +20,7 @@ class CompanySettingsManager extends Component
 
     public function mount()
     {
-        $this->company = CompanySetting::firstOrCreate([]);
+        $this->company = CompanySetting::where('tenant_id', Auth::user()->tenant_id)->firstOrCreate([]);
 
         $this->fill([
             'name'    => $this->company->name,
@@ -35,19 +37,26 @@ class CompanySettingsManager extends Component
     public function save()
     {
         $this->validate([
-            'name'    => 'required|string|max:255',
-            'email'   => 'nullable|email',
-            'phone'   => 'nullable|string|max:20',
-            'new_logo'=> 'nullable|image|max:2048', // 2MB
+            'name'     => 'required|string|max:255',
+            'email'    => 'nullable|email',
+            'phone'    => 'nullable|string|max:20',
+            'new_logo' => 'nullable|image|max:2048', // 2MB
             'devise'   => 'nullable|string|max:20',
         ]);
 
         if ($this->new_logo) {
+            // ✅ Supprimer l'ancien logo s'il existe
+            if ($this->company->logo && Storage::disk('public')->exists($this->company->logo)) {
+                Storage::disk('public')->delete($this->company->logo);
+            }
+
+            // ✅ Enregistrer le nouveau logo
             $path = $this->new_logo->store('logos', 'public');
             $this->logo = $path;
         }
 
         $this->company->update([
+            'tenant_id'    => Auth::user()?->tenant_id,
             'name'    => $this->name,
             'address' => $this->address,
             'email'   => $this->email,
@@ -55,10 +64,10 @@ class CompanySettingsManager extends Component
             'rccm'    => $this->rccm,
             'id_nat'  => $this->id_nat,
             'logo'    => $this->logo,
-            'devise'    => $this->devise,
+            'devise'  => $this->devise,
         ]);
 
-        notyf()->success('Paramètres mis à jour avec succès !');
+        notyf()->success(__('Paramètres mis à jour avec succès !'));
     }
 
     public function render()

@@ -7,6 +7,7 @@ use App\Models\Sale;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ClientReport extends Component
 {
@@ -27,14 +28,15 @@ class ClientReport extends Component
         // Clients avec ventes filtrées par période
         $clients = Client::with(['sales' => function ($q) {
             $q->whereBetween('created_at', [$this->filter_start, $this->filter_end]);
-        }])->paginate(10);
+        }])->where('tenant_id', Auth::user()->tenant_id)->paginate(10);
 
         // Totaux globaux
-        $total_factures = Sale::whereBetween('created_at', [$this->filter_start, $this->filter_end])->sum('total_amount');
-        $total_regles = Sale::whereBetween('created_at', [$this->filter_start, $this->filter_end])->sum('total_paid');
+        $total_factures = Sale::where('tenant_id', Auth::user()->tenant_id)->whereBetween('created_at', [$this->filter_start, $this->filter_end])->sum('total_amount');
+        $total_regles = Sale::where('tenant_id', Auth::user()->tenant_id)->whereBetween('created_at', [$this->filter_start, $this->filter_end])->sum('total_paid');
 
         // Top 5 clients
         $top_clients = Sale::selectRaw('client_id, SUM(total_amount) as total_achats')
+            ->where('tenant_id', Auth::user()->tenant_id)
             ->whereBetween('created_at', [$this->filter_start, $this->filter_end])
             ->groupBy('client_id')
             ->orderByDesc('total_achats')

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stores', function (Blueprint $table) {
+        Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('location')->nullable();
+            $table->string('name'); // Nom du supermarché ou de l’entreprise
+            $table->string('contact_name')->nullable(); // Responsable
+            $table->string('email')->unique();
             $table->string('phone')->nullable();
-            $table->string('email')->nullable();
+            $table->string('address')->nullable();
+            $table->boolean('is_active')->default(true); // actif / suspendu
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stores');
+        Schema::dropIfExists('tenants');
     }
 };

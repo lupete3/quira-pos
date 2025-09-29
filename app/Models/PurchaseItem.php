@@ -12,6 +12,7 @@ class PurchaseItem extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'tenant_id',
         'purchase_id',
         'product_id',
         'quantity',
@@ -27,5 +28,10 @@ class PurchaseItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

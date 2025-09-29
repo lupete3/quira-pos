@@ -55,19 +55,19 @@
         <div class="col">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Total achats') }}</strong>
-                <h5>{{ number_format($total_amount,2) }} {{ company()->devise }}</h5>
+                <h5>{{ number_format($total_amount,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
         <div class="col">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Total payé') }}</strong>
-                <h5 class="text-success">{{ number_format($total_paid,2) }} {{ company()->devise }}</h5>
+                <h5 class="text-success">{{ number_format($total_paid,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
         <div class="col">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Dette fournisseur') }}</strong>
-                <h5 class="text-danger">{{ number_format($total_due,2) }} {{ company()->devise }}</h5>
+                <h5 class="text-danger">{{ number_format($total_due,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
     </div>

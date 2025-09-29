@@ -44,9 +44,9 @@
                         @endif
                     </td>
                     <td>{{ $stock }}</td>
-                    <td>{{ number_format($valeurAchat, 2, ',', ' ') }} {{ company()->devise }}</td>
-                    <td>{{ number_format($valeurVente, 2, ',', ' ') }} {{ company()->devise }}</td>
-                    <td>{{ number_format($benefice, 2, ',', ' ') }} {{ company()->devise }}</td>
+                    <td>{{ number_format($valeurAchat, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($valeurVente, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($benefice, 2, ',', ' ') }} {{ company()?->devise }}</td>
                 </tr>
             @endforeach
         </tbody>

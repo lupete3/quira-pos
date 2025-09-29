@@ -73,6 +73,10 @@ new class extends Component {
     @include('partials.settings-heading')
 
     <x-settings.layout :subheading="__('Mettez à jour votre nom et votre adresse email')">
+
+      <div class="d-flex justify-content-between">
+
+
         <form wire:submit="updateProfileInformation" class="mb-6 w-50">
             <div class="mb-4">
                 <label for="name" class="form-label">{{ __('Nom') }}</label>
@@ -83,7 +87,6 @@ new class extends Component {
                 <label for="email" class="form-label">{{ __('Email') }}</label>
                 <div class="input-group">
                     <input type="email" id="email" wire:model="email" class="form-control" placeholder="email@example.com" required autocomplete="email">
-                    <span class="input-group-text">@example.com</span>
                 </div>
 
                 @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
@@ -110,6 +113,8 @@ new class extends Component {
             </div>
         </form>
 
-        <livewire:settings.delete-user-form />
+        {{-- <livewire:settings.delete-user-form /> --}}
+
+      </div>
     </x-settings.layout>
 </section>

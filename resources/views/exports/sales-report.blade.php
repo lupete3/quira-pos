@@ -22,9 +22,9 @@
             <tr>
                 <td>{{ $sale->id }}</td>
                 <td>{{ $sale->client?->name ?? __('Client Ordinaire') }}</td>
-                <td>{{ number_format($sale->total_amount, 2) }} {{ company()->devise }}</td>
-                <td>{{ number_format($sale->total_paid, 2) }} {{ company()->devise }}</td>
-                <td>{{ number_format($sale->total_amount - $sale->total_paid, 2) }} {{ company()->devise }}</td>
+                <td>{{ number_format($sale->total_amount, 2) }} {{ company()?->devise }}</td>
+                <td>{{ number_format($sale->total_paid, 2) }} {{ company()?->devise }}</td>
+                <td>{{ number_format($sale->total_amount - $sale->total_paid, 2) }} {{ company()?->devise }}</td>
                 <td>{{ $sale->store?->name ?? __('N/A') }}</td>
                 <td>{{ $sale->sale_date }}</td>
             </tr>

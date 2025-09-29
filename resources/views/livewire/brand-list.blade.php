@@ -26,9 +26,9 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($brands as $brand)
+                @forelse ($brands as $index => $brand)
                     <tr wire:key="{{ $brand->id }}">
-                        <td>{{ $brand->id }}</td>
+                        <td>{{ $index+1 }}</td>
                         <td><strong>{{ $brand->name }}</strong></td>
                         <td>
                             <div class="dropdown">

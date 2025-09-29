@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('cash_registers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->foreignId('store_id')->constrained()->onDelete('cascade');
             $table->decimal('opening_balance', 15, 2)->default(0); // solde initial
             $table->decimal('current_balance', 15, 2)->default(0); // solde courant (calculé dynamiquement)

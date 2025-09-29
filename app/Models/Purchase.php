@@ -10,6 +10,7 @@ class Purchase extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'supplier_id',
         'user_id',
         'total_amount',
@@ -37,5 +38,10 @@ class Purchase extends Model
     public function store()
     {
         return $this->belongsTo(Store::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

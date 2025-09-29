@@ -39,7 +39,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">{{ __('Aucun inventaire trouvé.') }}</td>
+                        <td colspan="6" class="text-center">{{ __('Aucun inventaire trouvé.') }}</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Store;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductReport extends Component
@@ -30,6 +31,12 @@ class ProductReport extends Component
   {
     // Charger tous les magasins une seule fois
     $this->stores = Store::all();
+
+    if (Auth::user()->role_id != 1) {
+      $store = Auth::user()->stores()->first();
+      $this->selectedStoreId = $store?->id; // sécurisation si pas de magasin
+    }
+
   }
 
   public function render()
@@ -37,7 +44,14 @@ class ProductReport extends Component
     $products = $this->getFilteredProducts(true);
 
     // Statistiques calculées comme avant...
-    $total_products = Product::count();
+    // $total_products = Product::where('tenant_id', Auth::user()->tenant_id)->count();
+
+    $total_products = DB::table('store_products')
+      ->join('products', 'products.id', '=', 'store_products.product_id')
+      ->when($this->selectedStoreId, function ($q) {
+        $q->where('store_products.store_id', $this->selectedStoreId);
+      })
+      ->sum(DB::raw('store_products.quantity'));
 
     $total_stock_value = DB::table('store_products')
       ->join('products', 'products.id', '=', 'store_products.product_id')
@@ -63,15 +77,14 @@ class ProductReport extends Component
 
     return view('livewire.reports.product-report', [
       'products' => $products,
-      'categories' => Category::all(),
-      'brands' => Brand::all(),
+      'categories' => Category::where('tenant_id', Auth::user()->tenant_id)->get(),
+      'brands' => Brand::where('tenant_id', Auth::user()->tenant_id)->get(),
       'total_products' => $total_products,
       'total_stock_value' => $total_stock_value,
       'total_stock_potential' => $total_stock_potential,
       'low_stock' => $low_stock,
     ]);
   }
-
 
   public function exportPdf()
   {
@@ -90,10 +103,10 @@ class ProductReport extends Component
     }, "rapport-produits.pdf");
   }
 
-
   public function getFilteredProducts($paginate = true)
   {
-    $query = Product::with(['category', 'brand', 'unit', 'stores']);
+    $query = Product::with(['category', 'brand', 'unit', 'stores'])
+        ->where('tenant_id', Auth::user()->tenant_id);
 
     if ($this->selectedStoreId) {
       $query->whereHas('stores', function ($q) {

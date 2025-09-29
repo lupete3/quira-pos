@@ -12,6 +12,7 @@ class ClientDebt extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'tenant_id',
         'client_id',
         'amount',
         'description',
@@ -23,5 +24,10 @@ class ClientDebt extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

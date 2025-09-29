@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Supplier;
 use App\Models\SupplierDebt as Debt;
 use App\Models\Purchase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -23,7 +24,7 @@ class SupplierDebtList extends Component
 
     public function render()
     {
-        $suppliers = Supplier::where('name', 'like', '%' . $this->search . '%')
+        $suppliers = Supplier::where('tenant_id', Auth::user()->tenant_id)->where('name', 'like', '%' . $this->search . '%')
             ->where('debt', '>', 0)
             ->latest()
             ->paginate(10);
@@ -36,7 +37,7 @@ class SupplierDebtList extends Component
         $this->selectedSupplier = Supplier::find($supplierId);
 
         // Achats non totalement payés
-        $this->purchasesUnpaid = Purchase::where('supplier_id', $supplierId)
+        $this->purchasesUnpaid = Purchase::where('tenant_id', Auth::user()->tenant_id)->where('supplier_id', $supplierId)
             ->whereColumn('total_paid', '<', 'total_amount')
             ->get();
 
@@ -61,6 +62,7 @@ class SupplierDebtList extends Component
         DB::transaction(function () use ($purchase, $amountToPay) {
             // Enregistrement dette fournisseur (trace)
             Debt::create([
+                'tenant_id' => Auth::user()->tenant_id,
                 'supplier_id' => $this->selectedSupplier->id,
                 'amount'      => $amountToPay,
                 'description' => 'Paiement facture achat #' . $purchase->id . '. ' . $this->payment_description,
@@ -75,7 +77,7 @@ class SupplierDebtList extends Component
             $this->selectedSupplier->decrement('debt', $amountToPay);
         });
 
-        session()->flash('message', 'Paiement fournisseur enregistré avec succès.');
+        notyf()->success(__('Paiement fournisseur enregistré avec succès.'));
         $this->dispatch('close-modal');
         $this->reset(['selectedSupplier','purchasesUnpaid','selectedPurchase','payment_amount','payment_description']);
     }

@@ -10,11 +10,17 @@ class Brand extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'name',
     ];
 
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

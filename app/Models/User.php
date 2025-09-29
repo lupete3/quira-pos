@@ -20,10 +20,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'email',
         'password',
         'role_id',
+        
     ];
 
     /**
@@ -86,4 +88,10 @@ class User extends Authenticatable
     {
         return $this->role === $role;
     }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
 }

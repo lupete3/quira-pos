@@ -35,7 +35,7 @@
                         <td>{{ $expense->expense_date->format('d/m/Y') }}</td>
                         <td>{{ $expense->category->name ?? '-' }}</td>
                         <td>{{ $expense->store->name ?? '-' }}</td>
-                        <td>{{ number_format($expense->amount, 2, ',', ' ') }} {{ company()->devise }}</td>
+                        <td>{{ number_format($expense->amount, 2, ',', ' ') }} {{ company()?->devise }}</td>
                         <td>{{ Str::limit($expense->description, 50) }}</td>
                         <td>
                           @switch($expense->status)
@@ -59,6 +59,8 @@
                                 <div class="dropdown-menu">
                                     @if ($expense->status == 'pending')
 
+                                    @if (Auth::user()->role_id == 1)
+                                    
                                     <a class="dropdown-item"
                                        href="#"
                                        wire:click="confirmValidate({{ $expense->id }}, 'validated')">
@@ -69,6 +71,8 @@
                                        wire:click="confirmValidate({{ $expense->id }}, 'cancelled')">
                                         <i class="bx bx-x me-1"></i> {{ __('Rejeter') }}
                                     </a>
+
+                                    @endif
 
                                     <a class="dropdown-item"
                                        href="#"
@@ -134,6 +138,7 @@
                                 </select>
                                 @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            @if (Auth::user()->role_id == 1)
                             <div class="mb-3 col-md-6">
                                 <label for="store_id" class="form-label">{{ __('Magasin') }}</label>
                                 <select id="store_id" class="form-control @error('store_id') is-invalid @enderror" wire:model="store_id">
@@ -144,6 +149,7 @@
                                 </select>
                                 @error('store_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            @endif
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-6">

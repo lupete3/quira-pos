@@ -22,17 +22,17 @@
         <tbody>
             <tr>
                 <td class="text-success">
-                    {{ number_format($total_in, 2) }} {{ company()->devise }}
+                    {{ number_format($total_in, 2) }} {{ company()?->devise }}
                 </td>
                 <td class="text-danger">
-                    {{ number_format($total_out, 2) }} {{ company()->devise }}
+                    {{ number_format($total_out, 2) }} {{ company()?->devise }}
                 </td>
                 <td>
-                    <strong>{{ number_format($net_balance, 2) }} {{ company()->devise }}</strong>
+                    <strong>{{ number_format($net_balance, 2) }} {{ company()?->devise }}</strong>
                 </td>
                 @if($current_balance !== null)
                     <td>
-                        <strong>{{ number_format($current_balance, 2) }} {{ company()->devise }}</strong>
+                        <strong>{{ number_format($current_balance, 2) }} {{ company()?->devise }}</strong>
                     </td>
                 @endif
             </tr>
@@ -71,9 +71,9 @@
                     <td>{{ $t->description ?? '-' }}</td>
                     <td>
                         @if($t->type === 'out')
-                            <span class="text-danger">-{{ number_format($t->amount, 2) }} {{ company()->devise }}</span>
+                            <span class="text-danger">-{{ number_format($t->amount, 2) }} {{ company()?->devise }}</span>
                         @else
-                            <span class="text-success">{{ number_format($t->amount, 2) }} {{ company()->devise }}</span>
+                            <span class="text-success">{{ number_format($t->amount, 2) }} {{ company()?->devise }}</span>
                         @endif
                     </td>
                     <td>{{ $t->user?->name ?? '-' }}</td>

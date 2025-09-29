@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CompanySetting extends Model
 {
     protected $fillable = [
+        'tenant_id',
         'name',
         'address',
         'email',
@@ -16,4 +17,9 @@ class CompanySetting extends Model
         'id_nat',
         'devise',
     ];
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
 }

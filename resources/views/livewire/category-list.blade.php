@@ -27,9 +27,9 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($categories as $category)
+                @forelse ($categories as $index => $category)
                     <tr wire:key="{{ $category->id }}">
-                        <td>{{ $category->id }}</td>
+                        <td>{{ $index+1 }}</td>
                         <td><strong>{{ $category->name }}</strong></td>
                         <td>{{ Str::limit($category->description, 50) }}</td>
                         <td>

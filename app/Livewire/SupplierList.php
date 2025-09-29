@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,7 +20,8 @@ class SupplierList extends Component
 
     public function render()
     {
-        $suppliers = Supplier::where('name', 'like', '%' . $this->search . '%')
+        $suppliers = Supplier::where('tenant_id', Auth::user()->tenant_id)
+            ->where('name', 'like', '%' . $this->search . '%')
             ->orWhere('email', 'like', '%' . $this->search . '%')
             ->orWhere('phone', 'like', '%' . $this->search . '%')
             ->latest()
@@ -61,6 +63,7 @@ class SupplierList extends Component
         Supplier::updateOrCreate(
             ['id' => $this->supplierId],
             [
+                'tenant_id' => Auth::user()->tenant_id,
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => $this->phone,
@@ -69,7 +72,7 @@ class SupplierList extends Component
             ]
         );
 
-        notyf()->success($this->isEditMode ? 'Supplier updated successfully.' : 'Supplier created successfully.');
+        notyf()->success(__($this->isEditMode ? 'Fournisseur mis à jour avec succès.' : 'Fournisseur créé avec succès.'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -84,7 +87,7 @@ class SupplierList extends Component
     public function delete()
     {
         Supplier::find($this->supplierId)->delete();
-        notyf()->success('Supplier deleted successfully.');
+        notyf()->success(__('Le fournisseur a été supprimé avec succès.'));
     }
 
     private function resetInputFields()

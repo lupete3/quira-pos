@@ -9,6 +9,7 @@ use App\Models\Client;
 use App\Models\Store;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class SalesReport extends Component
 {
@@ -30,12 +31,18 @@ class SalesReport extends Component
     {
         $this->start_date = now()->startOfMonth()->format('Y-m-d');
         $this->end_date = now()->endOfMonth()->format('Y-m-d');
-        $this->stores = Store::all();
+        $this->stores = Store::where('tenant_id', Auth::user()->tenant_id)->get();
+
+        if (Auth::user()->role_id != 1) {
+          $store = Auth::user()->stores()->first();
+          $this->store_id = $store?->id; // sécurisation si pas de magasin
+        }
     }
 
     public function render()
     {
-        $query = Sale::with('client','user','store');
+        $query = Sale::with('client','user','store')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->store_id) {
             $query->where('store_id', $this->store_id);
@@ -78,7 +85,7 @@ class SalesReport extends Component
 
         return view('livewire.reports.sales-report', [
             'sales' => $sales,
-            'clients' => Client::all(),
+            'clients' => Client::where('tenant_id', Auth::user()->tenant_id)->get(),
             'total_sales' => $total_sales,
             'total_amount' => $total_amount,
             'total_paid' => $total_paid,
@@ -88,7 +95,8 @@ class SalesReport extends Component
 
     public function exportPdf()
     {
-        $query = Sale::with('client','user','store');
+        $query = Sale::with('client','user','store')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->store_id) {
             $query->where('store_id', $this->store_id);

@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\SaleReturn;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -23,6 +24,18 @@ class SaleReturnList extends Component
   public $saleProducts = [];
   public $firstDebt;
 
+  public $storeId;
+
+  public function mount()
+  {
+    if (Auth::user()->role_id == 1) {
+       $this->storeId = null;
+    } else {
+        $store = Auth::user()->stores()->first();
+       $this->storeId = $store->id;
+    }
+  }
+
   public function updatedSaleId($value)
   {
     $this->saleProducts = [];
@@ -36,7 +49,9 @@ class SaleReturnList extends Component
 
   public function render()
   {
-    $saleReturns = SaleReturn::with('product')->orderBy('return_date', 'DESC')->paginate(10);
+    $saleReturns = SaleReturn::with('product')->where('tenant_id', Auth::user()->tenant_id)
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->orderBy('return_date', 'DESC')->paginate(10);
 
     return view('livewire.sale-return-list', compact('saleReturns'));
   }
@@ -55,14 +70,14 @@ class SaleReturnList extends Component
           'reason' => 'nullable|string',
       ]);
 
-      $saleItem = SaleItem::where('sale_id', $this->sale_id)
+      $saleItem = SaleItem::where('tenant_id', Auth::user()->tenant_id)->where('sale_id', $this->sale_id)
           ->where('product_id', $this->product_id)
           ->first();
 
       $this->firstDebt = $saleItem->sale->total_amount - $saleItem->sale->total_paid;
 
       if (!$saleItem || $this->quantity > $saleItem->quantity) {
-          $this->addError('quantity', 'La quantité retournée ne peut pas dépasser la quantité vendue.');
+          $this->addError('quantity', __('La quantité retournée ne peut pas dépasser la quantité vendue.'));
           return;
       }
 
@@ -72,6 +87,7 @@ class SaleReturnList extends Component
 
           // 🔹 1. Enregistrer le retour
           SaleReturn::create([
+              'tenant_id' => Auth::user()->tenant_id,
               'sale_id'    => $this->sale_id,
               'product_id' => $this->product_id,
               'store_id'   => $sale->store_id,
@@ -122,7 +138,7 @@ class SaleReturnList extends Component
           }
       });
 
-      notyf()->success('Retour de vente enregistré avec succès.');
+      notyf()->success(__('Retour de vente enregistré avec succès.'));
       $this->dispatch('close-modal');
       $this->resetInputFields();
   }

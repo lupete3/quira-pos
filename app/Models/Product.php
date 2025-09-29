@@ -10,6 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'reference',
         'name',
         'category_id',
@@ -57,6 +58,11 @@ class Product extends Model
     public function transferItems()
     {
         return $this->hasMany(TransferItem::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 
 }

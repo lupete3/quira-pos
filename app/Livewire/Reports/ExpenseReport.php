@@ -9,6 +9,7 @@ use App\Models\ExpenseCategory;
 use App\Models\Store;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseReport extends Component
 {
@@ -29,13 +30,19 @@ class ExpenseReport extends Component
     {
         $this->start_date = now()->startOfMonth()->format('Y-m-d');
         $this->end_date = now()->endOfMonth()->format('Y-m-d');
-        $this->stores = Store::all();
-        $this->categories = ExpenseCategory::all();
+        $this->stores = Store::where('tenant_id', Auth::user()->tenant_id)->get();
+        $this->categories = ExpenseCategory::where('tenant_id', Auth::user()->tenant_id)->get();
+
+        if (Auth::user()->role_id != 1) {
+          $store = Auth::user()->stores()->first();
+          $this->store_id = $store?->id; // sécurisation si pas de magasin
+        }
     }
 
     public function render()
     {
-        $query = Expense::with('category','store','user');
+        $query = Expense::with('category','store','user')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->store_id) {
             $query->where('store_id', $this->store_id);
@@ -76,7 +83,8 @@ class ExpenseReport extends Component
 
     public function exportPdf()
     {
-        $query = Expense::with('category','store','user');
+        $query = Expense::with('category','store','user')
+          ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->store_id) $query->where('store_id', $this->store_id);
         if ($this->category_id) $query->where('expense_category_id', $this->category_id);

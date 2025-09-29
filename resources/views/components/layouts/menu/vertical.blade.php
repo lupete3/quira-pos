@@ -1,18 +1,21 @@
 <!-- Menu -->
 <div wire:ignore>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-  <div class="app-brand demo">
-    @if(company()?->logo && file_exists(public_path('storage/'.company()->logo)))
-        <a href="{{ url('/') }}" class="app-brand-link">
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.company()->logo))) }}"
-                class="logo" alt="{{ __('Logo') }}">
+  <div class="app-brand demo" style="padding-top: 2rem; margin-bottom: 2rem;">
+    @php
+      $logoQuira = \App\Models\CompanySetting::first();
+    @endphp
+    @if($logoQuira?->logo && file_exists(public_path('storage/'.$logoQuira->logo)))
+        <a href="{{ url('/') }}" >
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.$logoQuira->logo))) }}"
+                class="w-100" alt="{{ __('Logo') }}">
         </a>
     @else
         <a href="{{ url('/') }}" class="app-brand-link"><x-app-logo /></a>
     @endif
   </div>
 
-  <div class="menu-inner-shadow"></div>
+  <div class="menu-inner-shadow mt-4"></div>
 
   <ul class="menu-inner py-1">
 
@@ -31,6 +34,8 @@
             <div class="text-truncate">{{ __('Magasin') }}</div>
         </a>
     </li>
+
+    @if (Auth::user()->role_id == 1)
 
     <!-- Point de Vente -->
     <li class="menu-item {{ request()->is('stores*') ? 'active' : '' }}">
@@ -66,6 +71,8 @@
       </ul>
     </li>
 
+    @endif
+
     <!-- Contacts -->
     <li class="menu-item {{ request()->is('clients*') || request()->is('suppliers*') ? 'active open' : '' }}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -98,6 +105,8 @@
       </ul>
     </li>
 
+    @if (Auth::user()->role_id == 1)
+
     <!-- Achats -->
     <li class="menu-item {{ request()->is('purchases*') || request()->routeIs('purchasereturns.index') ? 'active open' : '' }}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -117,6 +126,8 @@
       </ul>
     </li>
 
+    @endif
+
     <!-- Dettes -->
     <li class="menu-item {{ request()->routeIs('clientdebts.index') || request()->routeIs('supplierdebts.index') ? 'active open' : '' }}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -127,12 +138,15 @@
         <li class="menu-item {{ request()->routeIs('clientdebts.index') ? 'active' : '' }}">
           <a class="menu-link" href="{{ route('clientdebts.index') }}" wire:navigate>{{ __('Clients') }}</a>
         </li>
+        @if (Auth::user()->role_id == 1)
         <li class="menu-item {{ request()->routeIs('supplierdebts.index') ? 'active' : '' }}">
           <a class="menu-link" href="{{ route('supplierdebts.index') }}" wire:navigate>{{ __('Fournisseurs') }}</a>
         </li>
+        @endif
       </ul>
     </li>
 
+    @if (Auth::user()->role_id == 1)
     <!-- Inventaire -->
     <li class="menu-item {{ request()->routeIs('inventories*') ? 'active' : '' }}">
       <a class="menu-link" href="{{ route('inventories.index') }}" wire:navigate>
@@ -140,6 +154,7 @@
         <div class="text-truncate">{{ __('Inventaire') }}</div>
       </a>
     </li>
+    @endif
 
     <!-- Dépenses -->
     <li class="menu-item {{ request()->routeIs('expensecategory.index') || request()->routeIs('expenses.index') ? 'active open' : '' }}">
@@ -148,9 +163,11 @@
         <div class="text-truncate">{{ __('Dépenses') }}</div>
       </a>
       <ul class="menu-sub">
+        @if (Auth::user()->role_id == 1)
         <li class="menu-item {{ request()->routeIs('expensecategory.index') ? 'active' : '' }}">
           <a class="menu-link" href="{{ route('expensecategory.index') }}" wire:navigate>{{ __('Catégories') }}</a>
         </li>
+        @endif
         <li class="menu-item {{ request()->routeIs('expenses.index') ? 'active' : '' }}">
           <a class="menu-link" href="{{ route('expenses.index') }}" wire:navigate>{{ __('Dépenses') }}</a>
         </li>
@@ -167,13 +184,18 @@
       <ul class="menu-sub">
         <li class="menu-item {{ request()->routeIs('reports.products') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.products') }}" wire:navigate>{{ __('Produits') }}</a></li>
         <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.sales') }}" wire:navigate>{{ __('Ventes') }}</a></li>
+        <li class="menu-item {{ request()->routeIs('reports.stock') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.stock') }}" wire:navigate>{{ __('Stock') }}</a></li>
+        @if (Auth::user()->role_id == 1)
         <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.purchases') }}" wire:navigate>{{ __('Achats') }}</a></li>
         <li class="menu-item {{ request()->routeIs('reports.customers') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.customers') }}" wire:navigate>{{ __('Clients') }}</a></li>
         <li class="menu-item {{ request()->routeIs('reports.suppliers') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.suppliers') }}" wire:navigate>{{ __('Fournisseurs') }}</a></li>
-        <li class="menu-item {{ request()->routeIs('reports.stock') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.stock') }}" wire:navigate>{{ __('Stock') }}</a></li>
+        @endif
+
         <li class="menu-item {{ request()->routeIs('reports.expense') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.expense') }}" wire:navigate>{{ __('Dépenses') }}</a></li>
+        @if (Auth::user()->role_id == 1)
         <li class="menu-item {{ request()->routeIs('reports.cash') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.cash') }}" wire:navigate>{{ __('Caisses') }}</a></li>
-        <li class="menu-item {{ request()->routeIs('reports.profitloss') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.profitloss') }}" wire:navigate>{{ __('Profits & Pertes') }}</a></li>
+        {{-- <li class="menu-item {{ request()->routeIs('reports.profitloss') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.profitloss') }}" wire:navigate>{{ __('Profits & Pertes') }}</a></li> --}}
+        @endif
       </ul>
     </li>
 
@@ -194,21 +216,14 @@
     </li> --}}
 
 
+    @if (Auth::user()->role_id == 1)
 
     <!-- Utilisateurs -->
-    <li class="menu-item {{ request()->is('roles*') || request()->is('users*') ? 'active open' : '' }}">
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
+    <li class="menu-item {{ request()->routeIs('users*') ? 'active' : '' }}">
+      <a class="menu-link" href="{{ route('users.index') }}" wire:navigate>
         <i class="menu-icon tf-icons bx bx-user-circle"></i>
         <div class="text-truncate">{{ __('Utilisateurs') }}</div>
       </a>
-      <ul class="menu-sub">
-        <li class="menu-item {{ request()->routeIs('roles.index') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('roles.index') }}" wire:navigate>{{ __('Rôles') }}</a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('users.index') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('users.index') }}" wire:navigate>{{ __('Utilisateurs') }}</a>
-        </li>
-      </ul>
     </li>
 
     <!-- Paramètres -->
@@ -229,6 +244,8 @@
         </li>
       </ul>
     </li>
+
+    @endif
 
   </ul>
 </aside>

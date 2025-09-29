@@ -29,9 +29,9 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($stores as $store)
+                @forelse ($stores as $index => $store)
                     <tr wire:key="store-{{ $store->id }}">
-                        <td>{{ $store->id }}</td>
+                        <td>{{ $index + 1 }}</td>
                         <td><strong>{{ $store->name }}</strong></td>
                         <td>{{ $store->location }}</td>
                         <td>{{ $store->phone }}</td>
@@ -130,7 +130,7 @@
                                             <span class="me-2">{{ $user->name }} ({{ $user->email }})</span>
                                             @if(in_array($user->id, $selectedUsers))
                                                 <select wire:model="userRoles.{{ $user->id }}" class="form-select form-select-sm w-auto">
-                                                    <option value="manager">Manager</option>
+                                                    <option value="manager">Gérant</option>
                                                     <option value="cashier">Caissier</option>
                                                     <option value="stock_keeper">Vendeur</option>
                                                 </select>

@@ -27,8 +27,8 @@
                         <td>{{ $purchase->id }}</td>
                         <td>{{ $purchase->supplier->name ?? __('N/A') }}</td>
                         <td>{{ $purchase->purchase_date }}</td>
-                        <td>{{ number_format($purchase->total_amount, 2) }} {{ company()->devise }}</td>
-                        <td>{{ number_format($purchase->total_paid, 2) }} {{ company()->devise }}</td>
+                        <td>{{ number_format($purchase->total_amount, 2) }} {{ company()?->devise }}</td>
+                        <td>{{ number_format($purchase->total_paid, 2) }} {{ company()?->devise }}</td>
                         <td>
                           @if ($purchase->total_amount - $purchase->total_paid <= 0)
                             <span class="badge bg-label-success me-1">{{ __('Payé') }}</span>
@@ -77,9 +77,9 @@
                                 <p><strong>{{ __('Magasin') }}:</strong> {{ $selectedPurchase->store->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>{{ __('Montant total') }}:</strong> {{ number_format($selectedPurchase->total_amount, 2) }} {{ company()->devise }}</p>
-                                <p><strong>{{ __('Montant payé') }}:</strong> {{ number_format($selectedPurchase->total_paid, 2) }} {{ company()->devise }}</p>
-                                <p><strong>{{ __('Reste à payer') }}:</strong> {{ number_format($selectedPurchase->total_amount - $selectedPurchase->total_paid, 2) }} {{ company()->devise }}</p>
+                                <p><strong>{{ __('Montant total') }}:</strong> {{ number_format($selectedPurchase->total_amount, 2) }} {{ company()?->devise }}</p>
+                                <p><strong>{{ __('Montant payé') }}:</strong> {{ number_format($selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
+                                <p><strong>{{ __('Reste à payer') }}:</strong> {{ number_format($selectedPurchase->total_amount - $selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
                                 <p>
                                   @if ($selectedPurchase->total_amount - $selectedPurchase->total_paid <= 0)
                                     <span class="badge bg-label-success me-1">{{ __('Payé') }}</span>
@@ -107,8 +107,8 @@
                                 <tr>
                                     <td>{{ $item->product->name }}</td>
                                     <td>{{ $item->quantity }}</td>
-                                    <td>{{ number_format($item->unit_price, 2) }} {{ company()->devise }}</td>
-                                    <td>{{ number_format($item->total_price, 2) }} {{ company()->devise }}</td>
+                                    <td>{{ number_format($item->unit_price, 2) }} {{ company()?->devise }}</td>
+                                    <td>{{ number_format($item->total_price, 2) }} {{ company()?->devise }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

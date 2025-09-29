@@ -18,11 +18,11 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($clients as $client)
+                @forelse ($clients as $index => $client)
                     <tr wire:key="{{ $client->id }}">
-                        <td>{{ $client->id }}</td>
+                        <td>{{ $index+1 }}</td>
                         <td><strong>{{ $client->name }}</strong></td>
-                        <td>{{ number_format($client->debt, 2) }} {{ company()->devise }}</td>
+                        <td>{{ number_format($client->debt, 2) }} {{ company()?->devise }}</td>
                         <td>
                             <button class="btn btn-success btn-sm" wire:click="selectClient({{ $client->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal">
                                 <i class="bx bx-dollar me-1"></i> {{ __('Ajouter un paiement') }}
@@ -56,10 +56,10 @@
                 <form wire:submit.prevent="savePayment">
                     <div class="modal-body">
                         @if($selectedClient)
-                            <p><strong>{{ __('Dette actuelle :') }}</strong> {{ number_format($selectedClient->debt, 2) }} {{ company()->devise }}</p>
+                            <p><strong>{{ __('Dette actuelle :') }}</strong> {{ number_format($selectedClient->debt, 2) }} {{ company()?->devise }}</p>
                         <div class="mb-3">
                             <label for="selectedSale" class="form-label">{{ __('Sélectionner une vente impayée') }}</label>
-                            <select class="form-select @error('selectedSale') is-invalid @enderror" wire:model="selectedSale">
+                            <select class="form-select @error('selectedSale') is-invalid @enderror" wire:model.lazy="selectedSale">
                                 <option value="">{{ __('-- Choisir une vente --') }}</option>
                                 @foreach($salesUnpaid as $sale)
                                     @php
@@ -68,7 +68,7 @@
                                     <option value="{{ $sale->id }}">
                                         Vente #{{ $sale->id }} - Total: {{ number_format($sale->total_amount,2) }} /
                                         Payé: {{ number_format($sale->total_paid,2) }} /
-                                        Reste: {{ number_format($reste,2) }} {{ company()->devise }}
+                                        Reste: {{ number_format($reste,2) }} {{ company()?->devise }}
                                     </option>
                                 @endforeach
                             </select>
@@ -88,9 +88,12 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                        @if ($selectedClient && $selectedSale)
+
                         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                           <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                           {{ __('Enregistrer le paiement') }}</button>
+                        @endif
                     </div>
                 </form>
             </div>

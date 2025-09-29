@@ -46,7 +46,7 @@
             <div class="card border-success">
                 <div class="card-body">
                     <h6 class="text-success">{{ __('Total Entrées') }}</h6>
-                    <h4>{{ number_format($total_in, 2) }} {{ company()->devise }}</h4>
+                    <h4>{{ number_format($total_in, 2) }} {{ company()?->devise }}</h4>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
             <div class="card border-danger">
                 <div class="card-body">
                     <h6 class="text-danger">{{ __('Total Dépenses') }}</h6>
-                    <h4>{{ number_format($total_out, 2) }} {{ company()->devise }}</h4>
+                    <h4>{{ number_format($total_out, 2) }} {{ company()?->devise }}</h4>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
             <div class="card border-primary">
                 <div class="card-body">
                     <h6 class="text-primary">{{ __('Solde Net') }}</h6>
-                    <h4>{{ number_format($net_balance, 2) }} {{ company()->devise }}</h4>
+                    <h4>{{ number_format($net_balance, 2) }} {{ company()?->devise }}</h4>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
             <div class="card border-dark">
                 <div class="card-body">
                     <h6 class="text-dark">{{ __('Solde Actuel en Caisse') }}</h6>
-                    <h4>{{ number_format($current_balance, 2) }} {{ company()->devise }}</h4>
+                    <h4>{{ number_format($current_balance, 2) }} {{ company()?->devise }}</h4>
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@
                                 @endif
                             </td>
                             <td class="{{ $tr->type == 'in' ? 'text-success' : 'text-danger' }}">
-                                {{ number_format($tr->amount,2) }} {{ company()->devise }}
+                                {{ number_format($tr->amount,2) }} {{ company()?->devise }}
                             </td>
                             <td>{{ $tr->cashRegister?->store?->name ?? '-' }}</td>
                             <td>{{ $tr->user?->name ?? '-' }}</td>

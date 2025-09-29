@@ -59,8 +59,8 @@ class TransferManager extends Component
     public function addAllToCart()
     {
         if (!$this->from_store_id || !$this->to_store_id) {
-            $this->addError('store', 'Veuillez sélectionner les magasins source et destination.');
-            notyf()->error('Veuillez sélectionner les magasins source et destination.');
+            $this->addError('store', __('Veuillez sélectionner les magasins source et destination.'));
+            notyf()->error(__('Veuillez sélectionner les magasins source et destination.'));
             return;
         }
 
@@ -72,7 +72,7 @@ class TransferManager extends Component
                 $product = $this->products->where('id', $productId)->first();
 
                 if (!$product) {
-                    notyf()->error("Produit introuvable.");
+                    notyf()->error(__("Produit introuvable."));
                     continue; // Passer au produit suivant
                 }
 
@@ -93,23 +93,23 @@ class TransferManager extends Component
 
         if ($itemsAdded > 0) {
           $this->products = $this->products;
-            notyf()->success("{$itemsAdded} article(s) ajouté(s) au panier de transfert.");
+            notyf()->success(__("{$itemsAdded} article(s) ajouté(s) au panier de transfert."));
         } else {
-            notyf()->info("Veuillez saisir des quantités pour les produits à transférer.");
+            notyf()->info(__("Veuillez saisir des quantités pour les produits à transférer."));
         }
     }
 
     public function removeFromCart($productId)
     {
         unset($this->cart[$productId]);
-        notyf()->info("Article retiré du panier.");
+        notyf()->info(__("Article retiré du panier."));
     }
 
     public function validateTransfer()
     {
         if (empty($this->cart)) {
-            $this->addError('cart', 'Aucun produit sélectionné pour le transfert.');
-            notyf()->error('Aucun produit sélectionné pour le transfert.');
+            $this->addError('cart', __('Aucun produit sélectionné pour le transfert.'));
+            notyf()->error(__('Aucun produit sélectionné pour le transfert.'));
             return;
         }
 
@@ -141,7 +141,7 @@ class TransferManager extends Component
             }
         });
 
-        notyf()->success("Transfert validé avec succès !");
+        notyf()->success(__("Transfert validé avec succès !"));
         $this->resetForm();
     }
 

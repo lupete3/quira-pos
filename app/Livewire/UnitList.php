@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Unit;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -21,7 +22,8 @@ class UnitList extends Component
 
     public function render()
     {
-        $units = Unit::where('name', 'like', '%' . $this->search . '%')
+        $units = Unit::where('tenant_id', Auth::user()->tenant_id)
+            ->where('name', 'like', '%' . $this->search . '%')
             ->orWhere('abbreviation', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate(10);
@@ -58,12 +60,13 @@ class UnitList extends Component
         Unit::updateOrCreate(
             ['id' => $this->unitId],
             [
+                'tenant_id' => Auth::user()->tenant_id,
                 'name' => $this->name,
                 'abbreviation' => $this->abbreviation,
             ]
         );
 
-        notyf()->success($this->isEditMode ? 'Unit updated successfully.' : 'Unit created successfully.');
+        notyf()->success(__($this->isEditMode ? 'Unité de mesure mise à jour avec succès' : 'Unité de mesure créée avec succès'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -78,7 +81,7 @@ class UnitList extends Component
     public function delete()
     {
         Unit::find($this->unitId)->delete();
-        notyf()->success('Unit deleted successfully.');
+        notyf()->success(__('Unité de mesure a été supprimée avec succès'));
     }
 
     private function resetInputFields()

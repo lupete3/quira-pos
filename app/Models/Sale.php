@@ -10,6 +10,7 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'client_id',
         'user_id',
         'store_id',
@@ -37,5 +38,10 @@ class Sale extends Model
     public function store()
     {
         return $this->belongsTo(Store::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

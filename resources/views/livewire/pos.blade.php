@@ -23,7 +23,7 @@
             <!-- Filters -->
             <div class="d-flex flex-wrap gap-2 mt-2">
               <input type="search" class="form-control w-auto flex-grow-1" placeholder="{{ __('Rechercher...') }}"
-                    wire:model.live="search" />
+                    wire:model.live="search" autofocus />
             </div>
         </header>
         <hr class="my-2" />
@@ -44,7 +44,7 @@
                                     </div>
                                     <span
                                         class="btn btn-outline-primary fw-bold fs-6 mt-2" >{{ number_format($product->sale_price, 2) }}
-                                        {{ company()->devise }}</span>
+                                        {{ company()?->devise }}</span>
                                 </div>
                             </div>
                         </div>
@@ -77,14 +77,14 @@
                                 <div>
                                     <h6 class="card-title mb-1">{{ $item['name'] }}</h6>
                                     <small class="text-muted">{{ __('Prix') }} : {{ number_format($item['price'], 2) }}
-                                        {{ company()->devise }}</small>
+                                        {{ company()?->devise }}</small>
                                 </div>
                                 <div class="d-flex align-items-center gap-3">
                                     <input type="number" min="1"
                                         class="form-control form-control-sm text-center" style="width: 75px;"
                                         value="{{ $item['quantity'] }}"
                                         wire:change="updateQuantity({{ $index }}, $event.target.value)" />
-                                    <div class="fw-semibold fs-12">{{ number_format($item['subtotal'], 2) }} {{ company()->devise }}</div>
+                                    <div class="fw-semibold fs-12">{{ number_format($item['subtotal'], 2) }} {{ company()?->devise }}</div>
                                     <button class="btn btn-outline-danger btn-sm"
                                         wire:click="removeItem({{ $index }})" aria-label="{{ __('Supprimer') }}">
                                         <i class="bx bx-trash fs-5"></i>
@@ -101,7 +101,7 @@
         <div class="d-flex flex-column gap-2 fs-5">
             <div class="d-flex justify-content-between">
                 <span>{{ __('Sous-total') }}</span>
-                <strong>{{ number_format($subtotal, 2) }} {{ company()->devise }}</strong>
+                <strong>{{ number_format($subtotal, 2) }} {{ company()?->devise }}</strong>
             </div>
 
             <div class="d-flex justify-content-between align-items-center">
@@ -114,7 +114,7 @@
 
             <div class="d-flex justify-content-between fw-bold fs-4">
                 <span>{{ __('Total') }}</span>
-                <span>{{ number_format($total, 2) }} {{ company()->devise }}</span>
+                <span>{{ number_format($total, 2) }} {{ company()?->devise }}</span>
             </div>
 
             <div class="d-flex justify-content-between fw-bold fs-4">

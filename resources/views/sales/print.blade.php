@@ -29,9 +29,9 @@
 <body>
 
   <!-- En-tête -->
-  <div class="center bold" style="font-size:36px;">{{ company()?->name }}</div>
-  <div class="center">{{ __('N° RCCM: :rccm', ['rccm' => company()?->rccm]) }}</div>
-  <div class="center">{{ __('Adresse: :address', ['address' => company()?->adress]) }}</div>
+  <div class="center bold" style="font-size:36px;">{{ $sale->store?->name ?? company()?->name }}</div>
+  <div class="center">{{ __('RCCM: :rccm', ['rccm' => company()?->rccm]) }}</div>
+  <div class="center">{{ __('Adresse: :address', ['address' => $sale->store?->location ?? company()?->adress]) }}</div>
   <div class="center">{{ __('Tél: :phone', ['phone' => company()?->phone]) }}</div>
   <div class="line"></div>
 
@@ -42,7 +42,7 @@
 
   <!-- Infos client -->
   <div><strong>{{ __('Client') }} :</strong> {{ $client->name ?? __('Non défini') }}</div>
-  <div><strong>{{ __('Tél') }} :</strong> {{ $client->telephone ?? '-' }}</div>
+  <div><strong>{{ __('Tél') }} :</strong> {{ $client->phone ?? '-' }}</div>
   <div class="line"></div>
 
   <!-- Blocs des produits -->
@@ -75,7 +75,7 @@
     <span>{{ __('TVA (16%)') }} :</span><br>
     <span>{{ number_format(($sale->total_paid * 16 /100) ?? 0, 2, ',', ' ') }}</span>
   </div>
-  
+
   <div class="item-qty-price">
     <span>{{ __('Prix TTC') }} :</span><br>
     <span>{{ number_format($sale->total_amount + ($sale->discount ?? 0), 2, ',', ' ') }}</span>

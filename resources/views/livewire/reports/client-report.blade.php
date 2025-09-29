@@ -12,7 +12,7 @@
             <div class="card text-bg-info">
                 <div class="card-body">
                     <h5>{{ __('Total Facturé') }}</h5>
-                    <h3>{{ number_format($total_factures, 2) }} {{ company()->devise }}</h3>
+                    <h3>{{ number_format($total_factures, 2) }} {{ company()?->devise }}</h3>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
             <div class="card text-bg-success">
                 <div class="card-body">
                     <h5>{{ __('Total Payé') }}</h5>
-                    <h3>{{ number_format($total_regles, 2) }} {{ company()->devise }}</h3>
+                    <h3>{{ number_format($total_regles, 2) }} {{ company()?->devise }}</h3>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
         @foreach($top_clients as $tc)
             <li class="list-group-item d-flex justify-content-between">
                 <span>{{ $tc->client->name ?? __('Client supprimé') }}</span>
-                <span><b>{{ number_format($tc->total_achats, 2) }} {{ company()->devise }}</b></span>
+                <span><b>{{ number_format($tc->total_achats, 2) }} {{ company()?->devise }}</b></span>
             </li>
         @endforeach
     </ul>
@@ -56,10 +56,10 @@
                 <tr>
                     <td>{{ $client->name }}</td>
                     <td>{{ $client->phone }}</td>
-                    <td>{{ number_format($total, 2) }} {{ company()->devise }}</td>
-                    <td>{{ number_format($paye, 2) }} {{ company()->devise }}</td>
+                    <td>{{ number_format($total, 2) }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($paye, 2) }} {{ company()?->devise }}</td>
                     <td class="{{ $total > $paye ? 'text-danger fw-bold' : 'text-success' }}">
-                        {{ number_format($total - $paye, 2) }} {{ company()->devise }}
+                        {{ number_format($total - $paye, 2) }} {{ company()?->devise }}
                     </td>
                 </tr>
             @endforeach

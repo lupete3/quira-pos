@@ -1,10 +1,13 @@
 <div>
+
+    @if (Auth::user()->role_id == 1)
     <select wire:model.live="selectedStoreId" class="form-select w-25 mb-3">
         <option value="">Sélectionnez un magasin</option>
         @foreach ($stores as $store)
             <option value="{{ $store->id }}">{{ $store->name }}</option>
         @endforeach
     </select>
+    @endif
 
     @if ($selectedStoreId)
         <div class="card mb-3">
@@ -63,13 +66,13 @@
             <div class="col">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('Valeur Stock Achat') }}</strong>
-                    <h5>{{ number_format($total_stock_value, 2) }} {{ company()->devise }}</h5>
+                    <h5>{{ number_format($total_stock_value, 2) }} {{ company()?->devise }}</h5>
                 </div>
             </div>
             <div class="col">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('Valeur Stock Vente') }}</strong>
-                    <h5>{{ number_format($total_stock_potential, 2) }} {{ company()->devise }}</h5>
+                    <h5>{{ number_format($total_stock_potential, 2) }} {{ company()?->devise }}</h5>
                 </div>
             </div>
             <div class="col">

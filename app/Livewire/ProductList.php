@@ -31,7 +31,8 @@ class ProductList extends Component
     {
         $user = Auth::user();
 
-        $query = Product::with(['category', 'unit', 'stores']);
+        $query = Product::with(['category', 'unit', 'stores'])
+        ->where('tenant_id', Auth::user()->tenant_id);
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -44,10 +45,10 @@ class ProductList extends Component
 
         return view('livewire.product-list', [
             'products' => $products,
-            'categories' => Category::all(),
-            'brands' => Brand::all(),
-            'units' => Unit::all(),
-            'stores' => Store::all(),
+            'categories' => Category::where('tenant_id', Auth::user()->tenant_id)->get(),
+            'brands' => Brand::where('tenant_id', Auth::user()->tenant_id)->get(),
+            'units' => Unit::where('tenant_id', Auth::user()->tenant_id)->get(),
+            'stores' => Store::where('tenant_id', Auth::user()->tenant_id)->get(),
         ]);
     }
 
@@ -92,6 +93,7 @@ class ProductList extends Component
         $product = Product::updateOrCreate(
             ['id' => $this->productId],
             [
+                'tenant_id' => Auth::user()->tenant_id,
                 'name' => $this->name,
                 'reference' => $this->reference,
                 'category_id' => $this->category_id,
@@ -112,7 +114,7 @@ class ProductList extends Component
         }
         $product->stores()->sync($syncData);
 
-        notyf()->success($this->isEditMode ? 'Produit mis à jour avec succès.' : 'Produit créé avec succès.');
+        notyf()->success(__($this->isEditMode ? 'Produit mis à jour avec succès.' : 'Produit créé avec succès.'));
         $this->dispatch('close-modal');
         $this->resetInputFields();
     }
@@ -127,7 +129,7 @@ class ProductList extends Component
     public function delete()
     {
         Product::find($this->productId)->delete();
-        notyf()->success('Product deleted successfully.');
+        notyf()->success(__('Produit supprimé avec succès.'));
     }
 
     private function resetInputFields()

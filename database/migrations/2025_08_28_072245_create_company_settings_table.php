@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('company_settings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->nullable()->constrained();
             $table->string('name')->default('Quira POS');
             $table->text('address')->nullable();
             $table->string('email')->nullable();
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('rccm')->nullable();
             $table->string('id_nat')->nullable();
-            $table->string('devise')->nullable();
+            $table->string('devise')->default('$');
             $table->timestamps();
         });
     }

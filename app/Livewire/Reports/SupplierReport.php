@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Supplier;
 use App\Models\Purchase;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class SupplierReport extends Component
 {
@@ -33,7 +34,7 @@ class SupplierReport extends Component
             $query->where('name', 'like', '%' . $this->search . '%');
         }
 
-        $suppliers = $query->paginate(10);
+        $suppliers = $query->where('tenant_id', Auth::user()->tenant_id)->paginate(10);
 
         return view('livewire.reports.supplier-report', [
             'suppliers' => $suppliers
@@ -53,10 +54,10 @@ class SupplierReport extends Component
             }]);
 
         if (!empty($this->search)) {
-            $query->where('name', 'like', '%' . $this->search . '%');
+            $query->where('tenant_id', Auth::user()->tenant_id)->where('name', 'like', '%' . $this->search . '%');
         }
 
-        $suppliers = $query->get();
+        $suppliers = $query->where('tenant_id', Auth::user()->tenant_id)->get();
 
         $pdf = Pdf::loadView('exports.supplier-report-pdf', [
             'suppliers' => $suppliers,

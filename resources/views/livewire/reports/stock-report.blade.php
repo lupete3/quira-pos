@@ -1,15 +1,18 @@
 <div>
     <div class="d-flex justify-content-between mb-3">
+
         <div class="d-flex gap-2">
+          @if (Auth::user()->role_id == 1)
             <select wire:model.lazy="store_id" class="form-select">
                 <option value="">{{ __('-- Tous les magasins --') }}</option>
                 @foreach($stores as $st)
                     <option value="{{ $st->id }}">{{ $st->name }}</option>
                 @endforeach
             </select>
-
+          @endif
             <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un produit...') }}">
         </div>
+
 
         <button wire:click="exportPDF" class="btn btn-danger" wire:target="exportPdf" wire:loading.attr="disabled">
             <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
@@ -50,9 +53,9 @@
                         @endif
                     </td>
                     <td>{{ $stock }}</td>
-                    <td>{{ number_format($valeurAchat, 2, ',', ' ') }} {{ company()->devise }}</td>
-                    <td>{{ number_format($valeurVente, 2, ',', ' ') }} {{ company()->devise }}</td>
-                    <td>{{ number_format($benefice, 2, ',', ' ') }} {{ company()->devise }}</td>
+                    <td>{{ number_format($valeurAchat, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($valeurVente, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($benefice, 2, ',', ' ') }} {{ company()?->devise }}</td>
                 </tr>
             @endforeach
         </tbody>

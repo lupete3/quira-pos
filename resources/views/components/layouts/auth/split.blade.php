@@ -25,7 +25,7 @@
       <div class="d-flex align-items-center authentication-bg p-sm-12 p-6 h-100">
         <div class="w-px-400 mx-auto mt-sm-12 mt-8">
           {{ $slot }}
-          <div class="divider my-6">
+          {{-- <div class="divider my-6">
             <div class="divider-text">ou</div>
           </div>
 
@@ -45,7 +45,7 @@
             <a href="javascript:;" class="btn btn-sm btn-icon rounded-circle btn-text-google-plus">
               <i class="icon-base bx bxl-google icon-20px"></i>
             </a>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

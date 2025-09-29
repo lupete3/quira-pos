@@ -10,6 +10,7 @@ class Unit extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'abbreviation',
     ];
@@ -17,5 +18,10 @@ class Unit extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

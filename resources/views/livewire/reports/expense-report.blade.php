@@ -2,6 +2,7 @@
     <!-- Filtres -->
     <div class="card mb-3">
         <div class="card-body row g-2">
+          @if (Auth::user()->role_id == 1)
             <div class="col-md-2">
                 <select class="form-select" wire:model.lazy="store_id">
                     <option value="">{{ __('Tous les magasins') }}</option>
@@ -10,6 +11,7 @@
                     @endforeach
                 </select>
             </div>
+          @endif
             <div class="col-md-2">
                 <select class="form-select" wire:model.lazy="category_id">
                     <option value="">{{ __('Toutes catégories') }}</option>
@@ -58,7 +60,7 @@
         <div class="col">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Montant total') }}</strong>
-                <h5 class="text-danger">{{ number_format($total_amount,2) }} {{ company()->devise }}</h5>
+                <h5 class="text-danger">{{ number_format($total_amount,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
     </div>
@@ -83,7 +85,7 @@
                         <tr>
                             <td>{{ $exp->id }}</td>
                             <td>{{ $exp->description }}</td>
-                            <td class="text-danger">{{ number_format($exp->amount,2) }} {{ company()->devise }}</td>
+                            <td class="text-danger">{{ number_format($exp->amount,2) }} {{ company()?->devise }}</td>
                             <td>{{ $exp->category?->name ?? '-' }}</td>
                             <td>{{ $exp->store?->name ?? '-' }}</td>
                             <td>{{ $exp->user?->name ?? '-' }}</td>

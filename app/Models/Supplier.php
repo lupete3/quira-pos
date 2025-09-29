@@ -10,6 +10,7 @@ class Supplier extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'phone',
         'email',
@@ -25,5 +26,10 @@ class Supplier extends Model
     public function debts()
     {
         return $this->hasMany(SupplierDebt::class);
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }
