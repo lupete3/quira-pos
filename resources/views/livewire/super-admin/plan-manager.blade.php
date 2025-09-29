@@ -123,8 +123,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">
-                            {{ $isEditMode ? 'Enregistrer' : 'Créer' }}
+                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                          <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
+                          {{ $isEditMode ? 'Enregistrer' : 'Créer' }}
                         </button>
                     </div>
                 </form>
