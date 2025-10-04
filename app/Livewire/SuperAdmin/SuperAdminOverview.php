@@ -16,7 +16,7 @@ class SuperAdminOverview extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-    public $filter = 'tenants'; 
+    public $filter = 'tenants';
     public $search = '';
     public $perPage = 10;
     public $period = 'month'; // jour, semaine, mois, année, intervalle
@@ -103,6 +103,9 @@ class SuperAdminOverview extends Component
         $topPlan = Plan::withCount('subscriptions')
             ->orderByDesc('subscriptions_count')
             ->first();
+        if (Subscription::count() === 0) {
+            $topTenants = collect(); // collection vide
+        } else {
 
         $topTenants = Tenant::select('tenants.*', DB::raw('SUM(subscriptions.amount) as total_amount'))
             ->join('subscriptions', 'tenants.id', '=', 'subscriptions.tenant_id')
@@ -110,6 +113,7 @@ class SuperAdminOverview extends Component
             ->orderByDesc('total_amount')
             ->take(5)
             ->get();
+        }
 
         return [
             'title'        => 'Souscriptions',
