@@ -20,7 +20,7 @@
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-          <livewire:language-switcher />
+          @include('components.layouts.navbar.default')
           <!--/ Navbar -->
 
           <!-- Content wrapper -->
