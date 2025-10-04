@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $roles = [
             ['name' => 'Admin', 'description' => 'Admin d’un tenant (propriétaire de supermarché)'],
             ['name' => 'Gérant', 'description' => 'Gestion des ventes et produits'],
+            ['name' => 'Caissier', 'description' => 'Gestion des ventes'],
             ['name' => 'Super Admin', 'description' => 'Gestion globale du SaaS'],
         ];
 
