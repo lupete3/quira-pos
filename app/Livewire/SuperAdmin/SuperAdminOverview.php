@@ -103,17 +103,16 @@ class SuperAdminOverview extends Component
         $topPlan = Plan::withCount('subscriptions')
             ->orderByDesc('subscriptions_count')
             ->first();
-        if (Subscription::count() === 0) {
-            $topTenants = collect(); // collection vide
-        } else {
 
-        $topTenants = Tenant::select('tenants.*', DB::raw('SUM(subscriptions.amount) as total_amount'))
+        $topTenants = Subscription::exists()
+        ? Tenant::select('tenants.id', 'tenants.name', DB::raw('SUM(subscriptions.amount) as total_amount'))
             ->join('subscriptions', 'tenants.id', '=', 'subscriptions.tenant_id')
-            ->groupBy('tenants.id')
+            ->groupBy('tenants.id', 'tenants.name')
             ->orderByDesc('total_amount')
             ->take(5)
-            ->get();
-        }
+            ->get()
+        : collect();
+
 
         return [
             'title'        => 'Souscriptions',
