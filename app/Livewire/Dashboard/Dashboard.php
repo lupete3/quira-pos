@@ -9,6 +9,8 @@ use App\Models\Sale;
 use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 
 class Dashboard extends Component
@@ -108,20 +110,19 @@ class Dashboard extends Component
     $recentPurchases = Purchase::with('supplier')->where('tenant_id', Auth::user()->tenant_id)
       ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))->latest()->take(5)->get();
 
-    $popularProducts = Product::exists()
-      ?
-      $popularProducts = Product::select('products.*')
-      ->join('sale_items', 'products.id', '=', 'sale_items.product_id')
-      ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
-      ->when($this->storeId, fn($q) => $q->where('sales.store_id', $this->storeId))
-      ->when(Auth::check() && Auth::user()->tenant_id, fn($q) => $q->where('sales.tenant_id', Auth::user()->tenant_id))
-      ->selectRaw('SUM(sale_items.quantity) as total_sold')
-      ->groupBy('products.id')
-      ->orderByDesc('total_sold')
-      ->take(6)
-      ->get()
+    $columns = Schema::getColumnListing('products');
+    $columns = array_map(fn($col) => "products.$col", $columns);
 
-      : collect();
+    $popularProducts = Product::select(array_merge($columns, [DB::raw('SUM(sale_items.quantity) as total_sold')]))
+        ->join('sale_items', 'products.id', '=', 'sale_items.product_id')
+        ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+        ->when($this->storeId, fn($q) => $q->where('sales.store_id', $this->storeId))
+        ->when(Auth::check() && Auth::user()->tenant_id, fn($q) => $q->where('sales.tenant_id', Auth::user()->tenant_id))
+        ->groupBy($columns)
+        ->orderByDesc('total_sold')
+        ->take(6)
+        ->get();
+
 
     $sales = Sale::selectRaw('DATE(sale_date) as date, SUM(total_paid) as total')
       ->where('tenant_id', Auth::user()->tenant_id)
