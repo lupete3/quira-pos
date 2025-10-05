@@ -28,72 +28,71 @@ class Dashboard extends Component
 
   public function updatedStoreId()
   {
-      $weeklySales = Sale::selectRaw('YEAR(sale_date) as year, WEEK(sale_date) as week, SUM(total_paid) as total')
-          ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-          ->where('tenant_id', Auth::user()->tenant_id)
-          ->whereYear('sale_date', Carbon::now()->year)
-          ->groupBy('year', 'week')
-          ->orderBy('year')
-          ->orderBy('week')
-          ->pluck('total', 'week');
+    $weeklySales = Sale::selectRaw('YEAR(sale_date) as year, WEEK(sale_date) as week, SUM(total_paid) as total')
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->where('tenant_id', Auth::user()->tenant_id)
+      ->whereYear('sale_date', Carbon::now()->year)
+      ->groupBy('year', 'week')
+      ->orderBy('year')
+      ->orderBy('week')
+      ->pluck('total', 'week');
 
-      $labels = $weeklySales->keys()->map(fn($w) => 'Semaine '.$w)->values();
-      $data = $weeklySales->values()->map(fn($v) => (float)$v)->values();
+    $labels = $weeklySales->keys()->map(fn($w) => 'Semaine ' . $w)->values();
+    $data = $weeklySales->values()->map(fn($v) => (float)$v)->values();
 
-      $this->dispatch('weeklySalesUpdated', labels: $labels, data: $data);
-
+    $this->dispatch('weeklySalesUpdated', labels: $labels, data: $data);
   }
 
   public function render()
   {
     // === VENTES AUJOURD’HUI VS HIER ===
     $todaySales = Sale::where('tenant_id', Auth::user()->tenant_id)
-        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-        ->whereDate('sale_date', Carbon::today())
-        ->sum('total_paid');
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->whereDate('sale_date', Carbon::today())
+      ->sum('total_paid');
 
     $yesterdaySales = Sale::where('tenant_id', Auth::user()->tenant_id)
-        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-        ->whereDate('sale_date', Carbon::yesterday())
-        ->sum('total_paid');
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->whereDate('sale_date', Carbon::yesterday())
+      ->sum('total_paid');
 
     $salesGrowth = $yesterdaySales > 0
-        ? (($todaySales - $yesterdaySales) / $yesterdaySales) * 100
-        : 0;
+      ? (($todaySales - $yesterdaySales) / $yesterdaySales) * 100
+      : 0;
 
     // === VENTES MOIS ACTUEL VS MOIS PASSÉ ===
     $currentMonthSales = Sale::where('tenant_id', Auth::user()->tenant_id)
-        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-        ->whereMonth('sale_date', Carbon::now()->month)
-        ->whereYear('sale_date', Carbon::now()->year)
-        ->sum('total_paid');
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->whereMonth('sale_date', Carbon::now()->month)
+      ->whereYear('sale_date', Carbon::now()->year)
+      ->sum('total_paid');
 
     $lastMonthSales = Sale::where('tenant_id', Auth::user()->tenant_id)
-        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-        ->whereMonth('sale_date', Carbon::now()->subMonth()->month)
-        ->whereYear('sale_date', Carbon::now()->subMonth()->year)
-        ->sum('total_paid');
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->whereMonth('sale_date', Carbon::now()->subMonth()->month)
+      ->whereYear('sale_date', Carbon::now()->subMonth()->year)
+      ->sum('total_paid');
 
     $monthSalesGrowth = $lastMonthSales > 0
-        ? (($currentMonthSales - $lastMonthSales) / $lastMonthSales) * 100
-        : 0;
+      ? (($currentMonthSales - $lastMonthSales) / $lastMonthSales) * 100
+      : 0;
 
     // === ACHATS MOIS ACTUEL VS MOIS PASSÉ ===
     $currentMonthPurchases = Purchase::where('tenant_id', Auth::user()->tenant_id)
-        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-        ->whereMonth('purchase_date', Carbon::now()->month)
-        ->whereYear('purchase_date', Carbon::now()->year)
-        ->sum('total_amount');
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->whereMonth('purchase_date', Carbon::now()->month)
+      ->whereYear('purchase_date', Carbon::now()->year)
+      ->sum('total_amount');
 
     $lastMonthPurchases = Purchase::where('tenant_id', Auth::user()->tenant_id)
-        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-        ->whereMonth('purchase_date', Carbon::now()->subMonth()->month)
-        ->whereYear('purchase_date', Carbon::now()->subMonth()->year)
-        ->sum('total_amount');
+      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+      ->whereMonth('purchase_date', Carbon::now()->subMonth()->month)
+      ->whereYear('purchase_date', Carbon::now()->subMonth()->year)
+      ->sum('total_amount');
 
     $monthPurchasesGrowth = $lastMonthPurchases > 0
-        ? (($currentMonthPurchases - $lastMonthPurchases) / $lastMonthPurchases) * 100
-        : 0;
+      ? (($currentMonthPurchases - $lastMonthPurchases) / $lastMonthPurchases) * 100
+      : 0;
 
     $weeklySales = Sale::selectRaw('YEAR(sale_date) as year, WEEK(sale_date) as week, SUM(total_paid) as total')
       ->where('tenant_id', Auth::user()->tenant_id)
@@ -109,20 +108,20 @@ class Dashboard extends Component
     $recentPurchases = Purchase::with('supplier')->where('tenant_id', Auth::user()->tenant_id)
       ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))->latest()->take(5)->get();
 
-    if (Product::count() === 0) {
-        $popularProducts = collect(); // collection vide
-    } else {
+    $popularProducts = Product::exists()
+      ?
       $popularProducts = Product::select('products.*')
-        ->join('sale_items', 'products.id', '=', 'sale_items.product_id')
-        ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
-        ->when($this->storeId, fn($q) => $q->where('sales.store_id', $this->storeId))
-        ->when(Auth::user()->tenant_id, fn($q) => $q->where('sales.tenant_id', Auth::user()->tenant_id))
-        ->selectRaw('SUM(sale_items.quantity) as total_sold')
-        ->groupBy('products.id')
-        ->orderByDesc('total_sold')
-        ->take(6)
-        ->get();
-    }
+      ->join('sale_items', 'products.id', '=', 'sale_items.product_id')
+      ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+      ->when($this->storeId, fn($q) => $q->where('sales.store_id', $this->storeId))
+      ->when(Auth::user()->tenant_id, fn($q) => $q->where('sales.tenant_id', Auth::user()->tenant_id))
+      ->selectRaw('SUM(sale_items.quantity) as total_sold')
+      ->groupBy('products.id')
+      ->orderByDesc('total_sold')
+      ->take(6)
+      ->get()
+
+      : collect();
 
     $sales = Sale::selectRaw('DATE(sale_date) as date, SUM(total_paid) as total')
       ->where('tenant_id', Auth::user()->tenant_id)
@@ -142,7 +141,7 @@ class Dashboard extends Component
     if ($store) {
       $cashRegister = CashRegister::where('tenant_id', Auth::user()->tenant_id)->where('store_id', $store->id)->first();
       $current_balance = $cashRegister?->current_balance ?? 0;
-    }else {
+    } else {
       $current_balance = CashRegister::where('tenant_id', Auth::user()->tenant_id)->get()->sum('current_balance'); // Prendre la première caisse trouvée
     }
 

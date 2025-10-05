@@ -10,7 +10,7 @@ class ClientDebt extends Model
     use HasFactory;
 
     public $timestamps = false;
-
+    
     protected $fillable = [
         'tenant_id',
         'client_id',

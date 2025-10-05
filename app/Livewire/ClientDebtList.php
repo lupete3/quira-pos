@@ -93,14 +93,6 @@ class ClientDebtList extends Component
                 'paid_date'   => now(),
             ]);
 
-            // journal
-            ClientJournal::create([
-                'client_id'  => $this->selectedClient->id,
-                'debt_id'    => $debtRecord->id,
-                'payment'    => $amountToPay,
-                'description'=> 'Paiement affecté à la vente #' . $sale->id,
-            ]);
-
             // maj vente
             $sale->increment('total_paid', $amountToPay);
 
