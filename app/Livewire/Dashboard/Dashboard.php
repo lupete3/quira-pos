@@ -114,7 +114,7 @@ class Dashboard extends Component
       ->join('sale_items', 'products.id', '=', 'sale_items.product_id')
       ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
       ->when($this->storeId, fn($q) => $q->where('sales.store_id', $this->storeId))
-      ->when(Auth::user()->tenant_id, fn($q) => $q->where('sales.tenant_id', Auth::user()->tenant_id))
+      ->when(Auth::check() && Auth::user()->tenant_id, fn($q) => $q->where('sales.tenant_id', Auth::user()->tenant_id))
       ->selectRaw('SUM(sale_items.quantity) as total_sold')
       ->groupBy('products.id')
       ->orderByDesc('total_sold')
