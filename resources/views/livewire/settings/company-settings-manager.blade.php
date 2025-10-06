@@ -47,7 +47,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Nom de l’entreprise</label>
-                        <input type="text" wire:model="name" class="form-control">
+                        <input type="text" wire:model="name" class="form-control" required>
                         @error('name') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
@@ -83,7 +83,7 @@
 
                     <div class="col-md-4">
                         <label class="form-label">DEVISE</label>
-                        <input type="text" wire:model="devise" class="form-control">
+                        <input type="text" wire:model="devise" required class="form-control">
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@
                     @if ($logo)
                         <div class="mt-2">
                             <!-- Utilisez asset() pour l'affichage du logo existant -->
-                            <img src="{{ asset('storage/'.$logo) }}" alt="Logo actuel" width="120" class="img-thumbnail rounded-md">
+                            <img src="{{ asset($company->logo) }}" alt="Logo actuel" width="120" class="img-thumbnail rounded-md">
                         </div>
                     @endif
                     @error('new_logo') <small class="text-danger">{{ $message }}</small> @enderror
@@ -108,8 +108,8 @@
 
         <!-- Onglet 2: Historique des Souscriptions (Tableau) -->
         @if (Auth::user()->tenant_id)
-          
-        
+
+
         <div
             class="tab-pane fade @if($activeTab === 'history') show active @endif"
             id="history"

@@ -6,7 +6,7 @@ namespace App\Livewire\Settings;
 use App\Models\CompanySetting;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -46,31 +46,83 @@ class CompanySettingsManager extends Component
             'name'     => 'required|string|max:255',
             'email'    => 'nullable|email',
             'phone'    => 'nullable|string|max:20',
-            'new_logo' => 'nullable|image|max:2048', // 2MB
+            'new_logo' => 'nullable|image|max:2048',
             'devise'   => 'nullable|string|max:20',
         ]);
 
         if ($this->new_logo) {
-            // ✅ Supprimer l'ancien logo s'il existe
-            if ($this->company->logo && Storage::disk('public')->exists($this->company->logo)) {
-                Storage::disk('public')->delete($this->company->logo);
+            // 1. Définir le chemin de destination PUBLIC
+            $destinationPath = public_path('logos');
+
+            // 2. S'assurer que le dossier existe
+            // Utilisation de File::isDirectory() et File::makeDirectory() est plus robuste
+            if (!File::isDirectory($destinationPath)) {
+                // Tente de créer le dossier récursivement. Mode 0755 est standard.
+                if (!File::makeDirectory($destinationPath, 0755, true)) {
+                    notyf()->error("Impossible de créer le dossier 'logos'. Vérifiez les permissions du dossier 'public'.");
+                    return;
+                }
             }
 
-            // ✅ Enregistrer le nouveau logo
-            $path = $this->new_logo->store('logos', 'public');
-            $this->logo = $path;
+            // 3. Générer un nom unique et sécurisé
+            $safeOriginalName = pathinfo($this->new_logo->getClientOriginalName(), PATHINFO_FILENAME);
+            // Nettoyage: remplacer les caractères non sûrs par un tiret bas
+            $safeOriginalName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $safeOriginalName);
+            $extension = $this->new_logo->getClientOriginalExtension();
+            $imageName = time() . '_' . $safeOriginalName . '.' . $extension;
+            $fullDestination = $destinationPath . '/' . $imageName; // Chemin complet
+
+            $success = false;
+
+            try {
+                $this->new_logo->move($destinationPath, $imageName);
+                $success = true;
+            } catch (\Symfony\Component\HttpFoundation\File\Exception\FileException $e) {
+
+                // TENTER UNE MÉTHODE DE SECOURS (copy et delete)
+                if (copy($this->new_logo->getRealPath(), $fullDestination)) {
+                    // Si la copie réussit, supprimer l'original Livewire
+                    if (File::delete($this->new_logo->getRealPath())) {
+                        $success = true;
+                    } else {
+                        // La copie a réussi mais la suppression a échoué (un cas rare, mais important)
+                        notyf()->error("Le logo a été copié, mais l'image temporaire n'a pas pu être supprimée. Veuillez contacter le support.");
+                        // On considère l'opération réussie pour le chemin
+                        $success = true;
+                    }
+                } else {
+                    // Si move ET copy échouent, c'est clairement un problème de permissions
+                    notyf()->error("Échec du déplacement et de la copie du fichier. Permission refusée pour le dossier: " . $destinationPath . ". Erreur: " . $e->getMessage());
+                    return;
+                }
+            }
+
+            if ($success) {
+                // 5. Supprimer l'ancien logo APRÈS avoir vérifié que le nouveau a bien été enregistré
+                if ($this->company->logo && File::exists(public_path($this->company->logo))) {
+                    File::delete(public_path($this->company->logo));
+                }
+
+                // 6. Enregistrer le chemin RELATIF dans la DB
+                $this->logo = 'logos/' . $imageName;
+            } else {
+                // Ce cas ne devrait pas arriver avec les try/catch/else, mais par sécurité.
+                notyf()->error("Opération de sauvegarde du logo a échoué sans message d'erreur spécifique.");
+                return;
+            }
         }
 
         $this->company->update([
-            'tenant_id'    => Auth::user()?->tenant_id,
-            'name'    => $this->name,
-            'address' => $this->address,
-            'email'   => $this->email,
-            'phone'   => $this->phone,
-            'rccm'    => $this->rccm,
-            'id_nat'  => $this->id_nat,
-            'logo'    => $this->logo,
-            'devise'  => $this->devise,
+            'tenant_id' => Auth::user()?->tenant_id,
+            'name'      => $this->name,
+            'address'   => $this->address,
+            'email'     => $this->email,
+            'phone'     => $this->phone,
+            'rccm'      => $this->rccm,
+            'id_nat'    => $this->id_nat,
+            // Utiliser $this->logo si défini, sinon conserver l'ancien
+            'logo'      => $this->logo ?? $this->company->logo,
+            'devise'    => $this->devise,
         ]);
 
         notyf()->success(__('Paramètres mis à jour avec succès !'));
@@ -78,7 +130,6 @@ class CompanySettingsManager extends Component
 
     public function render()
     {
-
       $tenant = Auth::user()->tenant;
 
       $subscriptions = Subscription::with('plan')

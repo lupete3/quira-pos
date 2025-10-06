@@ -45,8 +45,8 @@
         @if (Auth::check())
           <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
-              @if(company()?->logo && file_exists(public_path('storage/'.company()->logo)))
-                  <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('Logo') }}">
+              @if(company()?->logo && file_exists(public_path(company()->logo)))
+                  <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('Logo') }}">
               @else
                   <img src="{{ Auth::user()->profile_photo_url ?? asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
               @endif
@@ -58,8 +58,8 @@
                 <div class="d-flex">
                   <div class="flex-shrink-0 me-3">
                     <div class="avatar avatar-online">
-                      @if(company()?->logo && file_exists(public_path('storage/'.company()->logo)))
-                          <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('Logo') }}">
+                      @if(company()?->logo && file_exists(public_path(company()->logo)))
+                          <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('Logo') }}">
                       @else
                           <img src="{{ Auth::user()->profile_photo_url ?? asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
                       @endif

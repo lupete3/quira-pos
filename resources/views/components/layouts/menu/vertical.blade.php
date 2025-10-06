@@ -5,9 +5,9 @@
     @php
       $logoQuira = \App\Models\CompanySetting::first();
     @endphp
-    @if($logoQuira?->logo && file_exists(public_path('storage/'.$logoQuira->logo)))
+    @if($logoQuira?->logo && file_exists(public_path($logoQuira->logo)))
         <a href="{{ url('/') }}" >
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.$logoQuira->logo))) }}"
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($logoQuira->logo))) }}"
                 class="w-100" alt="{{ __('Logo') }}">
         </a>
     @else

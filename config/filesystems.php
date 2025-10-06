@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'custom_public' => [
+            'driver' => 'local',
+            'root' => public_path(), // Sauvegarde directement dans /public
+            'url' => env('APP_URL') . '/uploads',
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

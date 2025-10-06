@@ -2,9 +2,9 @@
 <div wire:ignore>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
   <div class="app-brand demo" style="padding-top: 2rem; margin-bottom: 2rem;">
-    @if(company()?->logo && file_exists(public_path('storage/'.company()->logo)))
+    @if(company()?->logo && file_exists(public_path(company()->logo)))
         <a href="{{ url('/') }}" >
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.company()->logo))) }}"
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}"
                 class="w-100" alt="{{ __('Logo') }}">
         </a>
     @else
