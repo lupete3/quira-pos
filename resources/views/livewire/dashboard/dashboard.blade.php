@@ -171,9 +171,9 @@
                         <a href="{{ route('products.index') }}" class="btn btn-sm btn-outline-primary">Voir tout</a>
                     </div>
                     <div class="card-body">
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
+                        <div class="row g-3">
                             @forelse ($popularProducts as $product)
-                                <div class="col">
+                                <div class="col-12 col-md-4 col-lg-4">
                                     <div class="card h-100 border-1 product-card">
                                         <div class="card-body text-center">
                                             {{-- Nom du produit --}}
@@ -252,14 +252,14 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-3">
+                            <div class="col-6 col-md-3">
                                 <a href="{{ route('pos.index') }}"
                                     class="btn btn-outline-primary w-100 d-flex flex-column align-items-center py-3">
                                     <i class="tf-icons bx bx-receipt fs-2 mb-2"></i>
                                     <span>Nouvelle Vente</span>
                                 </a>
                             </div>
-                            <div class="col-3">
+                            <div class="col-6 col-md-3">
                                 <a href="{{ route('clients.index') }}"
                                     class="btn btn-outline-success w-100 d-flex flex-column align-items-center py-3">
                                     <i class="tf-icons bx bx-user-plus fs-2 mb-2"></i>
@@ -267,14 +267,14 @@
                                 </a>
                             </div>
                             @if (Auth::user()->role_id == 1)
-                            <div class="col-3">
+                            <div class="col-6 col-md-3">
                                 <a href="{{ route('products.index') }}"
                                     class="btn btn-outline-warning w-100 d-flex flex-column align-items-center py-3">
                                     <i class="tf-icons bx bx-box fs-2 mb-2"></i>
                                     <span>Ajouter Stock</span>
                                 </a>
                             </div>
-                            <div class="col-3">
+                            <div class="col-6 col-md-3">
                                 <a href="{{ route('purchases.index') }}"
                                     class="btn btn-outline-info w-100 d-flex flex-column align-items-center py-3">
                                     <i class="tf-icons bx bx-cart-add fs-2 mb-2"></i>

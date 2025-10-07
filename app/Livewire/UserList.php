@@ -32,7 +32,7 @@ class UserList extends Component
             ->paginate(10);
 
         if (Auth::user()->role_id != 4) {
-            $roles = Role::where('name', '=', 'Admin')->orWhere('name', '=', 'Gérant');
+            $roles = Role::where('name', '=', 'Admin')->orWhere('name', '=', 'Gérant')->orWhere('name', '=', 'Caissier')->get();
         }else{
           $roles = Role::where('name', '=', 'Super Admin')->get();
         }
@@ -91,7 +91,7 @@ class UserList extends Component
             'role_id' => 'required|exists:roles,id',
             'password' => $this->isEditMode ? 'nullable|min:8|confirmed' : 'required|min:8|confirmed',
         ];
-        
+
         $this->validate($rules);
 
         $data = [

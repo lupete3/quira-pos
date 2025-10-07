@@ -1,12 +1,16 @@
 <div>
 
     @if (Auth::user()->role_id == 1)
-    <select wire:model.live="selectedStoreId" class="form-select w-25 mb-3">
-        <option value="">Sélectionnez un magasin</option>
-        @foreach ($stores as $store)
-            <option value="{{ $store->id }}">{{ $store->name }}</option>
-        @endforeach
-    </select>
+    <div class="row">
+        <div class="col-12 col-md-4 mb-3">
+            <select class="form-select" wire:model.lazy="selectedStoreId">
+                <option value="">{{ __('Sélectionner un magasin') }}</option>
+                @foreach ($stores as $store)
+                    <option value="{{ $store->id }}">{{ $store->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     @endif
 
     @if ($selectedStoreId)
@@ -57,25 +61,25 @@
         </div>
 
         <div class="row text-center mb-3">
-            <div class="col">
+            <div class="col-12 col-md-3 mb-2">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('Total Produits') }}</strong>
                     <h5>{{ $total_products }}</h5>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-3 mb-2">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('Valeur Stock Achat') }}</strong>
                     <h5>{{ number_format($total_stock_value, 2) }} {{ company()?->devise }}</h5>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-3 mb-2">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('Valeur Stock Vente') }}</strong>
                     <h5>{{ number_format($total_stock_potential, 2) }} {{ company()?->devise }}</h5>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-3 mb-2">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('Stock Faible') }}</strong>
                     <h5 class="text-danger">{{ $low_stock }}</h5>

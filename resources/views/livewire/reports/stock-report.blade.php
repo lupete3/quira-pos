@@ -1,25 +1,29 @@
 <div>
-    <div class="d-flex justify-content-between mb-3">
-
-        <div class="d-flex gap-2">
-          @if (Auth::user()->role_id == 1)
-            <select wire:model.lazy="store_id" class="form-select">
-                <option value="">{{ __('-- Tous les magasins --') }}</option>
-                @foreach($stores as $st)
-                    <option value="{{ $st->id }}">{{ $st->name }}</option>
-                @endforeach
-            </select>
-          @endif
+    <div class="row mb-3">
+        <div class="col-12 col-md-3 mb-2">
+            <div class="input-group">
+              @if (Auth::user()->role_id == 1)
+                <select wire:model.lazy="store_id" class="form-select">
+                    <option value="">{{ __('-- Tous les magasins --') }}</option>
+                    @foreach($stores as $st)
+                        <option value="{{ $st->id }}">{{ $st->name }}</option>
+                    @endforeach
+                </select>
+              @endif
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mb-2">
             <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un produit...') }}">
         </div>
-
-
-        <button wire:click="exportPDF" class="btn btn-danger" wire:target="exportPdf" wire:loading.attr="disabled">
-            <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-            <i class="bx bx-file"></i> {{ __('Exporter PDF') }}
-        </button>
+        <div class="col-12 col-md-3 mb-2">
+          <button wire:click="exportPDF" class="btn btn-danger" wire:target="exportPdf" wire:loading.attr="disabled">
+              <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
+              <i class="bx bx-file"></i> {{ __('Exporter PDF') }}
+          </button>
+        </div>
     </div>
 
+    <div class="table-responsive">
     <table class="table table-bordered table-striped">
         <thead class="table-light">
             <tr>
@@ -60,6 +64,9 @@
             @endforeach
         </tbody>
     </table>
+    </div>
 
-    {{ $products->links() }}
+    <div class="d-flex justify-content-center mt-2">
+        {{ $products->links() }}
+    </div>
 </div>

@@ -56,25 +56,25 @@
 
     <!-- Statistiques -->
     <div class="row text-center mb-3">
-        <div class="col">
+        <div class="col-12 col-md-3 mb-2">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Nombre de ventes') }}</strong>
                 <h5>{{ $total_sales }}</h5>
             </div>
         </div>
-        <div class="col">
+        <div class="col-12 col-md-3 mb-2">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Total ventes') }}</strong>
                 <h5>{{ number_format($total_amount,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
-        <div class="col">
+        <div class="col-12 col-md-3 mb-2">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Total payé') }}</strong>
                 <h5 class="text-success">{{ number_format($total_paid,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
-        <div class="col">
+        <div class="col-12 col-md-3 mb-2">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Crédit restant') }}</strong>
                 <h5 class="text-danger">{{ number_format($total_due,2) }} {{ company()?->devise }}</h5>
@@ -116,6 +116,8 @@
                 </tbody>
             </table>
         </div>
-        {{ $sales->links() }}
+        <div class="d-flex justify-content-center mt-2">
+            {{ $sales->links() }}
+        </div>
     </div>
 </div>

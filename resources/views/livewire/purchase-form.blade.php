@@ -1,6 +1,6 @@
 <div class="row">
     {{-- Left Side: Product Search and Cart --}}
-    <div class="col-md-7">
+    <div class="col-md-7 mb-3">
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title">{{ __('Produits') }}</h5>
@@ -17,8 +17,8 @@
                         <thead>
                             <tr>
                                 <th>{{ __('Produit') }}</th>
-                                <th style="width: 120px;">{{ __('Quantité') }}</th>
-                                <th>{{ __('Prix') }}</th>
+                                <th style="width: 150px;">{{ __('Quantité') }}</th>
+                                <th style="width: 200px;">{{ __('Prix') }}</th>
                                 <th>{{ __('Sous-total') }}</th>
                                 <th></th>
                             </tr>
@@ -28,10 +28,10 @@
                                 <tr wire:key="{{ $index }}">
                                     <td><strong>{{ $item['name'] }}</strong></td>
                                     <td>
-                                        <input type="number" class="form-control form-control-sm" value="{{ $item['quantity'] }}" wire:change="updateQuantity({{ $index }}, $event.target.value)">
+                                        <input type="number" class="form-control form-control-sm" value="{{ $item['quantity'] }}" wire:change="updateQuantity({{ $index }}, $event.target.value)" style="min-width: 80px;">
                                     </td>
                                     <td>
-                                        <input type="number" step="0.01" class="form-control form-control-sm" value="{{ $item['price'] }}" wire:change="updatePrice({{ $index }}, $event.target.value)">
+                                        <input type="number" step="0.01" class="form-control form-control-sm" value="{{ $item['price'] }}" wire:change="updatePrice({{ $index }}, $event.target.value)" style="min-width: 100px;">
                                     </td>
                                     <td>{{ number_format($item['subtotal'], 2) }}</td>
                                     <td>
@@ -70,7 +70,7 @@
     </div>
 
     {{-- Right Side: Supplier, Total and Actions --}}
-    <div class="col-md-5">
+    <div class="col-md-5 ">
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title">{{ __('Détails de l\'achat') }}</h5>

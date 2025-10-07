@@ -51,13 +51,13 @@
 
     <!-- Statistiques -->
     <div class="row text-center mb-3">
-        <div class="col">
+        <div class="col-md-6 mb-2">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Nombre de dépenses') }}</strong>
                 <h5>{{ $total_expenses }}</h5>
             </div>
         </div>
-        <div class="col">
+        <div class="col-md-6 mb-2">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('Montant total') }}</strong>
                 <h5 class="text-danger">{{ number_format($total_amount,2) }} {{ company()?->devise }}</h5>
@@ -99,6 +99,8 @@
                 </tbody>
             </table>
         </div>
-        {{ $expenses->links() }}
+        <div class="d-flex justify-content-center mt-2">
+            {{ $expenses->links() }}
+        </div>
     </div>
 </div>

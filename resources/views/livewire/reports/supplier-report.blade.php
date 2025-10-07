@@ -1,10 +1,10 @@
 <div>
     <div class="card mb-3">
-        <div class="card-body d-flex justify-content-between align-items-center">
-            <div class="d-flex gap-2">
-                <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un fournisseur...') }}">
+        <div class="card-body row g-2 align-items-center ">
 
-                <input type="date" wire:model.lazy="date_from" class="form-control">
+            <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un fournisseur...') }}">
+            <div class="">
+                <input type="date" wire:model.lazy="date_from" class="form-control mb-2">
                 <input type="date" wire:model.lazy="date_to" class="form-control">
             </div>
             <div>

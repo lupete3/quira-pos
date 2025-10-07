@@ -59,7 +59,7 @@
                             {{-- Sélection facture --}}
                             <div class="mb-3">
                                 <label class="form-label">{{ __('Sélectionner une facture impayée') }}</label>
-                                <select class="form-select @error('selectedPurchase') is-invalid @enderror" wire:model="selectedPurchase">
+                                <select class="form-select @error('selectedPurchase') is-invalid @enderror" wire:model="selectedPurchase" required >
                                     <option value="">{{ __('-- Choisir une facture --') }}</option>
                                     @foreach($purchasesUnpaid as $purchase)
                                         @php

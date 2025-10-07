@@ -92,7 +92,7 @@
                                 <p><strong>{{ __('Montant total:') }}</strong> {{ number_format($selectedSale->total_amount, 2) }} {{ company()?->devise }}</p>
                                 <p><strong>{{ __('Montant payé:') }}</strong> {{ number_format($selectedSale->total_paid, 2) }} {{ company()?->devise }}</p>
                                 <p><strong>{{ __('Reste à payer:') }}</strong> {{ number_format($selectedSale->total_amount - $selectedSale->total_paid, 2) }} {{ company()?->devise }}</p>
-                                <p>
+                                <p></p><strong>{{ __('Statut de paiement:') }}</strong>
                                   @if ($selectedSale->total_amount - $selectedSale->total_paid <= 0)
                                     <span class="badge bg-label-success me-1">{{ __('Payé') }}</span>
                                   @elseif ($selectedSale->total_paid > 0 && $selectedSale->total_amount - $selectedSale->total_paid > 0)
@@ -105,26 +105,28 @@
                         </div>
                         <hr>
                         <h6>{{ __('Articles:') }}</h6>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('Produit') }}</th>
-                                    <th>{{ __('Quantité') }}</th>
-                                    <th>{{ __('Prix unitaire') }}</th>
-                                    <th>{{ __('Total') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($selectedSale->items as $item)
-                                <tr>
-                                    <td>{{ $item->product->name }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ number_format($item->unit_price, 2) }} {{ company()?->devise }}</td>
-                                    <td>{{ number_format($item->total_price, 2) }} {{ company()?->devise }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <div class="table-responsive text-nowrap">
+                          <table class="table">
+                              <thead>
+                                  <tr>
+                                      <th>{{ __('Produit') }}</th>
+                                      <th>{{ __('Quantité') }}</th>
+                                      <th>{{ __('Prix unitaire') }}</th>
+                                      <th>{{ __('Total') }}</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  @foreach($selectedSale->items as $item)
+                                  <tr>
+                                      <td>{{ $item->product->name }}</td>
+                                      <td>{{ $item->quantity }}</td>
+                                      <td>{{ number_format($item->unit_price, 2) }} {{ company()?->devise }}</td>
+                                      <td>{{ number_format($item->total_price, 2) }} {{ company()?->devise }}</td>
+                                  </tr>
+                                  @endforeach
+                              </tbody>
+                          </table>
+                        </div>
                     @endif
                 </div>
                 <div class="modal-footer">

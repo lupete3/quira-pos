@@ -87,7 +87,7 @@
                                     <div class="fw-semibold fs-12">{{ number_format($item['subtotal'], 2) }} {{ company()?->devise }}</div>
                                     <button class="btn btn-outline-danger btn-sm"
                                         wire:click="removeItem({{ $index }})" aria-label="{{ __('Supprimer') }}">
-                                        <i class="bx bx-trash fs-5"></i>
+                                        <i class="bx bx-x fs-5"></i>
                                     </button>
                                 </div>
                             </div>

@@ -42,7 +42,7 @@
     <!-- Statistiques -->
 
     <div class="row text-center mb-3">
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-success">
                 <div class="card-body">
                     <h6 class="text-success">{{ __('Total Entrées') }}</h6>
@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-danger">
                 <div class="card-body">
                     <h6 class="text-danger">{{ __('Total Dépenses') }}</h6>
@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-primary">
                 <div class="card-body">
                     <h6 class="text-primary">{{ __('Solde Net') }}</h6>
@@ -67,7 +67,7 @@
             </div>
         </div>
         @if($current_balance !== null)
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-dark">
                 <div class="card-body">
                     <h6 class="text-dark">{{ __('Solde Actuel en Caisse') }}</h6>
@@ -121,6 +121,8 @@
                 </tbody>
             </table>
         </div>
-        {{ $transactions->links() }}
+        <div class="d-flex justify-content-center mt-2">
+            {{ $transactions->links() }}
+        </div>
     </div>
 </div>
