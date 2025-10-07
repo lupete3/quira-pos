@@ -30,7 +30,7 @@ class ProductReport extends Component
   public function mount()
   {
     // Charger tous les magasins une seule fois
-    $this->stores = Store::all();
+    $this->stores = Store::where('tenant_id', Auth::user()->tenant_id)->get();
 
     if (Auth::user()->role_id != 1) {
       $store = Auth::user()->stores()->first();

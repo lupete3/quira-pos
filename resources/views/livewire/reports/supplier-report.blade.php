@@ -1,13 +1,21 @@
 <div>
     <div class="card mb-3">
-        <div class="card-body row g-2 align-items-center ">
-
-            <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un fournisseur...') }}">
-            <div class="">
-                <input type="date" wire:model.lazy="date_from" class="form-control mb-2">
-                <input type="date" wire:model.lazy="date_to" class="form-control">
+        <div class="card-body row">
+            <div class="col-md-6 mb-2">
+              <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un fournisseur...') }}">
             </div>
-            <div>
+           
+            <div class="col-md-4 mb-2">
+                <div class="row">
+                  <div class="col-md-6">
+                    <input type="date" wire:model.lazy="date_from" class="form-control mb-2">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="date" wire:model.lazy="date_to" class="form-control mb-2">
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-2">
                 <button wire:click="exportPdf" class="btn btn-danger">
                   <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                   <i class="bx bxs-file-pdf"></i> {{ __('Exporter PDF') }}

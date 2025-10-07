@@ -20,10 +20,14 @@ class ClientList extends Component
 
     public function render()
     {
-        $clients = Client::where('tenant_id', Auth::user()->tenant_id)
-            ->where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('email', 'like', '%' . $this->search . '%')
-            ->orWhere('phone', 'like', '%' . $this->search . '%')
+        $tenantId = Auth::user()->tenant_id;
+
+        $clients = Client::where('tenant_id', $tenantId)
+            ->where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('email', 'like', '%' . $this->search . '%')
+                      ->orWhere('phone', 'like', '%' . $this->search . '%');
+            })
             ->latest()
             ->paginate(10);
 
