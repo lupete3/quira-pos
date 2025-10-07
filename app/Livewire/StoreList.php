@@ -30,18 +30,21 @@ class StoreList extends Component
 
     public function render()
     {
+        $tenantId = Auth::user()->tenant_id;
+
         $stores = Store::with('users')
-            ->where('tenant_id', Auth::user()->tenant_id)
-            ->where('name', 'like', '%' . $this->search . '%')
+            ->where('tenant_id', $tenantId)
+            ->where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%');
+            })
             ->latest()
             ->paginate(10);
 
-        $allUsers = User::where('tenant_id', Auth::user()->tenant_id)->orderBy('name')->get();
+        $allUsers = User::where('tenant_id', $tenantId)
+            ->orderBy('name')
+            ->get();
 
-        return view('livewire.store-list', [
-            'stores' => $stores,
-            'allUsers' => $allUsers,
-        ]);
+        return view('livewire.store-list', compact('stores', 'allUsers'));
     }
 
     public function create()

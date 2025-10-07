@@ -12,13 +12,16 @@
     </div>
 
     <div>
-        <select wire:model.live="selectedStoreId" class="form-select w-25 mb-3">
-            <option value="">Sélectionnez un magasin</option>
-            @foreach ($stores as $store)
-                <option value="{{ $store->id }}">{{ $store->name }}</option>
-            @endforeach
-        </select>
-
+      <div class="row mt-2">
+        <div class="col-md-4">
+          <select wire:model.live="selectedStoreId" class="form-select mb-3">
+              <option value="">Sélectionnez un magasin</option>
+              @foreach ($stores as $store)
+                  <option value="{{ $store->id }}">{{ $store->name }}</option>
+              @endforeach
+          </select>
+        </div>
+      </div>
         @if ($selectedStoreId)
             {{-- Inventory Table --}}
             <div class="card mt-3">

@@ -38,7 +38,7 @@
                         <td>
                             @foreach($store->users as $user)
                                 <span class="badge bg-label-primary me-1">
-                                    {{ $user->name }} - {{ ucfirst($user->pivot->role) }}
+                                     {{ $user->name }} - {{ $user->role->name }} {{-- - {{ ucfirst($user->pivot->role) }} --}}
                                 </span>
                             @endforeach
                         </td>
@@ -128,13 +128,13 @@
                                         <div class="d-flex align-items-center mb-2">
                                             <input type="checkbox" value="{{ $user->id }}" wire:model="selectedUsers" class="form-check-input me-2">
                                             <span class="me-2">{{ $user->name }} ({{ $user->email }})</span>
-                                            @if(in_array($user->id, $selectedUsers))
+                                            {{-- @if(in_array($user->id, $selectedUsers))
                                                 <select wire:model="userRoles.{{ $user->id }}" class="form-select form-select-sm w-auto">
                                                     <option value="manager">Gérant</option>
                                                     <option value="cashier">Caissier</option>
                                                     <option value="stock_keeper">Vendeur</option>
                                                 </select>
-                                            @endif
+                                            @endif --}}
                                         </div>
                                     @endforeach
                                 </div>

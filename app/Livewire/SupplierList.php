@@ -20,10 +20,14 @@ class SupplierList extends Component
 
     public function render()
     {
-        $suppliers = Supplier::where('tenant_id', Auth::user()->tenant_id)
-            ->where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('email', 'like', '%' . $this->search . '%')
-            ->orWhere('phone', 'like', '%' . $this->search . '%')
+        $tenantId = Auth::user()->tenant_id;
+
+        $suppliers = Supplier::where('tenant_id', $tenantId)
+            ->where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('email', 'like', '%' . $this->search . '%')
+                      ->orWhere('phone', 'like', '%' . $this->search . '%');
+            })
             ->latest()
             ->paginate(10);
 
@@ -57,7 +61,7 @@ class SupplierList extends Component
             'address' => 'nullable|string',
             'debt' => 'nullable|numeric|min:0',
         ];
-        
+
         $this->validate($rules);
 
         Supplier::updateOrCreate(

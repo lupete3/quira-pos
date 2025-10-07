@@ -22,9 +22,13 @@ class UnitList extends Component
 
     public function render()
     {
-        $units = Unit::where('tenant_id', Auth::user()->tenant_id)
-            ->where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('abbreviation', 'like', '%' . $this->search . '%')
+        $tenantId = Auth::user()->tenant_id;
+
+        $units = Unit::where('tenant_id', $tenantId)
+            ->where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('abbreviation', 'like', '%' . $this->search . '%');
+            })
             ->latest()
             ->paginate(10);
 
@@ -54,7 +58,7 @@ class UnitList extends Component
             'name' => 'required|string|max:50|unique:units,name,' . $this->unitId,
             'abbreviation' => 'nullable|string|max:20',
         ];
-        
+
         $this->validate($rules);
 
         Unit::updateOrCreate(

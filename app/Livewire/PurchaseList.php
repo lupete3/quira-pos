@@ -18,9 +18,9 @@ class PurchaseList extends Component
     public function render()
     {
         $purchases = Purchase::with(['supplier', 'store'])
-            ->where('tenant_id', Auth::user()->tenant_id)
             ->where(function ($query) {
-                $query->where('id', 'like', '%' . $this->search . '%')
+                $query->where('tenant_id', Auth::user()->tenant_id)
+                    ->where('id', 'like', '%' . $this->search . '%')
                     ->orWhereHas('supplier', function ($q) {
                         $q->where('name', 'like', '%' . $this->search . '%');
                     });
