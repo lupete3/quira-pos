@@ -22,17 +22,18 @@
     .item-block { margin-bottom:10px; border-bottom:1px dashed #000; padding-bottom:5px; }
     .item-name { font-weight:bold; font-size:20px; }
     .item-qty-price { display:flex; justify-content:space-between; font-size:26px; }
-    .item-total { text-align:right; font-size:26px; font-weight:bold; }
+    .item-total { text-align:right; font-size:26px; font-weight:bold; margin-top: 10px; margin-bottom: 10px; }
     .footer { font-size:24px; text-align:center; margin-top:10px; }
   </style>
 </head>
 <body>
 
   <!-- En-tête -->
-  <div class="center bold" style="font-size:36px;">{{ $sale->store?->name ?? company()?->name }}</div>
-  <div class="center">{{ __('RCCM: :rccm', ['rccm' => company()?->rccm]) }}</div>
-  <div class="center">{{ __('Adresse: :address', ['address' => $sale->store?->location ?? company()?->adress]) }}</div>
-  <div class="center">{{ __('Tél: :phone', ['phone' => company()?->phone]) }}</div>
+  <div class="center bold" style="font-size:36px;">{{ company()?->name ?? 'QUIRA POS' }}</div>
+  <div class="center bold" style="font-size:25px;">{{ $sale->store?->name ?? company()?->name }}</div>
+  <div class="center">{{ __(':rccm', ['rccm' => company()?->rccm]) }}</div>
+  <div class="center">{{ __(':address', ['address' => $sale->store?->location ?? company()?->adress]) }}</div>
+  <div class="center">{{ __(':phone', ['phone' => company()?->phone]) }}</div>
   <div class="line"></div>
 
   <!-- Titre et date -->
@@ -59,30 +60,34 @@
   <div class="line"></div>
 
   @php
-    $tva = number_format(($sale->total_paid * 16 /100) , 2);
+    $tva = round(($sale->total_paid * 16 /100) , 2);
   @endphp
 
   <!-- Totaux -->
   <div class="item-qty-price">
     <span>{{ __('Prix HT') }} :</span><br>
-    <span>{{ number_format($sale->total_amount - $tva, 2, ',', ' ') }}</span>
+    <span>{{ round(($sale->total_amount - $tva), 2) }}</span>
   </div>
   <div class="item-qty-price">
     <span>{{ __('Reduction') }} :</span><br>
-    <span>{{ number_format($sale->discount ?? 0, 2, ',', ' ') }}</span>
+    <span>{{ round(($sale->discount ?? 0), 2) }}</span>
   </div>
   <div class="item-qty-price">
     <span>{{ __('TVA (16%)') }} :</span><br>
-    <span>{{ number_format(($sale->total_paid * 16 /100) ?? 0, 2, ',', ' ') }}</span>
+    <span>{{ round((($sale->total_paid * 16 /100) ?? 0), 2) }}</span>
   </div>
 
   <div class="item-qty-price">
     <span>{{ __('Prix TTC') }} :</span><br>
-    <span>{{ number_format($sale->total_amount + ($sale->discount ?? 0), 2, ',', ' ') }}</span>
+    <span>{{ round(($sale->total_amount + ($sale->discount ?? 0)), 2) }}</span>
   </div>
   <div class="item-total">
-    <span>{{ __('Total payé') }} :</span> {{ number_format($sale->total_paid, 2, ',', ' ') }}{{ company()->devise ?? '' }}
+    <span>{{ __('Total payé') }} :</span> {{ round($sale->total_paid, 2) }}{{ company()->devise ?? '' }}
   </div>
+  <div class="item-total">
+    <span>{{ __('Reste') }} :</span> {{ round(($sale->total_amount - $sale->total_paid + ($sale->discount ?? 0)), 2) }}{{ company()->devise ?? '' }}
+  </div>
+  <p><strong>{{ __('Agent') }} :</strong> {{ $sale->user?->name ?? __('Non défini') }}</p>
 
   <div class="line"></div>
   <div class="center bold">{{ __('Merci pour votre confiance !') }}</div>
