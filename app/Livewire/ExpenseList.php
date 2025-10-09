@@ -71,7 +71,7 @@ class ExpenseList extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        $stores = Store::all();
+        $stores = Store::where('tenant_id', Auth::user()->tenant_id)->get();
 
         return view('livewire.expense-list', [
             'expenses'   => $expenses,
