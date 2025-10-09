@@ -17,13 +17,15 @@ class PurchaseList extends Component
 
     public function render()
     {
+        $tenantId = Auth::user()->tenant_id;
+
         $purchases = Purchase::with(['supplier', 'store'])
+            ->where('tenant_id', $tenantId)
             ->where(function ($query) {
-                $query->where('tenant_id', Auth::user()->tenant_id)
-                    ->where('id', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('supplier', function ($q) {
-                        $q->where('name', 'like', '%' . $this->search . '%');
-                    });
+                $query->where('id', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('supplier', function ($q) {
+                          $q->where('name', 'like', '%' . $this->search . '%');
+                      });
             })
             ->latest()
             ->paginate(10);
