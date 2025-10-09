@@ -26,8 +26,14 @@ class PurchaseReturnList extends Component
     public function updatedPurchaseId($value)
     {
         $this->purchaseProducts = [];
+
         if ($value) {
-            $purchase = Purchase::with('items.product')->find($value);
+            $tenantId = Auth::user()->tenant_id;
+
+            $purchase = Purchase::with('items.product')
+                ->where('tenant_id', $tenantId)
+                ->find($value);
+
             if ($purchase) {
                 $this->purchaseProducts = $purchase->items;
             }
@@ -36,9 +42,13 @@ class PurchaseReturnList extends Component
 
     public function render()
     {
+        $tenantId = Auth::user()->tenant_id;
+
         $purchaseReturns = PurchaseReturn::with('product')
-          ->where('tenant_id', Auth::user()->tenant_id)
-          ->orderBy('return_date', 'DESC')->paginate(10);
+            ->where('tenant_id', $tenantId)
+            ->orderBy('return_date', 'DESC')
+            ->paginate(10);
+
         return view('livewire.purchase-return-list', compact('purchaseReturns'));
     }
 

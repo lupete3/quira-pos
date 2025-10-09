@@ -38,22 +38,32 @@ class SaleReturnList extends Component
 
   public function updatedSaleId($value)
   {
-    $this->saleProducts = [];
-    if ($value) {
-      $sale = Sale::with('items.product')->find($value);
-      if ($sale) {
-        $this->saleProducts = $sale->items;
+      $this->saleProducts = [];
+
+      if ($value) {
+          $tenantId = Auth::user()->tenant_id;
+
+          $sale = Sale::with('items.product')
+              ->where('tenant_id', $tenantId)
+              ->find($value);
+
+          if ($sale) {
+              $this->saleProducts = $sale->items;
+          }
       }
-    }
   }
 
   public function render()
   {
-    $saleReturns = SaleReturn::with('product')->where('tenant_id', Auth::user()->tenant_id)
-      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-      ->orderBy('return_date', 'DESC')->paginate(10);
+      $tenantId = Auth::user()->tenant_id;
 
-    return view('livewire.sale-return-list', compact('saleReturns'));
+      $saleReturns = SaleReturn::with('product')
+          ->where('tenant_id', $tenantId)
+          ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+          ->orderBy('return_date', 'DESC')
+          ->paginate(10);
+
+      return view('livewire.sale-return-list', compact('saleReturns'));
   }
 
   public function create()
