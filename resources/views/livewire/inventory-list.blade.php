@@ -32,7 +32,7 @@
                             </span>
                         </td>
                         <td>
-                            <a href="{{ route('inventories.show', $inventory->id) }}" class="btn btn-info btn-sm">
+                            <a href="{{ route('inventories.show', $inventory->id) }}" class="btn btn-info btn-sm" wire:navigate>
                                 <i class="bx bx-show me-1"></i> {{ __('Voir') }}
                             </a>
                         </td>

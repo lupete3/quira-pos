@@ -8,6 +8,7 @@
             <h5 class="card-title mb-0">{{ __('Inventaire') }} #{{ $inventory->id }}</h5>
             <div>
               <a href="{{ route('inventories.export', $inventory->id) }}" class="btn btn-danger" wire:click="exportPdf">
+                  <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                   <i class="bx bx-download"></i> {{ __('Exporter') }}
               </a>
               <a href="{{ route('inventories.index') }}" wire:navigate class="btn btn-secondary">
