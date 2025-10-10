@@ -2,7 +2,8 @@
     {{-- Search --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="{{ __('Rechercher par ID d\'achat ou nom du fournisseur...') }}" wire:model.live.debounce.300ms="search">
+            {{-- Clé : rechercher --}}
+            <input type="text" class="form-control" placeholder="{{ __('purchase_list.rechercher') }}" wire:model.live.debounce.300ms="search">
         </div>
     </div>
 
@@ -11,14 +12,14 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('ID') }}</th>
-                    <th>{{ __('Fournisseur') }}</th>
-                    <th>{{ __('Date') }}</th>
-                    <th>{{ __('Montant total') }}</th>
-                    <th>{{ __('Payé') }}</th>
-                    <th>{{ __('Statut') }}</th>
-                    <th>{{ __('Magasin') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th>{{ __('purchase_list.id') }}</th>
+                    <th>{{ __('purchase_list.fournisseur') }}</th>
+                    <th>{{ __('purchase_list.date') }}</th>
+                    <th>{{ __('purchase_list.montant_total') }}</th>
+                    <th>{{ __('purchase_list.paye') }}</th>
+                    <th>{{ __('purchase_list.statut') }}</th>
+                    <th>{{ __('purchase_list.magasin') }}</th>
+                    <th>{{ __('purchase_list.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -30,24 +31,32 @@
                         <td>{{ number_format($purchase->total_amount, 2) }} {{ company()?->devise }}</td>
                         <td>{{ number_format($purchase->total_paid, 2) }} {{ company()?->devise }}</td>
                         <td>
-                          @if ($purchase->total_amount - $purchase->total_paid <= 0)
-                            <span class="badge bg-label-success me-1">{{ __('Payé') }}</span>
-                          @elseif ($purchase->total_paid > 0 && $purchase->total_amount - $purchase->total_paid > 0)
-                            <span class="badge bg-label-warning me-1">{{ __('Partiellement payé') }}</span>
-                          @else
-                            <span class="badge bg-label-primary me-1">{{ __('Non payé') }}</span
-                          @endif
+                            @if ($purchase->total_amount - $purchase->total_paid <= 0)
+                                {{-- Clé : payé --}}
+                                <span class="badge bg-label-success me-1">{{ __('purchase_list.payé') }}</span>
+                            @elseif ($purchase->total_paid > 0 && $purchase->total_amount - $purchase->total_paid > 0)
+                                {{-- Clé : partiellement_paye --}}
+                                <span class="badge bg-label-warning me-1">{{ __('purchase_list.partiellement_paye') }}</span>
+                            @else
+                                {{-- Clé : non_paye --}}
+                                <span class="badge bg-label-primary me-1">{{ __('purchase_list.non_paye') }}</span
+                            @endif
                         </td>
                         <td>{{ $purchase->store->name ?? __('N/A') }}</td>
                         <td>
                             <button class="btn btn-info btn-sm" wire:click="viewDetails({{ $purchase->id }})" data-bs-toggle="modal" data-bs-target="#purchaseDetailsModal">
-                                <i class="bx bx-show me-1"></i> {{ __('Voir') }}
+                                <i class="bx bx-show me-1"></i>
+                                {{-- Clé : voir --}}
+                                {{ __('purchase_list.voir') }}
                             </button>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">{{ __('Aucun achat trouvé.') }}</td>
+                        <td colspan="8" class="text-center">
+                            {{-- Clé : aucun_achat --}}
+                            {{ __('purchase_list.aucun_achat') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -64,42 +73,46 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('Détails de l\'achat') }} (ID: {{ $selectedPurchase ? $selectedPurchase->id : '' }})</h5>
-                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fermer') }}"></button>
+                    {{-- Clé : details_achat --}}
+                    <h5 class="modal-title">{{ __('purchase_list.details_achat') }} (ID: {{ $selectedPurchase ? $selectedPurchase->id : '' }})</h5>
+                    {{-- Clé : fermer --}}
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{{ __('purchase_list.fermer') }}"></button>
                 </div>
                 <div class="modal-body">
                     @if ($selectedPurchase)
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>{{ __('Fournisseur') }}:</strong> {{ $selectedPurchase->supplier->name ?? __('N/A') }}</p>
-                                <p><strong>{{ __('Date') }}:</strong> {{ $selectedPurchase->purchase_date }}</p>
-                                <p><strong>{{ __('Statut') }}:</strong> {{ $selectedPurchase->status }}</p>
-                                <p><strong>{{ __('Magasin') }}:</strong> {{ $selectedPurchase->store->name ?? 'N/A' }}</p>
+                                <p><strong>{{ __('purchase_list.fournisseur') }}:</strong> {{ $selectedPurchase->supplier->name ?? __('N/A') }}</p>
+                                <p><strong>{{ __('purchase_list.date') }}:</strong> {{ $selectedPurchase->purchase_date }}</p>
+                                <p><strong>{{ __('purchase_list.statut') }}:</strong> {{ $selectedPurchase->status }}</p>
+                                <p><strong>{{ __('purchase_list.magasin') }}:</strong> {{ $selectedPurchase->store->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>{{ __('Montant total') }}:</strong> {{ number_format($selectedPurchase->total_amount, 2) }} {{ company()?->devise }}</p>
-                                <p><strong>{{ __('Montant payé') }}:</strong> {{ number_format($selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
-                                <p><strong>{{ __('Reste à payer') }}:</strong> {{ number_format($selectedPurchase->total_amount - $selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
+                                <p><strong>{{ __('purchase_list.montant_total') }}:</strong> {{ number_format($selectedPurchase->total_amount, 2) }} {{ company()?->devise }}</p>
+                                <p><strong>{{ __('purchase_list.paye') }}:</strong> {{ number_format($selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
+                                {{-- Clé : reste_a_payer --}}
+                                <p><strong>{{ __('purchase_list.reste_a_payer') }}:</strong> {{ number_format($selectedPurchase->total_amount - $selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
                                 <p>
-                                  @if ($selectedPurchase->total_amount - $selectedPurchase->total_paid <= 0)
-                                    <span class="badge bg-label-success me-1">{{ __('Payé') }}</span>
-                                  @elseif ($selectedPurchase->total_paid > 0 && $selectedPurchase->total_amount - $selectedPurchase->total_paid > 0)
-                                    <span class="badge bg-label-warning me-1">{{ __('Partiellement payé') }}</span>
-                                  @else
-                                    <span class="badge bg-label-primary me-1">{{ __('Non payé') }}</span
-                                  @endif
+                                    @if ($selectedPurchase->total_amount - $selectedPurchase->total_paid <= 0)
+                                        <span class="badge bg-label-success me-1">{{ __('purchase_list.payé') }}</span>
+                                    @elseif ($selectedPurchase->total_paid > 0 && $selectedPurchase->total_amount - $selectedPurchase->total_paid > 0)
+                                        <span class="badge bg-label-warning me-1">{{ __('purchase_list.partiellement_paye') }}</span>
+                                    @else
+                                        <span class="badge bg-label-primary me-1">{{ __('purchase_list.non_paye') }}</span
+                                    @endif
                                 </p>
                             </div>
                         </div>
                         <hr>
-                        <h6>{{ __('Articles') }}:</h6>
+                        {{-- Clé : articles --}}
+                        <h6>{{ __('purchase_list.articles') }}:</h6>
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Produit') }}</th>
-                                    <th>{{ __('Quantité') }}</th>
-                                    <th>{{ __('Prix unitaire') }}</th>
-                                    <th>{{ __('Total') }}</th>
+                                    <th>{{ __('purchase_list.produit') }}</th>
+                                    <th>{{ __('purchase_list.quantite') }}</th>
+                                    <th>{{ __('purchase_list.prix_unitaire') }}</th>
+                                    <th>{{ __('purchase_list.total') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,7 +129,7 @@
                     @endif
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('purchase_list.fermer') }}</button>
                 </div>
             </div>
         </div>

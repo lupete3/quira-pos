@@ -4,14 +4,14 @@
         <div class="col-md-4">
             <input type="text"
                    class="form-control"
-                   placeholder="{{ __('Rechercher des catégories...') }}"
+                   placeholder="{{ __('category.rechercher_categories') }}"
                    wire:model.live.debounce.300ms="search">
         </div>
         <button class="btn btn-primary"
                 wire:click="create"
                 data-bs-toggle="modal"
                 data-bs-target="#categoryModal">
-            <i class="bx bx-plus me-1"></i> {{ __('Ajouter') }}
+            <i class="bx bx-plus me-1"></i> {{ __('category.ajouter') }}
         </button>
     </div>
 
@@ -20,10 +20,10 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('ID') }}</th>
-                    <th>{{ __('Nom') }}</th>
-                    <th>{{ __('Description') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th>{{ __('category.id') }}</th>
+                    <th>{{ __('category.nom') }}</th>
+                    <th>{{ __('category.description') }}</th>
+                    <th>{{ __('category.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -45,12 +45,12 @@
                                        wire:click="edit({{ $category->id }})"
                                        data-bs-toggle="modal"
                                        data-bs-target="#categoryModal">
-                                        <i class="bx bx-edit-alt me-1"></i> {{ __('Modifier') }}
+                                        <i class="bx bx-edit-alt me-1"></i> {{ __('category.modifier') }}
                                     </a>
                                     <a class="dropdown-item"
                                        href="#"
                                        wire:click="confirmDelete({{ $category->id }})">
-                                        <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
+                                        <i class="bx bx-trash me-1"></i> {{ __('category.supprimer') }}
                                     </a>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center">{{ __('Aucune catégorie trouvée.') }}</td>
+                        <td colspan="4" class="text-center">{{ __('category.aucune_categorie') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -76,33 +76,33 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        {{ $isEditMode ? __('Modifier la catégorie') : __('Créer une catégorie') }}
+                        {{ $isEditMode ? __('category.modifier_categorie') : __('category.creer_categorie') }}
                     </h5>
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="modal"
-                            aria-label="{{ __('Fermer') }}"></button>
+                            aria-label="{{ __('category.fermer') }}"></button>
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="name" class="form-label">{{ __('Nom') }}</label>
+                            <label for="name" class="form-label">{{ __('category.nom') }}</label>
                             <input type="text"
                                    class="form-control @error('name') is-invalid @enderror"
                                    id="name"
                                    wire:model="name"
-                                   placeholder="{{ __('Entrer le nom de la catégorie') }}">
+                                   placeholder="{{ __('category.entrer_nom_categorie') }}">
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label">{{ __('Description') }}</label>
+                            <label for="description" class="form-label">{{ __('category.description') }}</label>
                             <textarea class="form-control @error('description') is-invalid @enderror"
                                       id="description"
                                       wire:model="description"
                                       rows="3"
-                                      placeholder="{{ __('Entrer la description') }}"></textarea>
+                                      placeholder="{{ __('category.entrer_description') }}"></textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -111,11 +111,11 @@
                     <div class="modal-footer">
                         <button type="button"
                                 class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                                data-bs-dismiss="modal">{{ __('category.fermer') }}</button>
                         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                             <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                             <i class="bx bx-check me-1"></i>
-                            {{ $isEditMode ? __('Enregistrer les modifications') : __('Créer') }}
+                            {{ $isEditMode ? __('category.enregistrer_modifications') : __('category.creer') }}
                         </button>
                     </div>
                 </form>

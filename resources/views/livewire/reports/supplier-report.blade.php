@@ -2,23 +2,23 @@
     <div class="card mb-3">
         <div class="card-body row">
             <div class="col-md-6 mb-2">
-              <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un fournisseur...') }}">
+              <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('supplier_report.search_supplier') }}">
             </div>
-           
+
             <div class="col-md-4 mb-2">
                 <div class="row">
                   <div class="col-md-6">
-                    <input type="date" wire:model.lazy="date_from" class="form-control mb-2">
+                    <input type="date" wire:model.lazy="date_from" class="form-control mb-2" title="{{ __('supplier_report.from') }}">
                   </div>
                   <div class="col-md-6">
-                    <input type="date" wire:model.lazy="date_to" class="form-control mb-2">
+                    <input type="date" wire:model.lazy="date_to" class="form-control mb-2" title="{{ __('supplier_report.to') }}">
                   </div>
                 </div>
             </div>
             <div class="col-md-2">
                 <button wire:click="exportPdf" class="btn btn-danger">
                   <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-                  <i class="bx bxs-file-pdf"></i> {{ __('Exporter PDF') }}
+                  <i class="bx bxs-file-pdf"></i> {{ __('supplier_report.export_pdf') }}
                 </button>
             </div>
         </div>
@@ -29,12 +29,12 @@
             <table class="table table-striped table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th>{{ __('Fournisseur') }}</th>
-                        <th>{{ __('Contact') }}</th>
-                        <th>{{ __('Nb Achats') }}</th>
-                        <th>{{ __('Total Achats') }}</th>
-                        <th>{{ __('Total Payé') }}</th>
-                        <th>{{ __('Solde') }}</th>
+                        <th>{{ __('supplier_report.supplier') }}</th>
+                        <th>{{ __('supplier_report.contact') }}</th>
+                        <th>{{ __('supplier_report.purchase_count') }}</th>
+                        <th>{{ __('supplier_report.total_purchases') }}</th>
+                        <th>{{ __('supplier_report.total_paid') }}</th>
+                        <th>{{ __('supplier_report.balance') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,7 +56,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">{{ __('Aucun résultat trouvé') }}</td>
+                            <td colspan="6" class="text-center">{{ __('supplier_report.no_results_found') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

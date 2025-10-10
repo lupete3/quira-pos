@@ -21,11 +21,11 @@
               } else {
                 $store = Auth::user()->stores()->first();
                 if($store){
-                  echo __('Point de Vente: ').$store?->name ?? company()?->name;
+                  echo __('navbar.point_de_vente: ').$store?->name ?? company()?->name;
                 }
               }
             } else{
-              echo __('Quira POS');
+              echo __('navbar.application_name');
             }
           @endphp
         </h3>
@@ -34,19 +34,15 @@
     <!-- /Search -->
 
     <ul class="navbar-nav flex-row align-items-center ms-md-auto">
-      <li class="nav-item lh-1 me-4">
-        {{-- <select wire:model.lazy="localeL" class="form-select w-auto">
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-        </select> --}}
-      </li>
+      @livewire('language-switcher')
+
       <!-- User -->
       <li class="nav-item navbar-dropdown dropdown-user dropdown">
         @if (Auth::check())
           <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
               @if(company()?->logo && file_exists(public_path(company()->logo)))
-                  <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('Logo') }}">
+                  <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('navbar.logo') }}">
               @else
                   <img src="{{ Auth::user()->profile_photo_url ?? asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
               @endif
@@ -59,7 +55,7 @@
                   <div class="flex-shrink-0 me-3">
                     <div class="avatar avatar-online">
                       @if(company()?->logo && file_exists(public_path(company()->logo)))
-                          <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('Logo') }}">
+                          <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="w-px-40 h-auto rounded-circle" alt="{{ __('navbar.logo') }}">
                       @else
                           <img src="{{ Auth::user()->profile_photo_url ?? asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
                       @endif
@@ -67,7 +63,7 @@
                   </div>
                   <div class="flex-grow-1">
                     <h6 class="mb-0">{{ Auth::user()?->name }}</h6>
-                    <small class="text-body-secondary">{{ Auth::user()->role?->name ?? __('Utilisateur') }}</small>
+                    <small class="text-body-secondary">{{ Auth::user()->role?->name ?? __('navbar.utilisateur') }}</small>
                   </div>
                 </div>
               </a>
@@ -77,12 +73,12 @@
             </li>
             <li>
               <a class="dropdown-item {{ request()->routeIs('settings.profile') ? 'active' : '' }}" href="{{ route('settings.profile') }}" wire:navigate>
-                <i class="icon-base bx bx-user icon-md me-3"></i><span>{{ __('Mon Profil') }}</span>
+                <i class="icon-base bx bx-user icon-md me-3"></i><span>{{ __('navbar.mon_profil') }}</span>
               </a>
             </li>
             <li>
               <a class="dropdown-item {{ request()->routeIs('settings.password') ? 'active' : '' }}" href="{{ route('settings.password') }}" wire:navigate>
-                <i class="icon-base bx bx-cog icon-md me-3"></i><span>{{ __('Paramètres') }}</span>
+                <i class="icon-base bx bx-cog icon-md me-3"></i><span>{{ __('navbar.parametres') }}</span>
               </a>
             </li>
             <li>
@@ -92,7 +88,7 @@
               <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="dropdown-item" type="submit" class="btn p-0">
-                  <i class="icon-base bx bx-power-off icon-md me-3"></i><span>{{ __('Se Déconnecter') }}</span>
+                  <i class="icon-base bx bx-power-off icon-md me-3"></i><span>{{ __('navbar.se_deconnecter') }}</span>
                 </button>
               </form>
             </li>
@@ -104,7 +100,7 @@
             </div>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="{{ route('login') }}">{{ __('Se Connecter') }}</a></li>
+            <li><a class="dropdown-item" href="{{ route('login') }}">{{ __('navbar.se_connecter') }}</a></li>
           </ul>
         @endif
       </li>

@@ -2,10 +2,12 @@
     {{-- Barre de recherche et bouton d'ajout --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="{{ __('Rechercher fournisseurs par nom, email ou téléphone...') }}" wire:model.live.debounce.300ms="search">
+            {{-- Clé : rechercher_fournisseurs --}}
+            <input type="text" class="form-control" placeholder="{{ __('supplier.rechercher_fournisseurs') }}" wire:model.live.debounce.300ms="search">
         </div>
         <button class="btn btn-primary" wire:click="create" data-bs-toggle="modal" data-bs-target="#supplierModal">
-            <i class="bx bx-plus me-1"></i> {{ __('Ajouter') }}
+            <i class="bx bx-plus me-1"></i> {{-- Clé : ajouter --}}
+            {{ __('supplier.ajouter') }}
         </button>
     </div>
 
@@ -14,12 +16,13 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('ID') }}</th>
-                    <th>{{ __('Nom') }}</th>
-                    <th>{{ __('Email') }}</th>
-                    <th>{{ __('Téléphone') }}</th>
-                    <th>{{ __('Dette') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    {{-- Clés pour l'en-tête du tableau --}}
+                    <th>{{ __('supplier.id') }}</th>
+                    <th>{{ __('supplier.nom') }}</th>
+                    <th>{{ __('supplier.email') }}</th>
+                    <th>{{ __('supplier.telephone') }}</th>
+                    <th>{{ __('supplier.dette') }}</th>
+                    <th>{{ __('supplier.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -37,12 +40,14 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#" wire:click="edit({{ $supplier->id }})" data-bs-toggle="modal" data-bs-target="#supplierModal">
-                                        <i class="bx bx-edit-alt me-1"></i> {{ __('Éditer') }}
+                                        <i class="bx bx-edit-alt me-1"></i> {{-- Clé : editer --}}
+                                        {{ __('supplier.editer') }}
                                     </a>
                                     @if (Auth::user()->role_id == 1)
-                                    <a class="dropdown-item" href="#" wire:click="confirmDelete({{ $supplier->id }})">
-                                        <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
-                                    </a>
+                                        <a class="dropdown-item" href="#" wire:click="confirmDelete({{ $supplier->id }})">
+                                            <i class="bx bx-trash me-1"></i> {{-- Clé : supprimer --}}
+                                            {{ __('supplier.supprimer') }}
+                                        </a>
                                     @endif
                                 </div>
                             </div>
@@ -50,7 +55,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">{{ __('Aucun fournisseur trouvé.') }}</td>
+                        <td colspan="6" class="text-center">
+                            {{-- Clé : aucun_fournisseur --}}
+                            {{ __('supplier.aucun_fournisseur') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -67,47 +75,60 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ $isEditMode ? __('Éditer le fournisseur') : __('Créer un fournisseur') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fermer') }}"></button>
+                    {{-- Clés conditionnelles pour le titre du modal --}}
+                    <h5 class="modal-title">{{ $isEditMode ? __('supplier.editer_fournisseur') : __('supplier.creer_fournisseur') }}</h5>
+                    {{-- Clé : fermer --}}
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('supplier.fermer') }}"></button>
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ __('Nom') }}</label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model="name" placeholder="{{ __('Nom du fournisseur') }}">
+                                {{-- Clé : nom --}}
+                                <label class="form-label">{{ __('supplier.nom') }}</label>
+                                {{-- Clé : nom_fournisseur --}}
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model="name" placeholder="{{ __('supplier.nom_fournisseur') }}">
                                 @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ __('Email') }}</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model="email" placeholder="{{ __('Email') }}">
+                                {{-- Clé : email --}}
+                                <label class="form-label">{{ __('supplier.email') }}</label>
+                                {{-- Clé : email_fournisseur --}}
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model="email" placeholder="{{ __('supplier.email') }}">
                                 @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ __('Téléphone') }}</label>
-                                <input type="text" class="form-control @error('phone') is-invalid @enderror" wire:model="phone" placeholder="{{ __('Numéro de téléphone') }}">
+                                {{-- Clé : telephone --}}
+                                <label class="form-label">{{ __('supplier.telephone') }}</label>
+                                {{-- Clé : telephone_fournisseur --}}
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" wire:model="phone" placeholder="{{ __('supplier.telephone_fournisseur') }}">
                                 @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ __('Dette initiale') }}</label>
+                                {{-- Clé : dette_initiale --}}
+                                <label class="form-label">{{ __('supplier.dette_initiale') }}</label>
                                 <input type="number" step="0.01" class="form-control @error('debt') is-invalid @enderror" wire:model="debt" placeholder="0.00" readonly>
                                 @error('debt') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">{{ __('Adresse') }}</label>
-                            <textarea class="form-control @error('address') is-invalid @enderror" wire:model="address" rows="3" placeholder="{{ __('Adresse du fournisseur') }}"></textarea>
+                            {{-- Clé : adresse --}}
+                            <label class="form-label">{{ __('supplier.adresse') }}</label>
+                            {{-- Clé : adresse_fournisseur --}}
+                            <textarea class="form-control @error('address') is-invalid @enderror" wire:model="address" rows="3" placeholder="{{ __('supplier.adresse_fournisseur') }}"></textarea>
                             @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                        {{-- Clé : fermer --}}
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('supplier.fermer') }}</button>
                         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                             <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                             <i class="bx bx-check me-1"></i>
-                          {{ $isEditMode ? __('Enregistrer les modifications') : __('Créer') }}</button>
+                            {{-- Clés conditionnelles pour le bouton d'action --}}
+                          {{ $isEditMode ? __('supplier.enregistrer_modifications') : __('supplier.creer') }}</button>
                     </div>
                 </form>
             </div>

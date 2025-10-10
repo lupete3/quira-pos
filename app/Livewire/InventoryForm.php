@@ -40,28 +40,45 @@ class InventoryForm extends Component
             // Initialiser les quantités physiques avec les quantités théoriques
             foreach ($this->products as $product) {
                 $theoretical_quantity = $product->stores->where('id', $value)->first()->pivot->quantity ?? 0;
-                $this->physical_quantities[$product->id] = intval($theoretical_quantity); // Assurez-vous que c'est un entier
+                // Assurez-vous que c'est un entier
+                $this->physical_quantities[$product->id] = intval($theoretical_quantity); 
             }
+            
+            // Si vous voulez charger tous les produits même ceux sans stock (à adapter selon votre besoin)
+            // if ($this->products->isEmpty()) {
+            //     notyf()->warning(__('inventory_form.aucun_produit'));
+            // }
         }
     }
 
     public function render()
     {
-        // Le rendu de la vue est simple, car les données sont déjà gérées par d'autres méthodes
         return view('livewire.inventory-form');
     }
 
     public function saveInventory()
     {
-        // Assurez-vous qu'un magasin est sélectionné avant de sauvegarder
         if (!$this->selectedStoreId) {
-            notyf()->error(__('Veuillez sélectionner un magasin.'));
+            notyf()->error(__('inventory_form.erreur_magasin_non_selectionne'));
             return;
         }
 
-        $this->validate([
+        $rules = [
             'physical_quantities.*' => 'nullable|integer|min:0',
-        ]);
+        ];
+        
+        $messages = [
+            'physical_quantities.*.integer' => __('inventory_form.quantite_invalide'),
+            'physical_quantities.*.min'     => __('inventory_form.quantite_invalide'),
+        ];
+
+        $this->validate($rules, $messages);
+        
+        if ($this->products->isEmpty()) {
+             notyf()->warning(__('inventory_form.aucun_produit'));
+             return;
+        }
+
 
         DB::transaction(function () {
             $inventory = Inventory::create([
@@ -73,9 +90,8 @@ class InventoryForm extends Component
             ]);
 
             foreach ($this->products as $product) {
-                $physical_quantity = $this->physical_quantities[$product->id] ?? 0;
+                $physical_quantity = intval($this->physical_quantities[$product->id] ?? 0);
 
-                // Récupérez la quantité théorique fraîchement pour chaque produit pour éviter les erreurs
                 $theoretical_quantity = $product->stores->where('id', $this->selectedStoreId)->first()->pivot->quantity ?? 0;
                 $difference = $physical_quantity - $theoretical_quantity;
 
@@ -88,12 +104,11 @@ class InventoryForm extends Component
                     'store_id' => $this->selectedStoreId,
                 ]);
 
-                // Mettez à jour le stock dans la table pivot
                 $product->stores()->updateExistingPivot($this->selectedStoreId, ['quantity' => $physical_quantity]);
             }
         });
 
-        notyf()->success(__('Inventaire du magasin validé et stock mis à jour avec succès.'));
+        notyf()->success(__('inventory_form.inventaire_valide'));
         return redirect()->route('inventories.index');
     }
 }

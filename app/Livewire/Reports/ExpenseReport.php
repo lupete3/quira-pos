@@ -42,7 +42,8 @@ class ExpenseReport extends Component
     public function render()
     {
         $query = Expense::with('category','store','user')
-          ->where('tenant_id', Auth::user()->tenant_id);
+          ->where('tenant_id', Auth::user()->tenant_id)
+          ->where('status', 'validated');
 
         if ($this->store_id) {
             $query->where('store_id', $this->store_id);
@@ -84,7 +85,8 @@ class ExpenseReport extends Component
     public function exportPdf()
     {
         $query = Expense::with('category','store','user')
-          ->where('tenant_id', Auth::user()->tenant_id);
+          ->where('tenant_id', Auth::user()->tenant_id)
+          ->where('status', 'validated');
 
         if ($this->store_id) $query->where('store_id', $this->store_id);
         if ($this->category_id) $query->where('expense_category_id', $this->category_id);

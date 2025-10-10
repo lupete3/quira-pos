@@ -60,7 +60,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 };
 ?>
 
-@section('title', __('Réinitialisation du mot de passe'))
+@section('title', __('reset_password.page_title'))
 
 @section('page-style')
 @vite([
@@ -69,8 +69,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 @endsection
 
 <div>
-    <h4 class="mb-1">{{ __('Réinitialiser le mot de passe') }} 🔑</h4>
-    <p class="mb-6">{{ __('Votre nouveau mot de passe doit être différent des mots de passe précédemment utilisés') }}</p>
+    <h4 class="mb-1">{{ __('reset_password.heading') }}</h4>
+    <p class="mb-6">{{ __('reset_password.description') }}</p>
 
     <!-- Session Status -->
     @if (session('status'))
@@ -81,7 +81,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     <form wire:submit="resetPassword" class="mb-6">
         <div class="mb-6">
-            <label for="email" class="form-label">{{ __('Email') }}</label>
+            <label for="email" class="form-label">{{ __('reset_password.email') }}</label>
             <input
                 wire:model="email"
                 type="email"
@@ -89,7 +89,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 id="email"
                 required
                 autocomplete="email"
-                placeholder="{{ __('Saisissez votre email') }}"
+                placeholder="{{ __('reset_password.email_placeholder') }}"
             >
             @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -97,7 +97,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </div>
 
         <div class="mb-6 form-password-toggle">
-            <label class="form-label" for="password">{{ __('Nouveau mot de passe') }}</label>
+            <label class="form-label" for="password">{{ __('reset_password.new_password') }}</label>
             <div class="input-group input-group-merge">
                 <input
                     wire:model="password"
@@ -106,7 +106,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     id="password"
                     required
                     autocomplete="new-password"
-                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                    placeholder="{{ __('reset_password.password_placeholder') }}"
                 >
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                 @error('password')
@@ -116,7 +116,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </div>
 
         <div class="mb-6 form-password-toggle">
-            <label class="form-label" for="password_confirmation">{{ __('Confirmer le mot de passe') }}</label>
+            <label class="form-label" for="password_confirmation">{{ __('reset_password.password_confirmation') }}</label>
             <div class="input-group input-group-merge">
                 <input
                     wire:model="password_confirmation"
@@ -125,7 +125,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     id="password_confirmation"
                     required
                     autocomplete="new-password"
-                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                    placeholder="{{ __('reset_password.password_placeholder') }}"
                 >
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                 @error('password_confirmation')
@@ -135,13 +135,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </div>
 
         <button type="submit" class="btn btn-primary d-grid w-100 mb-6">
-            {{ __('Définir le nouveau mot de passe') }}
+            {{ __('reset_password.confirm_button') }}
         </button>
 
         <div class="text-center">
             <a href="{{ route('login') }}" class="d-flex justify-content-center" wire:navigate>
                 <i class="bx bx-chevron-left scaleX-n1-rtl me-1"></i>
-                {{ __('Retour à la connexion') }}
+                {{ __('reset_password.back_to_login') }}
             </a>
         </div>
     </form>

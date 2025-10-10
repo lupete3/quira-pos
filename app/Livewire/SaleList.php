@@ -55,13 +55,25 @@ class SaleList extends Component
 
     public function viewDetails($saleId)
     {
-        $this->selectedSale = Sale::with(['items.product', 'client'])->find($saleId);
+        // Utilisation d'un try-catch pour capturer une erreur si Sale n'existe pas,
+        // et envoyer une notification traduite.
+        try {
+            $this->selectedSale = Sale::with(['items.product', 'client'])->findOrFail($saleId);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $this->selectedSale = null;
+            notyf()->error(__('sale.erreur_vente'));
+        }
     }
 
     public function printInvoice()
     {
         if ($this->selectedSale) {
-          $this->dispatch('facture-validee', url: route('invoice.print', ['sale' => $this->selectedSale->id]));
+          // L'action ici n'a pas de notification d'erreur spécifique, mais on peut l'encapsuler.
+          try {
+            $this->dispatch('facture-validee', url: route('invoice.print', ['sale' => $this->selectedSale->id]));
+          } catch (\Exception $e) {
+            notyf()->error(__('sale.erreur_vente'));
+          }
         }
     }
 }

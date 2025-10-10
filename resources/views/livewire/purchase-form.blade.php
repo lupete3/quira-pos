@@ -1,29 +1,74 @@
 <div class="row">
-    {{-- Left Side: Product Search and Cart --}}
-    <div class="col-md-7 mb-3">
-        <div class="card">
+    {{-- Colonne Gauche: Liste des Produits et Panier --}}
+    <div class="col-md-7">
+        <div class="card mb-3">
             <div class="card-header">
-                <h5 class="card-title">{{ __('Produits') }}</h5>
+                {{-- Clé : produits --}}
+                <h5 class="mb-0">{{ __('purchase.produits') }}</h5>
             </div>
             <div class="card-body">
-                {{-- Search Box --}}
+                {{-- Barre de recherche --}}
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="{{ __('Rechercher des produits par nom ou référence...') }}" wire:model.live.debounce.300ms="search">
+                    {{-- Clé : rechercher_produits --}}
+                    <input type="text" class="form-control" wire:model.live.debounce.300ms="search"
+                           placeholder="{{ __('purchase.rechercher_produits') }}">
                 </div>
 
-                {{-- Purchase Cart Table --}}
-                <div class="table-responsive text-nowrap" style="min-height: 300px;">
+                {{-- Liste des produits pour l'ajout au panier --}}
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>{{ __('Produit') }}</th>
-                                <th style="width: 150px;">{{ __('Quantité') }}</th>
-                                <th style="width: 200px;">{{ __('Prix') }}</th>
-                                <th>{{ __('Sous-total') }}</th>
-                                <th></th>
+                                <th>{{ __('purchase.produit') }}</th>
+                                <th>{{ __('purchase.ref') }}</th>
+                                <th>{{ __('purchase.stock') }}</th>
+                                <th>{{ __('purchase.actions') }}</th>
                             </tr>
                         </thead>
-                        <tbody class="table-border-bottom-0">
+                        <tbody>
+                            @forelse ($products as $product)
+                                <tr wire:key="prod-{{ $product->id }}">
+                                    <td>{{ $product->name }}</td>
+                                    <td>{{ $product->reference }}</td>
+                                    <td>
+                                        {{ $product->stores->sum('pivot.quantity') ?? 0 }}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" wire:click="addToCart({{ $product->id }})" title="Ajouter">
+                                            <i class="bx bx-plus"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">{{ __('purchase.aucun_produit') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {{-- Panier d'achat --}}
+        <div class="card">
+            <div class="card-header">
+                {{-- Clé : details_achat --}}
+                <h5 class="mb-0">{{ __('purchase.details_achat') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{ __('purchase.produit') }}</th>
+                                <th>{{ __('purchase.quantite') }}</th>
+                                <th>{{ __('purchase.prix') }}</th>
+                                <th>{{ __('purchase.sous_total') }}</th>
+                                <th>{{ __('purchase.actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             @forelse ($cart as $index => $item)
                                 <tr wire:key="{{ $index }}">
                                     <td><strong>{{ $item['name'] }}</strong></td>
@@ -42,7 +87,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center">{{ __('Le panier est vide.') }}</td>
+                                    <td colspan="5" class="text-center">{{ __('purchase.panier_vide') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -50,85 +95,76 @@
                 </div>
             </div>
         </div>
-
-        {{-- Product List for Search --}}
-        @if(!empty($products))
-        <div class="card mt-3">
-            <div class="card-body">
-                <div class="list-group">
-                    @forelse($products as $product)
-                        <a href="#" class="list-group-item list-group-item-action" wire:click.prevent="addItem({{ $product->id }})">
-                            <strong>{{ $product->name }}</strong> ({{ __('Réf') }}: {{ $product->reference }}) - {{ __('Stock') }}: {{ $product->stock_quantity }}
-                        </a>
-                    @empty
-                        <div class="list-group-item">{{ __('Aucun produit trouvé.') }}</div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-        @endif
     </div>
 
-    {{-- Right Side: Supplier, Total and Actions --}}
-    <div class="col-md-5 ">
+    {{-- Colonne Droite: Formulaire de Finalisation --}}
+    <div class="col-md-5">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">{{ __('Détails de l\'achat') }}</h5>
+                {{-- Clé : details_achat --}}
+                <h5 class="mb-0">{{ __('purchase.details_achat') }}</h5>
             </div>
-            <div class="card-body">
-              {{-- Store Selection --}}
-              <div class="mb-3">
-                  <label for="store_id" class="form-label">{{ __('Magasin') }}</label>
-                  <select class="form-select @error('store_id') is-invalid @enderror" wire:model="store_id">
-                      <option value="">{{ __('Sélectionner un magasin') }}</option>
-                      @foreach($stores as $store)
-                          <option value="{{ $store->id }}">{{ $store->name }}</option>
-                      @endforeach
-                  </select>
-                  @error('store_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-              </div>
+            <form wire:submit.prevent="savePurchase">
+                <div class="card-body">
+                    {{-- Magasin --}}
+                    <div class="mb-3">
+                        {{-- Clé : magasin --}}
+                        <label class="form-label">{{ __('purchase.magasin') }}</label>
+                        <select class="form-select @error('store_id') is-invalid @enderror" wire:model.live="store_id" {{ Auth::user()->role_id != 1 ? 'disabled' : '' }}>
+                            {{-- Clé : selectionner_magasin --}}
+                            <option value="">{{ __('purchase.selectionner_magasin') }}</option>
+                            @foreach($stores as $store)
+                                <option value="{{ $store->id }}">{{ $store->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('store_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
 
-                {{-- Supplier Selection --}}
-                <div class="mb-3">
-                    <label for="supplier_id" class="form-label">{{ __('Fournisseur') }}</label>
-                    <select class="form-select @error('supplier_id') is-invalid @enderror" wire:model="supplier_id">
-                        <option value="">{{ __('Sélectionner un fournisseur') }}</option>
-                        @foreach($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('supplier_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    {{-- Fournisseur --}}
+                    <div class="mb-3">
+                        {{-- Clé : fournisseur --}}
+                        <label class="form-label">{{ __('purchase.fournisseur') }}</label>
+                        <select class="form-select @error('supplier_id') is-invalid @enderror" wire:model="supplier_id">
+                            {{-- Clé : selectionner_fournisseur --}}
+                            <option value="">{{ __('purchase.selectionner_fournisseur') }}</option>
+                            @foreach($suppliers as $supplier)
+                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('supplier_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    {{-- Total à payer --}}
+                    <div class="mb-3">
+                        <p class="h4">
+                            <strong>{{ __('purchase.total') }}:</strong>
+                            {{ number_format($total, 2) }} {{ company()?->devise }}
+                        </p>
+                        <hr>
+                    </div>
+
+                    {{-- Montant Payé --}}
+                    <div class="mb-3">
+                        {{-- Clé : montant_paye --}}
+                        <label class="form-label">{{ __('purchase.montant_paye') }}</label>
+                        <input type="number" step="0.01" class="form-control @error('total_paid') is-invalid @enderror" wire:model="total_paid" min="0" placeholder="0.00">
+                        @error('total_paid') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
                 </div>
 
-                <hr>
-
-                {{-- Totals --}}
-                <h4 class="d-flex justify-content-between mt-3">
-                    <span>{{ __('Total') }}</span>
-                    <strong>{{ number_format($total, 2) }} {{ company()?->devise }}</strong>
-                </h4>
-
-                <hr>
-
-                {{-- Payment --}}
-                <div class="mb-3">
-                    <label for="total_paid" class="form-label">{{ __('Montant payé') }}</label>
-                    <input type="number" class="form-control @error('total_paid') is-invalid @enderror" wire:model="total_paid" placeholder="0.00">
-                    @error('total_paid') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                </div>
-
-                {{-- Actions --}}
-                <div class="d-grid gap-2">
-                    <button class="btn btn-success" wire:click="savePurchase" wire:loading.attr="disabled">
-                        <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-                        <i class="bx bx-check me-1"></i> {{ __('Finaliser l\'achat') }}
+                <div class="card-footer d-grid gap-2">
+                    {{-- Clé : annuler --}}
+                    <button type="button" class="btn btn-outline-secondary" wire:click="cancelPurchase">
+                        <i class="bx bx-x me-1"></i> {{ __('purchase.annuler') }}
                     </button>
-                    <button class="btn btn-danger" wire:click="clearCart" wire:loading.attr="disabled">
+                    {{-- Clé : finaliser_achat --}}
+                    <button type="submit" class="btn btn-success" wire:loading.attr="disabled" wire:target="savePurchase">
                         <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-                        <i class="bx bx-x me-1"></i> {{ __('Annuler') }}
+                        <i class="bx bx-check me-1"></i> {{ __('purchase.finaliser_achat') }}
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
+

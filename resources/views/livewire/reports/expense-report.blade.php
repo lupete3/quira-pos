@@ -1,11 +1,10 @@
 <div>
-    <!-- Filtres -->
     <div class="card mb-3">
         <div class="card-body row g-2">
           @if (Auth::user()->role_id == 1)
             <div class="col-md-2">
                 <select class="form-select" wire:model.lazy="store_id">
-                    <option value="">{{ __('Tous les magasins') }}</option>
+                    <option value="">{{ __('expense_report.all_stores') }}</option>
                     @foreach ($stores as $store)
                         <option value="{{ $store->id }}">{{ $store->name }}</option>
                     @endforeach
@@ -14,7 +13,7 @@
           @endif
             <div class="col-md-2">
                 <select class="form-select" wire:model.lazy="category_id">
-                    <option value="">{{ __('Toutes catégories') }}</option>
+                    <option value="">{{ __('expense_report.all_categories') }}</option>
                     @foreach ($categories as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                     @endforeach
@@ -22,11 +21,11 @@
             </div>
             <div class="col-md-2">
                 <select class="form-select" wire:model.lazy="date_type">
-                    <option value="all">{{ __('Toutes périodes') }}</option>
-                    <option value="today">{{ __("Aujourd'hui") }}</option>
-                    <option value="month">{{ __('Ce mois') }}</option>
-                    <option value="year">{{ __('Cette année') }}</option>
-                    <option value="range">{{ __('Intervalle') }}</option>
+                    <option value="all">{{ __('expense_report.all_periods') }}</option>
+                    <option value="today">{{ __('expense_report.today') }}</option>
+                    <option value="month">{{ __('expense_report.this_month') }}</option>
+                    <option value="year">{{ __('expense_report.this_year') }}</option>
+                    <option value="range">{{ __('expense_report.range') }}</option>
                 </select>
             </div>
             @if($date_type == 'range')
@@ -38,46 +37,44 @@
                 </div>
             @endif
             <div class="col-md-2">
-                <input type="text" class="form-control" wire:model.live="search" placeholder="{{ __('Rechercher...') }}">
+                <input type="text" class="form-control" wire:model.live="search" placeholder="{{ __('expense_report.search') }}">
             </div>
             <div class="col-md-2">
                 <button class="btn btn-danger w-100" wire:click="exportPdf" wire:target="exportPdf" wire:loading.attr="disabled">
                     <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-                    <i class="bx bx-download"></i> {{ __('Exporter PDF') }}
+                    <i class="bx bx-download"></i> {{ __('expense_report.export_pdf') }}
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Statistiques -->
     <div class="row text-center mb-3">
         <div class="col-md-6 mb-2">
             <div class="card p-2 shadow-sm">
-                <strong>{{ __('Nombre de dépenses') }}</strong>
+                <strong>{{ __('expense_report.total_expenses_count') }}</strong>
                 <h5>{{ $total_expenses }}</h5>
             </div>
         </div>
         <div class="col-md-6 mb-2">
             <div class="card p-2 shadow-sm">
-                <strong>{{ __('Montant total') }}</strong>
+                <strong>{{ __('expense_report.total_amount') }}</strong>
                 <h5 class="text-danger">{{ number_format($total_amount,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
     </div>
 
-    <!-- Tableau -->
     <div class="card">
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead class="table-light">
                     <tr>
-                        <th>#</th>
-                        <th>{{ __('Description') }}</th>
-                        <th>{{ __('Montant') }}</th>
-                        <th>{{ __('Catégorie') }}</th>
-                        <th>{{ __('Magasin') }}</th>
-                        <th>{{ __('Utilisateur') }}</th>
-                        <th>{{ __('Date') }}</th>
+                        <th>{{ __('expense_report.id') }}</th>
+                        <th>{{ __('expense_report.description') }}</th>
+                        <th>{{ __('expense_report.amount') }}</th>
+                        <th>{{ __('expense_report.category') }}</th>
+                        <th>{{ __('expense_report.store') }}</th>
+                        <th>{{ __('expense_report.user') }}</th>
+                        <th>{{ __('expense_report.date') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,7 +90,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">{{ __('Aucune dépense trouvée') }}</td>
+                            <td colspan="7" class="text-center">{{ __('expense_report.no_expense_found') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

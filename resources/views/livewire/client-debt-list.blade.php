@@ -2,7 +2,8 @@
     {{-- Recherche --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="{{ __('Rechercher par nom du client...') }}" wire:model.live.debounce.300ms="search">
+            {{-- Clé : rechercher --}}
+            <input type="text" class="form-control" placeholder="{{ __('customer_debt.rechercher') }}" wire:model.live.debounce.300ms="search">
         </div>
     </div>
 
@@ -12,9 +13,9 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>{{ __('Nom du client') }}</th>
-                    <th>{{ __('Dette totale') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th>{{ __('customer_debt.nom_client') }}</th>
+                    <th>{{ __('customer_debt.dette_totale') }}</th>
+                    <th>{{ __('customer_debt.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -25,13 +26,18 @@
                         <td>{{ number_format($client->debt, 2) }} {{ company()?->devise }}</td>
                         <td>
                             <button class="btn btn-success btn-sm" wire:click="selectClient({{ $client->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                                <i class="bx bx-dollar me-1"></i> {{ __('Ajouter un paiement') }}
+                                <i class="bx bx-dollar me-1"></i>
+                                {{-- Clé : ajouter_paiement --}}
+                                {{ __('customer_debt.ajouter_paiement') }}
                             </button>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center">{{ __('Aucun client endetté trouvé.') }}</td>
+                        <td colspan="4" class="text-center">
+                            {{-- Clé : aucun_client --}}
+                            {{ __('customer_debt.aucun_client') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -49,18 +55,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        {{ __('Ajouter un paiement pour') }} {{ $selectedClient ? $selectedClient->name : '' }}
+                        {{-- Clé : ajouter_paiement_pour --}}
+                        {{ __('customer_debt.ajouter_paiement_pour') }} {{ $selectedClient ? $selectedClient->name : '' }}
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fermer') }}"></button>
+                    {{-- Clé : fermer --}}
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('customer_debt.fermer') }}"></button>
                 </div>
                 <form wire:submit.prevent="savePayment">
                     <div class="modal-body">
                         @if($selectedClient)
-                            <p><strong>{{ __('Dette actuelle :') }}</strong> {{ number_format($selectedClient->debt, 2) }} {{ company()?->devise }}</p>
+                            {{-- Clé : dette_actuelle --}}
+                            <p><strong>{{ __('customer_debt.dette_actuelle') }}</strong> {{ number_format($selectedClient->debt, 2) }} {{ company()?->devise }}</p>
                         <div class="mb-3">
-                            <label for="selectedSale" class="form-label">{{ __('Sélectionner une vente impayée') }}</label>
+                            {{-- Clé : selectionner_vente --}}
+                            <label for="selectedSale" class="form-label">{{ __('customer_debt.selectionner_vente') }}</label>
                             <select class="form-select @error('selectedSale') is-invalid @enderror" wire:model.lazy="selectedSale">
-                                <option value="">{{ __('-- Choisir une vente --') }}</option>
+                                {{-- Clé : choisir_vente --}}
+                                <option value="">{{ __('customer_debt.choisir_vente') }}</option>
                                 @foreach($salesUnpaid as $sale)
                                     @php
                                         $reste = $sale->total_amount - $sale->total_paid;
@@ -74,25 +85,29 @@
                             </select>
                             @error('selectedSale') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-                    @endif
+                        @endif
 
                         <div class="mb-3">
-                            <label for="payment_amount" class="form-label">{{ __('Montant du paiement') }}</label>
+                            {{-- Clé : montant_paiement --}}
+                            <label for="payment_amount" class="form-label">{{ __('customer_debt.montant_paiement') }}</label>
                             <input type="number" step="0.01" class="form-control @error('payment_amount') is-invalid @enderror" wire:model="payment_amount" placeholder="0.00">
                             @error('payment_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="payment_description" class="form-label">{{ __('Description (optionnelle)') }}</label>
+                            {{-- Clé : description_optionnelle --}}
+                            <label for="payment_description" class="form-label">{{ __('customer_debt.description_optionnelle') }}</label>
                             <textarea class="form-control" wire:model="payment_description" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Fermer') }}</button>
-                        @if ($selectedClient && $selectedSale)
-
-                        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                          <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-                          {{ __('Enregistrer le paiement') }}</button>
+                        {{-- Clé : fermer --}}
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('customer_debt.fermer') }}</button>
+                        @if ($selectedClient)
+                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                                <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                {{-- Clé : enregistrer_paiement --}}
+                                {{ __('customer_debt.enregistrer_paiement') }}
+                            </button>
                         @endif
                     </div>
                 </form>

@@ -46,11 +46,20 @@ class BrandList extends Component
 
     public function save()
     {
+        // 1. Définition des règles
         $rules = [
             'name' => 'required|string|max:100|unique:brands,name,' . $this->brandId,
         ];
 
-        $this->validate($rules);
+        // 2. Définition des messages d'erreur de validation traduits
+        $messages = [
+            'name.required' => __('brand.nom_requis'),
+            'name.unique' => __('brand.nom_unique'),
+            // 'name.max' pourrait aussi être ajouté ici si besoin d'un message spécifique
+        ];
+
+        // 3. Validation avec messages traduits
+        $this->validate($rules, $messages);
 
         Brand::updateOrCreate(
             ['id' => $this->brandId],
@@ -60,7 +69,9 @@ class BrandList extends Component
             ]
         );
 
-        notyf()->success(__($this->isEditMode ? 'Marque mise à jour avec succès.' : 'Marque ajoutée avec succès.'));
+        // 4. Notification de succès traduite
+        $messageKey = $this->isEditMode ? 'brand.marque_mise_a_jour' : 'brand.marque_creee';
+        notyf()->success(__($messageKey));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -74,8 +85,15 @@ class BrandList extends Component
 
     public function delete()
     {
-        Brand::find($this->brandId)->delete();
-        notyf()->success(__('Marque supprimée avec succès'));
+        try {
+            // Tentative de suppression
+            Brand::find($this->brandId)->delete();
+            // 5. Notification de suppression traduite
+            notyf()->success(__('brand.marque_supprimee'));
+        } catch (\Exception $e) {
+            // Gestion d'erreur (ex: la marque est liée à un produit) avec message traduit
+            notyf()->error(__('brand.erreur_marque'));
+        }
     }
 
     private function resetInputFields()

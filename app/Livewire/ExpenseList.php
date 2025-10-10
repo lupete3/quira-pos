@@ -106,15 +106,17 @@ class ExpenseList extends Component
         if (Auth::user()->role_id != 1) {
             $store = Auth::user()->stores()->first();
             $this->store_id = $store?->id; // sécurisation si pas de magasin
-            $cashRegister = $store->cashRegister;
+            // L'accès à $cashRegister ici est incorrect si $store n'est pas trouvé,
+            // mais nous maintenons la structure existante en assumant que $store est valide pour la suite.
         }
 
         $store = Store::find($this->store_id);
         $cashRegister = $store->cashRegister;
 
         if ($this->amount > $cashRegister->current_balance) {
-          notyf()->error(__('Le montant dépensé est supérieur au solde de la caisse.'));
-          return;
+            // Clé : montant_depasse_solde
+            notyf()->error(__('expense.montant_depasse_solde'));
+            return;
         }
 
         Expense::updateOrCreate(
@@ -130,7 +132,8 @@ class ExpenseList extends Component
             ]
         );
 
-        notyf()->success(__($this->isEditMode ? 'Dépense mise à jour.' : 'Dépense enregistrée.'));
+        // Clés : depense_mise_a_jour / depense_enregistree
+        notyf()->success(__($this->isEditMode ? 'expense.depense_mise_a_jour' : 'expense.depense_enregistree'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -149,7 +152,8 @@ class ExpenseList extends Component
           $expense = Expense::findOrFail($this->expenseId)->update([
             'status' => $this->operationType
           ]);
-          notyf()->warning(__('La dépense a été annulée.'));
+          // Clé : depense_annulee
+          notyf()->warning(__('expense.depense_annulee'));
           $this->dispatch('close-validate-confirmation');
           return;
         }
@@ -180,17 +184,22 @@ class ExpenseList extends Component
                   $expense->update(['status' => $this->operationType]);
                   $expense->save();
                   $this->dispatch('close-validate-confirmation');
-                  notyf()->success(__('La dépense a été validée.'));
+                  // Clé : depense_validee
+                  notyf()->success(__('expense.depense_validee'));
 
               }else{
                 DB::rollBack();
-                throw new \Exception("Le montant dépensé est supérieur au solde de la caisse.");
-                notyf()->error(__('Le montant dépensé est supérieur au solde de la caisse.'));
+                // Clé : montant_depasse_solde
+                throw new \Exception(__('expense.montant_depasse_solde'));
+                // NOTE: La ligne ci-dessous est actuellement INACCESSIBLE car elle est après le "throw".
+                // Nous maintenons la clé de traduction si jamais le code est réorganisé.
+                notyf()->error(__('expense.montant_depasse_solde'));
               }
 
             } catch (\Throwable $th) {
               DB::rollBack();
-              notyf()->error(__('Une erreur s\'est produite lors de la validation de la dépense.'));
+              // Clé : depense_erreur_validation
+              notyf()->error(__('expense.depense_erreur_validation'));
             }
           });
 
@@ -208,7 +217,8 @@ class ExpenseList extends Component
     public function delete()
     {
         Expense::findOrFail($this->expenseId)->delete();
-        notyf()->success(__('Dépense supprimée.'));
+        // Clé : depense_supprimee
+        notyf()->success(__('expense.depense_supprimee'));
         $this->dispatch('close-delete-confirmation');
     }
 

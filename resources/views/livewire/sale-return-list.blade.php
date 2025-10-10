@@ -2,7 +2,9 @@
     {{-- Bouton Ajouter --}}
     <div class="d-flex justify-content-end align-items-center mb-3">
         <button class="btn btn-primary" wire:click="create" data-bs-toggle="modal" data-bs-target="#saleReturnModal">
-            <i class="bx bx-plus me-1"></i> {{ __('Ajouter') }}
+            <i class="bx bx-plus me-1"></i>
+            {{-- Clé : ajouter --}}
+            {{ __('sale_return.ajouter') }}
         </button>
     </div>
 
@@ -11,13 +13,14 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('Client') }}</th>
-                    <th>{{ __('ID Vente') }}</th>
-                    <th>{{ __('Produit') }}</th>
-                    <th>{{ __('Quantité') }}</th>
-                    <th>{{ __('Magasin') }}</th>
-                    <th>{{ __('Date') }}</th>
-                    <th>{{ __('Raison') }}</th>
+                    {{-- En-têtes du tableau --}}
+                    <th>{{ __('sale_return.client') }}</th>
+                    <th>{{ __('sale_return.id_vente') }}</th>
+                    <th>{{ __('sale_return.produit') }}</th>
+                    <th>{{ __('sale_return.quantite') }}</th>
+                    <th>{{ __('sale_return.magasin') }}</th>
+                    <th>{{ __('sale_return.date') }}</th>
+                    <th>{{ __('sale_return.raison') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -29,7 +32,8 @@
                                 {{ $return->sale_id }}
                             </a>
                         </td>
-                        <td>{{ $return->product->name ?? __('N/A') }}</td>
+                        {{-- Clé : na (supposons que "N/A" peut réutiliser la clé du module 'sale') --}}
+                        <td>{{ $return->product->name ?? __('sale.na') }}</td>
                         <td>{{ $return->quantity }}</td>
                         <td>{{ $return->sale->store->name }}</td>
                         <td>{{ $return->return_date }}</td>
@@ -37,7 +41,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">{{ __('Aucun retour de vente trouvé.') }}</td>
+                        <td colspan="7" class="text-center">
+                            {{-- Clé : aucun_retour --}}
+                            {{ __('sale_return.aucun_retour') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -54,25 +61,31 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('Créer un retour de vente') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fermer') }}"></button>
+                    {{-- Clé : creer_retour_vente --}}
+                    <h5 class="modal-title">{{ __('sale_return.creer_retour_vente') }}</h5>
+                    {{-- Clé : fermer --}}
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('sale_return.fermer') }}"></button>
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">{{ __('ID Vente') }}</label>
-                            <input type="number" class="form-control @error('sale_id') is-invalid @enderror" wire:model.live="sale_id" placeholder="{{ __('Entrez l\'ID de la vente') }}">
+                            {{-- Clé : id_vente --}}
+                            <label class="form-label">{{ __('sale_return.id_vente') }}</label>
+                            {{-- Clé : entrez_id_vente --}}
+                            <input type="number" class="form-control @error('sale_id') is-invalid @enderror" wire:model.live="sale_id" placeholder="{{ __('sale_return.entrez_id_vente') }}">
                             @error('sale_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         @if($saleProducts)
                         <div class="mb-3">
-                            <label class="form-label">{{ __('Produit') }}</label>
+                            {{-- Clé : produit --}}
+                            <label class="form-label">{{ __('sale_return.produit') }}</label>
                             <select class="form-select @error('product_id') is-invalid @enderror" wire:model="product_id">
-                                <option value="">{{ __('Sélectionnez un produit') }}</option>
+                                {{-- Clé : selectionner_produit --}}
+                                <option value="">{{ __('sale_return.selectionner_produit') }}</option>
                                 @foreach($saleProducts as $item)
                                     <option value="{{ $item->product->id }}">
-                                        {{ $item->product->name }} ({{ __('Acheté:') }} {{ $item->quantity }})
+                                        {{ $item->product->name }} ({{ __('sale_return.achete') }} {{ $item->quantity }})
                                     </option>
                                 @endforeach
                             </select>
@@ -81,22 +94,28 @@
                         @endif
 
                         <div class="mb-3">
-                            <label class="form-label">{{ __('Quantité') }}</label>
-                            <input type="number" class="form-control @error('quantity') is-invalid @enderror" wire:model="quantity" placeholder="{{ __('Entrez la quantité à retourner') }}">
+                            {{-- Clé : quantite --}}
+                            <label class="form-label">{{ __('sale_return.quantite') }}</label>
+                            {{-- Clé : entrez_quantite --}}
+                            <input type="number" class="form-control @error('quantity') is-invalid @enderror" wire:model="quantity" placeholder="{{ __('sale_return.entrez_quantite') }}">
                             @error('quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">{{ __('Raison') }}</label>
-                            <textarea class="form-control @error('reason') is-invalid @enderror" wire:model="reason" rows="3" placeholder="{{ __('Entrez la raison du retour') }}"></textarea>
+                            {{-- Clé : raison --}}
+                            <label class="form-label">{{ __('sale_return.raison') }}</label>
+                            {{-- Clé : entrez_raison --}}
+                            <textarea class="form-control @error('reason') is-invalid @enderror" wire:model="reason" rows="3" placeholder="{{ __('sale_return.entrez_raison') }}"></textarea>
                             @error('reason') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                        {{-- Clé : fermer --}}
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('sale_return.fermer') }}</button>
                         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                          <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-                          {{ __('Enregistrer le retour') }}</button>
+                            <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            {{-- Clé : enregistrer_retour --}}
+                            {{ __('sale_return.enregistrer_retour') }}</button>
                     </div>
                 </form>
             </div>

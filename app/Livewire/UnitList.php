@@ -27,7 +27,7 @@ class UnitList extends Component
         $units = Unit::where('tenant_id', $tenantId)
             ->where(function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('abbreviation', 'like', '%' . $this->search . '%');
+                    ->orWhere('abbreviation', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate(10);
@@ -54,12 +54,22 @@ class UnitList extends Component
 
     public function save()
     {
+        // 1. Définition des règles
         $rules = [
             'name' => 'required|string|max:50|unique:units,name,' . $this->unitId,
             'abbreviation' => 'nullable|string|max:20',
         ];
 
-        $this->validate($rules);
+        // 2. Définition des messages d'erreur de validation traduits
+        $messages = [
+            'name.required' => __('unit.nom_requis'),
+            'name.unique' => __('unit.nom_unique'),
+            // Vous pouvez ajouter plus de messages ici si nécessaire
+            // 'name.max' => __('unit.nom_trop_long'),
+        ];
+
+        // 3. Validation avec messages traduits
+        $this->validate($rules, $messages);
 
         Unit::updateOrCreate(
             ['id' => $this->unitId],
@@ -70,7 +80,9 @@ class UnitList extends Component
             ]
         );
 
-        notyf()->success(__($this->isEditMode ? 'Unité de mesure mise à jour avec succès' : 'Unité de mesure créée avec succès'));
+        // 4. Notification avec message traduit
+        $messageKey = $this->isEditMode ? 'unit.unite_mise_a_jour' : 'unit.unite_creee';
+        notyf()->success(__($messageKey));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -84,8 +96,14 @@ class UnitList extends Component
 
     public function delete()
     {
-        Unit::find($this->unitId)->delete();
-        notyf()->success(__('Unité de mesure a été supprimée avec succès'));
+        try {
+            Unit::find($this->unitId)->delete();
+            // 5. Notification de suppression traduite
+            notyf()->success(__('unit.unite_supprimee'));
+        } catch (\Exception $e) {
+            // Gestion des erreurs (ex: clé étrangère) avec message traduit
+            notyf()->error(__('unit.erreur_unite'));
+        }
     }
 
     private function resetInputFields()

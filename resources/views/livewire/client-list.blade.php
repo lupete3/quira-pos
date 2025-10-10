@@ -2,10 +2,12 @@
     {{-- Search and Add button --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="{{ __('Rechercher des clients par nom, email ou téléphone...') }}" wire:model.live.debounce.300ms="search">
+            {{-- Clé : rechercher_clients --}}
+            <input type="text" class="form-control" placeholder="{{ __('client.rechercher_clients') }}" wire:model.live.debounce.300ms="search">
         </div>
         <button class="btn btn-primary" wire:click="create" data-bs-toggle="modal" data-bs-target="#clientModal">
-            <i class="bx bx-plus me-1"></i> {{ __('Ajouter') }}
+            <i class="bx bx-plus me-1"></i> {{-- Clé : ajouter --}}
+            {{ __('client.ajouter') }}
         </button>
     </div>
 
@@ -14,12 +16,13 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('ID') }}</th>
-                    <th>{{ __('Nom') }}</th>
-                    <th>{{ __('Email') }}</th>
-                    <th>{{ __('Téléphone') }}</th>
-                    <th>{{ __('Dette') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    {{-- Clés pour l'en-tête du tableau --}}
+                    <th>{{ __('client.id') }}</th>
+                    <th>{{ __('client.nom') }}</th>
+                    <th>{{ __('client.email') }}</th>
+                    <th>{{ __('client.telephone') }}</th>
+                    <th>{{ __('client.dette') }}</th>
+                    <th>{{ __('client.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -37,12 +40,14 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#" wire:click="edit({{ $client->id }})" data-bs-toggle="modal" data-bs-target="#clientModal">
-                                        <i class="bx bx-edit-alt me-1"></i> {{ __('Modifier') }}
+                                        <i class="bx bx-edit-alt me-1"></i> {{-- Clé : modifier --}}
+                                        {{ __('client.modifier') }}
                                     </a>
                                     @if (Auth::user()->role_id == 1)
-                                      <a class="dropdown-item" href="#" wire:click="confirmDelete({{ $client->id }})">
-                                          <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
-                                      </a>
+                                        <a class="dropdown-item" href="#" wire:click="confirmDelete({{ $client->id }})">
+                                            <i class="bx bx-trash me-1"></i> {{-- Clé : supprimer --}}
+                                            {{ __('client.supprimer') }}
+                                        </a>
                                     @endif
                                 </div>
                             </div>
@@ -50,7 +55,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">{{ __('Aucun client trouvé.') }}</td>
+                        <td colspan="6" class="text-center">
+                            {{-- Clé : aucun_client --}}
+                            {{ __('client.aucun_client') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -67,47 +75,60 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ $isEditMode ? __('Modifier le client') : __('Créer un client') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fermer') }}"></button>
+                    {{-- Clés conditionnelles pour le titre du modal --}}
+                    <h5 class="modal-title">{{ $isEditMode ? __('client.modifier_client') : __('client.creer_client') }}</h5>
+                    {{-- Clé : fermer --}}
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('client.fermer') }}"></button>
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">{{ __('Nom') }}</label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model="name" placeholder="{{ __('Entrez le nom du client') }}">
+                                {{-- Clé : nom_client --}}
+                                <label for="name" class="form-label">{{ __('client.nom_client') }}</label>
+                                {{-- Clé : entrez_nom --}}
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model="name" placeholder="{{ __('client.entrez_nom') }}">
                                 @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">{{ __('Email') }}</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model="email" placeholder="{{ __('Entrez l\'email') }}">
+                                {{-- Clé : email_client --}}
+                                <label for="email" class="form-label">{{ __('client.email_client') }}</label>
+                                {{-- Clé : entrez_email --}}
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model="email" placeholder="{{ __('client.entrez_email') }}">
                                 @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="phone" class="form-label">{{ __('Téléphone') }}</label>
-                                <input type="text" class="form-control @error('phone') is-invalid @enderror" wire:model="phone" placeholder="{{ __('Entrez le numéro de téléphone') }}">
+                                {{-- Clé : telephone_client --}}
+                                <label for="phone" class="form-label">{{ __('client.telephone_client') }}</label>
+                                {{-- Clé : entrez_telephone --}}
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" wire:model="phone" placeholder="{{ __('client.entrez_telephone') }}">
                                 @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="debt" class="form-label">{{ __('Dette initiale') }}</label>
+                                {{-- Clé : dette_initiale --}}
+                                <label for="debt" class="form-label">{{ __('client.dette_initiale') }}</label>
                                 <input type="number" step="0.01" class="form-control @error('debt') is-invalid @enderror" wire:model="debt" placeholder="0.00" readonly >
                                 @error('debt') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="address" class="form-label">{{ __('Adresse') }}</label>
-                            <textarea class="form-control @error('address') is-invalid @enderror" wire:model="address" rows="3" placeholder="{{ __('Entrez l\'adresse') }}"></textarea>
+                            {{-- Clé : adresse_client --}}
+                            <label for="address" class="form-label">{{ __('client.adresse_client') }}</label>
+                            {{-- Clé : entrez_adresse --}}
+                            <textarea class="form-control @error('address') is-invalid @enderror" wire:model="address" rows="3" placeholder="{{ __('client.entrez_adresse') }}"></textarea>
                             @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                        {{-- Clé : fermer --}}
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('client.fermer') }}</button>
                         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                             <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                             <i class="bx bx-check me-1"></i>
-                          {{ $isEditMode ? __('Enregistrer les modifications') : __('Créer') }}</button>
+                            {{-- Clés conditionnelles pour le bouton d'action --}}
+                          {{ $isEditMode ? __('client.enregistrer_modifications') : __('client.creer') }}</button>
                     </div>
                 </form>
             </div>

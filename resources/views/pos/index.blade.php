@@ -1,6 +1,6 @@
 <x-layouts.app>
     <x-slot:title>
-        {{ __('Point de vente') }}
+        {{ __('pos.pos') }}
     </x-slot:title>
 
     @livewire('pos')

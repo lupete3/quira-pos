@@ -25,8 +25,8 @@ class ClientList extends Component
         $clients = Client::where('tenant_id', $tenantId)
             ->where(function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('email', 'like', '%' . $this->search . '%')
-                      ->orWhere('phone', 'like', '%' . $this->search . '%');
+                    ->orWhere('email', 'like', '%' . $this->search . '%')
+                    ->orWhere('phone', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate(10);
@@ -61,8 +61,16 @@ class ClientList extends Component
             'address' => 'nullable|string',
             'debt' => 'nullable|numeric|min:0',
         ];
-        
-        $this->validate($rules);
+
+        // Messages de validation traduits
+        $messages = [
+            'name.required' => __('client.nom_requis'),
+            'email.unique' => __('client.email_unique'),
+            // Note: Les règles 'email', 'max', 'min', etc. utilisent les messages par défaut de Laravel
+            // sauf si vous les définissez explicitement ici. Pour l'exemple, nous nous concentrons sur les clés fournies.
+        ];
+
+        $this->validate($rules, $messages);
 
         Client::updateOrCreate(
             ['id' => $this->clientId],
@@ -76,7 +84,9 @@ class ClientList extends Component
             ]
         );
 
-        notyf()->success(__($this->isEditMode ? 'Client mis à jour avec succès.' : 'Client crée avec succès.'));
+        // Notification de succès traduite
+        $messageKey = $this->isEditMode ? 'client.client_mis_a_jour' : 'client.client_cree';
+        notyf()->success(__($messageKey));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -90,8 +100,14 @@ class ClientList extends Component
 
     public function delete()
     {
-        Client::find($this->clientId)->delete();
-        notyf()->success(__('Client supprimé avec succès'));
+        try {
+            Client::find($this->clientId)->delete();
+            // Notification de suppression traduite
+            notyf()->success(__('client.client_supprime'));
+        } catch (\Exception $e) {
+            // Gestion d'erreur (ex: clé étrangère) avec message traduit
+            notyf()->error(__('client.erreur_client'));
+        }
     }
 
     private function resetInputFields()

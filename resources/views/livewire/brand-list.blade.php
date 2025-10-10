@@ -4,14 +4,16 @@
         <div class="col-md-4">
             <input type="text"
                    class="form-control"
-                   placeholder="{{ __('Rechercher une marque...') }}"
+                   {{-- Utilisation de la clé 'brand.rechercher_marques' --}}
+                   placeholder="{{ __('brand.rechercher_marques') }}"
                    wire:model.live.debounce.300ms="search">
         </div>
         <button class="btn btn-primary"
                 wire:click="create"
                 data-bs-toggle="modal"
                 data-bs-target="#brandModal">
-            <i class="bx bx-plus me-1"></i> {{ __('Ajouter') }}
+            <i class="bx bx-plus me-1"></i> {{-- Utilisation de la clé 'brand.ajouter' --}}
+            {{ __('brand.ajouter') }}
         </button>
     </div>
 
@@ -20,9 +22,10 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('ID') }}</th>
-                    <th>{{ __('Nom') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    {{-- Utilisation des clés pour l'en-tête du tableau --}}
+                    <th>{{ __('brand.id') }}</th>
+                    <th>{{ __('brand.nom') }}</th>
+                    <th>{{ __('brand.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -43,12 +46,14 @@
                                        wire:click="edit({{ $brand->id }})"
                                        data-bs-toggle="modal"
                                        data-bs-target="#brandModal">
-                                        <i class="bx bx-edit-alt me-1"></i> {{ __('Modifier') }}
+                                        <i class="bx bx-edit-alt me-1"></i> {{-- Utilisation de la clé 'brand.modifier' --}}
+                                        {{ __('brand.modifier') }}
                                     </a>
                                     <a class="dropdown-item"
                                        href="#"
                                        wire:click="confirmDelete({{ $brand->id }})">
-                                        <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
+                                        <i class="bx bx-trash me-1"></i> {{-- Utilisation de la clé 'brand.supprimer' --}}
+                                        {{ __('brand.supprimer') }}
                                     </a>
                                 </div>
                             </div>
@@ -56,7 +61,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="text-center">{{ __('Aucune marque trouvée.') }}</td>
+                        <td colspan="3" class="text-center">
+                            {{-- Utilisation de la clé 'brand.aucune_marque' --}}
+                            {{ __('brand.aucune_marque') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
@@ -74,36 +82,41 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        {{ $isEditMode ? __('Modifier la marque') : __('Créer une marque') }}
+                        {{-- Utilisation des clés conditionnelles pour le titre du modal --}}
+                        {{ $isEditMode ? __('brand.modifier_marque') : __('brand.creer_marque') }}
                     </h5>
+                    {{-- Utilisation de la clé 'brand.fermer' pour l'attribut aria-label --}}
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="modal"
-                            aria-label="{{ __('Fermer') }}"></button>
+                            aria-label="{{ __('brand.fermer') }}"></button>
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="name" class="form-label">{{ __('Nom') }}</label>
+                            {{-- Utilisation de la clé 'brand.nom' --}}
+                            <label for="name" class="form-label">{{ __('brand.nom') }}</label>
                             <input type="text"
                                    class="form-control @error('name') is-invalid @enderror"
                                    id="name"
                                    wire:model="name"
-                                   placeholder="{{ __('Entrer le nom de la marque') }}">
+                                   {{-- Utilisation de la clé 'brand.nom_marque' comme placeholder --}}
+                                   placeholder="{{ __('brand.nom_marque') }}">
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
+                        {{-- Utilisation de la clé 'brand.fermer' --}}
                         <button type="button"
                                 class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                                data-bs-dismiss="modal">{{ __('brand.fermer') }}</button>
                         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                             <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                             <i class="bx bx-check me-1"></i>
-                            {{-- <i class="bx bx-check me-1"></i> --- IGNORE --- --}}
-                            {{ $isEditMode ? __('Enregistrer les modifications') : __('Créer') }}
+                            {{-- Utilisation des clés conditionnelles pour le bouton d'action --}}
+                            {{ $isEditMode ? __('brand.enregistrer_modifications') : __('brand.creer') }}
                         </button>
                     </div>
                 </form>

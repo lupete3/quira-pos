@@ -81,7 +81,7 @@ class Pos extends Component
     $product = Product::findOrFail($productId);
 
     if ($product->stores()->where('store_id', Auth::user()->stores()->first()->id)->first()->pivot->quantity <= 0) {
-      notyf()->error(__('Produit non disponible en stock'));
+      notyf()->error(__('pos.produit_non_disponible'));
       return;
     }
 
@@ -100,7 +100,7 @@ class Pos extends Component
       ];
     }
 
-    notyf()->success(__('Produit ajouté au panier.'));
+    notyf()->success(__('pos.produit_ajoute'));
   }
 
   public function updateQuantity($index, $quantity)
@@ -114,7 +114,7 @@ class Pos extends Component
     $product = Product::find($this->cart[$index]['id']);
     if ($quantity > $product->stores()->where('store_id', Auth::user()->stores()->first()->id)->first()->pivot->quantity) {
       $this->cart[$index]['quantity'] = $product->stores()->where('store_id', Auth::user()->stores()->first()->id)->first()->pivot->quantity;
-      notyf()->error(__('Quantité non disponible pour ') . $product->name);
+      notyf()->error(__('pos.quantite_non_disponible') . $product->name);
     } else {
       $this->cart[$index]['quantity'] = $quantity;
     }
@@ -144,7 +144,7 @@ class Pos extends Component
     ]);
 
     if (empty($this->cart)) {
-      notyf()->error('Cart is empty.');
+      notyf()->error('pos.panier_vide_erreur');
       return;
     }
 
@@ -211,12 +211,12 @@ class Pos extends Component
 
       DB::commit();
 
-      notyf()->success(__('Vente effectuée avec succès.'));
+      notyf()->success(__('pos.vente_reussie'));
       $this->clearCart();
       $this->dispatch('facture-validee', url: route('invoice.print', ['sale' => $sale->id]));
     } catch (\Throwable $th) {
       DB::rollBack();
-      notyf()->error(__('Une erreur est survenue lors de la vente.'));
+      notyf()->error(__('pos.vente_erreur'));
     }
   }
 

@@ -18,12 +18,12 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         Password::sendResetLink($this->only('email'));
 
-        session()->flash('status', __('Un lien de réinitialisation sera envoyé si le compte existe.'));
+        session()->flash('status', __('forgot_password.status_sent'));
     }
 };
 ?>
 
-@section('title', __('Mot de passe oublié'))
+@section('title', __('forgot_password.page_title'))
 
 @section('page-style')
 @vite([
@@ -32,8 +32,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 @endsection
 
 <div>
-    <h4 class="mb-1">{{ __('Mot de passe oublié ?') }} 🔒</h4>
-    <p class="mb-6">{{ __('Entrez votre adresse email et nous vous enverrons les instructions pour réinitialiser votre mot de passe.') }}</p>
+    <h4 class="mb-1">{{ __('forgot_password.heading') }}</h4>
+    <p class="mb-6">{{ __('forgot_password.description') }}</p>
 
     <!-- Session Status -->
     @if (session('status'))
@@ -44,7 +44,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     <form wire:submit="sendPasswordResetLink" class="mb-6">
         <div class="mb-6">
-            <label for="email" class="form-label">{{ __('Email') }}</label>
+            <label for="email" class="form-label">{{ __('forgot_password.email') }}</label>
             <input
                 wire:model="email"
                 type="email"
@@ -53,7 +53,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 required
                 autofocus
                 autocomplete="email"
-                placeholder="{{ __('Entrez votre email') }}"
+                placeholder="{{ __('forgot_password.email_placeholder') }}"
             >
             @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -61,14 +61,14 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </div>
 
         <button type="submit" class="btn btn-primary d-grid w-100 mb-6">
-            {{ __('Envoyer le lien de réinitialisation') }}
+            {{ __('forgot_password.send_reset_link') }}
         </button>
     </form>
 
     <div class="text-center">
         <a href="{{ route('login') }}" class="d-flex justify-content-center" wire:navigate>
             <i class="bx bx-chevron-left scaleX-n1-rtl me-1"></i>
-            {{ __('Retour à la connexion') }}
+            {{ __('forgot_password.back_to_login') }}
         </a>
     </div>
 </div>

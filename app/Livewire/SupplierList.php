@@ -25,8 +25,8 @@ class SupplierList extends Component
         $suppliers = Supplier::where('tenant_id', $tenantId)
             ->where(function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('email', 'like', '%' . $this->search . '%')
-                      ->orWhere('phone', 'like', '%' . $this->search . '%');
+                    ->orWhere('email', 'like', '%' . $this->search . '%')
+                    ->orWhere('phone', 'like', '%' . $this->search . '%');
             })
             ->latest()
             ->paginate(10);
@@ -62,7 +62,12 @@ class SupplierList extends Component
             'debt' => 'nullable|numeric|min:0',
         ];
 
-        $this->validate($rules);
+        $messages = [
+            'name.required' => __('supplier.nom_requis'),
+            'email.unique' => __('supplier.email_unique'),
+        ];
+
+        $this->validate($rules, $messages);
 
         Supplier::updateOrCreate(
             ['id' => $this->supplierId],
@@ -76,7 +81,8 @@ class SupplierList extends Component
             ]
         );
 
-        notyf()->success(__($this->isEditMode ? 'Fournisseur mis à jour avec succès.' : 'Fournisseur créé avec succès.'));
+        $messageKey = $this->isEditMode ? 'supplier.fournisseur_mis_a_jour' : 'supplier.fournisseur_cree';
+        notyf()->success(__($messageKey));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -90,8 +96,12 @@ class SupplierList extends Component
 
     public function delete()
     {
-        Supplier::find($this->supplierId)->delete();
-        notyf()->success(__('Le fournisseur a été supprimé avec succès.'));
+        try {
+            Supplier::find($this->supplierId)->delete();
+            notyf()->success(__('supplier.fournisseur_supprime'));
+        } catch (\Exception $e) {
+            notyf()->error(__('supplier.erreur_fournisseur'));
+        }
     }
 
     private function resetInputFields()

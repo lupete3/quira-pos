@@ -2,10 +2,10 @@
     {{-- Barre de recherche et bouton d'ajout --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="{{ __('Rechercher des utilisateurs par nom ou email...') }}" wire:model.live.debounce.300ms="search">
+            <input type="text" class="form-control" placeholder="{{ __('users.search_placeholder') }}" wire:model.live.debounce.300ms="search">
         </div>
         <button class="btn btn-primary" wire:click="create" data-bs-toggle="modal" data-bs-target="#userModal">
-            <i class="bx bx-plus me-1"></i> {{ __('Ajouter') }}
+            <i class="bx bx-plus me-1"></i> {{ __('users.add_user') }}
         </button>
     </div>
 
@@ -14,11 +14,11 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('ID') }}</th>
-                    <th>{{ __('Nom') }}</th>
-                    <th>{{ __('Email') }}</th>
-                    <th>{{ __('Rôle') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th>{{ __('users.id') }}</th>
+                    <th>{{ __('users.name') }}</th>
+                    <th>{{ __('users.email') }}</th>
+                    <th>{{ __('users.role') }}</th>
+                    <th>{{ __('users.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -35,10 +35,10 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#" wire:click="edit({{ $user->id }})" data-bs-toggle="modal" data-bs-target="#userModal">
-                                        <i class="bx bx-edit-alt me-1"></i> {{ __('Éditer') }}
+                                        <i class="bx bx-edit-alt me-1"></i> {{ __('users.edit') }}
                                     </a>
                                     <a class="dropdown-item" href="#" wire:click="confirmDelete({{ $user->id }})">
-                                        <i class="bx bx-trash me-1"></i> {{ __('Supprimer') }}
+                                        <i class="bx bx-trash me-1"></i> {{ __('users.delete') }}
                                     </a>
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">{{ __('Aucun utilisateur trouvé.') }}</td>
+                        <td colspan="5" class="text-center">{{ __('users.no_user_found') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -63,27 +63,27 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ $isEditMode ? __('Éditer l’utilisateur') : __('Créer un utilisateur') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Fermer') }}"></button>
+                    <h5 class="modal-title">{{ $isEditMode ? __('users.edit_user') : __('users.create_user') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('users.close') }}"></button>
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">{{ __('Nom') }}</label>
+                            <label class="form-label">{{ __('users.name') }}</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model="name">
                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">{{ __('Email') }}</label>
+                            <label class="form-label">{{ __('users.email') }}</label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model="email">
                             @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">{{ __('Rôle') }}</label>
+                            <label class="form-label">{{ __('users.role') }}</label>
                             <select class="form-select @error('role_id') is-invalid @enderror" wire:model="role_id">
-                                <option value="">{{ __('Sélectionner un rôle') }}</option>
+                                <option value="">{{ __('users.select_role') }}</option>
                                 @foreach($roles as $role)
                                     <option value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
@@ -92,19 +92,19 @@
                         </div>
 
                         <div class="mb-3 form-password-toggle">
-                            <label class="form-label">{{ __('Mot de passe') }}</label>
+                            <label class="form-label">{{ __('users.password') }}</label>
                             <div class="input-group input-group-merge">
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" wire:model="password">
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                             @if($isEditMode)
-                                <small class="form-text text-muted">{{ __('Laisser vide pour conserver le mot de passe actuel.') }}</small>
+                                <small class="form-text text-muted">{{ __('users.leave_blank_to_keep') }}</small>
                             @endif
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3 form-password-toggle">
-                            <label class="form-label">{{ __('Confirmer le mot de passe') }}</label>
+                            <label class="form-label">{{ __('users.password_confirmation') }}</label>
                             <div class="input-group input-group-merge">
                                 <input type="password" class="form-control" wire:model="password_confirmation">
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
@@ -112,11 +112,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Fermer') }}</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('users.close') }}</button>
                         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                             <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
                             <i class="bx bx-check me-1"></i>
-                          {{ $isEditMode ? __('Enregistrer les modifications') : __('Créer') }}</button>
+                          {{ $isEditMode ? __('users.save_changes') : __('users.create') }}</button>
                     </div>
                 </form>
             </div>

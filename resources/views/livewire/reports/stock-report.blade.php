@@ -4,7 +4,7 @@
             <div class="input-group">
               @if (Auth::user()->role_id == 1)
                 <select wire:model.lazy="store_id" class="form-select">
-                    <option value="">{{ __('-- Tous les magasins --') }}</option>
+                    <option value="">{{ __('stock_report.all_stores_option') }}</option>
                     @foreach($stores as $st)
                         <option value="{{ $st->id }}">{{ $st->name }}</option>
                     @endforeach
@@ -13,12 +13,12 @@
             </div>
         </div>
         <div class="col-12 col-md-6 mb-2">
-            <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('Rechercher un produit...') }}">
+            <input type="text" wire:model.live="search" class="form-control" placeholder="{{ __('stock_report.search_product') }}">
         </div>
         <div class="col-12 col-md-3 mb-2">
           <button wire:click="exportPDF" class="btn btn-danger" wire:target="exportPdf" wire:loading.attr="disabled">
               <span wire:loading class="spinner-border spinner-border-sm me-2" role="status"></span>
-              <i class="bx bx-file"></i> {{ __('Exporter PDF') }}
+              <i class="bx bx-file"></i> {{ __('stock_report.export_pdf') }}
           </button>
         </div>
     </div>
@@ -27,13 +27,13 @@
     <table class="table table-bordered table-striped">
         <thead class="table-light">
             <tr>
-                <th>{{ __('Produit') }}</th>
-                <th>{{ __('Catégorie') }}</th>
-                <th>{{ __('Magasin') }}</th>
-                <th>{{ __('Stock Actuel') }}</th>
-                <th>{{ __('Valeur Achat') }}</th>
-                <th>{{ __('Valeur Vente') }}</th>
-                <th>{{ __('Bénéfice Attendu') }}</th>
+                <th>{{ __('stock_report.product') }}</th>
+                <th>{{ __('stock_report.category') }}</th>
+                <th>{{ __('stock_report.store') }}</th>
+                <th>{{ __('stock_report.current_stock') }}</th>
+                <th>{{ __('stock_report.purchase_value') }}</th>
+                <th>{{ __('stock_report.sale_value') }}</th>
+                <th>{{ __('stock_report.expected_profit') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@
                         @if($store_id)
                             {{ $prod->stores->first()->name ?? '-' }}
                         @else
-                            {{ __('Tous magasins') }}
+                            {{ __('stock_report.all_stores') }}
                         @endif
                     </td>
                     <td>{{ $stock }}</td>

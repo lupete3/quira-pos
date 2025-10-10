@@ -48,37 +48,63 @@ class SupplierDebtList extends Component
 
     public function savePayment()
     {
-        $this->validate([
+        // Définition des règles et des messages de validation traduits
+        $rules = [
             'selectedPurchase' => 'required|exists:purchases,id',
             'payment_amount'   => 'required|numeric|min:0.01',
-        ]);
+        ];
+
+        $messages = [
+            'selectedPurchase.required' => __('supplier_debt.selectionner_facture'), // Utilisé la clé la plus pertinente
+            'payment_amount.required'   => __('customer_debt.montant_requis'), // Réutilisation d'une clé client/générique si non fournie ici
+            'payment_amount.numeric'    => __('customer_debt.montant_numerique'),
+            'payment_amount.min'        => __('customer_debt.montant_min'),
+        ];
+
+        $this->validate($rules, $messages);
 
         $purchase = Purchase::findOrFail($this->selectedPurchase);
 
         // montant restant
         $remaining = $purchase->total_amount - $purchase->total_paid;
+
+        // Validation que le montant ne dépasse pas le reste à payer (même si min() est utilisé pour limiter)
+        if ($this->payment_amount > $remaining) {
+             // Ici, on pourrait utiliser une notification plus spécifique si on en avait une pour le fournisseur,
+             // mais en attendant on notifie pour éviter un comportement inattendu si l'utilisateur met un gros montant.
+             notyf()->warning(__('supplier_debt.montant_depasse'));
+            $this->payment_amount = $remaining;
+            return;
+        }
+
         $amountToPay = min($this->payment_amount, $remaining);
 
-        DB::transaction(function () use ($purchase, $amountToPay) {
-            // Enregistrement dette fournisseur (trace)
-            Debt::create([
-                'tenant_id' => Auth::user()->tenant_id,
-                'supplier_id' => $this->selectedSupplier->id,
-                'amount'      => $amountToPay,
-                'description' => 'Paiement facture achat #' . $purchase->id . '. ' . $this->payment_description,
-                'is_paid'     => true,
-                'paid_date'   => now(),
-            ]);
+        try {
+            DB::transaction(function () use ($purchase, $amountToPay) {
+                // Enregistrement dette fournisseur (trace)
+                Debt::create([
+                    'tenant_id'   => Auth::user()->tenant_id,
+                    'supplier_id' => $this->selectedSupplier->id,
+                    'amount'      => $amountToPay,
+                    'description' => 'Paiement facture achat #' . $purchase->id . '. ' . $this->payment_description,
+                    'is_paid'     => true,
+                    'paid_date'   => now(),
+                ]);
 
-            // MAJ facture achat
-            $purchase->increment('total_paid', $amountToPay);
+                // MAJ facture achat
+                $purchase->increment('total_paid', $amountToPay);
 
-            // MAJ dette totale fournisseur
-            $this->selectedSupplier->decrement('debt', $amountToPay);
-        });
+                // MAJ dette totale fournisseur
+                $this->selectedSupplier->decrement('debt', $amountToPay);
+            });
 
-        notyf()->success(__('Paiement fournisseur enregistré avec succès.'));
-        $this->dispatch('close-modal');
-        $this->reset(['selectedSupplier','purchasesUnpaid','selectedPurchase','payment_amount','payment_description']);
+            // Notification de succès traduite
+            notyf()->success(__('supplier_debt.paiement_enregistre'));
+            $this->dispatch('close-modal');
+            $this->reset(['selectedSupplier','purchasesUnpaid','selectedPurchase','payment_amount','payment_description']);
+        } catch (\Exception $e) {
+            // Notification d'erreur générale traduite
+            notyf()->error(__('supplier_debt.erreur_operation'));
+        }
     }
 }

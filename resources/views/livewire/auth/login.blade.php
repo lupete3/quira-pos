@@ -15,75 +15,99 @@ new #[Layout('components.layouts.auth')] class extends Component {
     #[Validate('required|string|email')]
     public string $email = '';
 
-    #[Validate('required|string')]
+    #[Validate('required|string|min:4')]
     public string $password = '';
 
     public bool $remember = false;
 
     /**
-     * Handle an incoming authentication request.
+     * Messages personnalisés de validation
      */
-    public function login(): void
+    protected function messages(): array
     {
-        $this->validate();
-
-        $this->ensureIsNotRateLimited();
-
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
-
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        return [
+            'email.required' => __('login.required_email'),
+            'email.email' => __('login.invalid_email_format'),
+            'password.required' => __('login.required_password'),
+            'password.min' => __('login.too_short_password'),
+        ];
     }
 
     /**
-     * Ensure the authentication request is not rate limited.
+     * Tente de connecter l'utilisateur
+     */
+    public function login(): void
+    {
+        try {
+            $this->validate();
+
+            $this->ensureIsNotRateLimited();
+
+            if (!Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+                RateLimiter::hit($this->throttleKey());
+
+                notyf()->error(__('auth.failed'));
+                return;
+            }
+
+            // Succès de connexion
+            RateLimiter::clear($this->throttleKey());
+            Session::regenerate();
+
+            notyf()->success(__('login.success_message'));
+
+            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        } catch (ValidationException $e) {
+            // Gestion des erreurs de validation
+            $errors = collect($e->errors())->flatten()->toArray();
+            notyf()->error(implode("\n", $errors));
+            throw $e;
+        }
+    }
+
+    /**
+     * Vérifie le nombre de tentatives de connexion
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
         event(new Lockout(request()));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
-
-        throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+        $message = __('auth.throttle', [
+            'seconds' => $seconds,
+            'minutes' => ceil($seconds / 60),
         ]);
+
+        notyf()->warning($message);
+
+        throw ValidationException::withMessages(['email' => $message]);
     }
 
     /**
-     * Get the authentication rate limiting throttle key.
+     * Clé unique de limitation par IP + email
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 };
 ?>
 
-@section('title', __('Page de connexion'))
+@section('title', __('login.login_page_title'))
 
 @section('page-style')
-@vite([
-    'resources/assets/vendor/scss/pages/page-auth.scss'
-])
+    @vite(['resources/assets/vendor/scss/pages/page-auth.scss'])
 @endsection
 
 <div>
-    <x-auth-header :title="__('Bienvenue sur :app !', ['app' => company()?->name ?? config('app.name')])" :description="__('Saisissez votre email et mot de passe ci-dessous pour vous connecter')" />
+    <ul class="navbar-nav flex-row align-items-center ms-md-auto">
+        @livewire('language-switcher')
+    </ul>
+    <x-auth-header :title="__('login.welcome', ['app' => company()?->name ?? config('app.name')])" :description="__('login.login_description')" />
 
     <!-- Session Status -->
     @if (session('status'))
@@ -94,17 +118,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     <form wire:submit="login" class="mb-6">
         <div class="mb-6">
-            <label for="email" class="form-label">{{ __('Email ou Nom d\'utilisateur') }}</label>
-            <input
-                wire:model="email"
-                type="email"
-                class="form-control @error('email') is-invalid @enderror"
-                id="email"
-                required
-                autofocus
-                autocomplete="email"
-                placeholder="{{ __('Saisissez votre email') }}"
-            >
+            <label for="email" class="form-label">{{ __('login.email') }}</label>
+            <input wire:model="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                id="email" required autofocus autocomplete="email"
+                placeholder="{{ __('login.email_placeholder') }}">
             @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -112,23 +129,17 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         <div class="mb-6 form-password-toggle">
             <div class="d-flex justify-content-between">
-                <label for="password" class="form-label">{{ __('Mot de passe') }}</label>
+                <label for="password" class="form-label">{{ __('login.password') }}</label>
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" wire:navigate>
-                        <span>{{ __('Mot de passe oublié ?') }}</span>
+                        <span>{{ __('login.forgot_password') }}</span>
                     </a>
                 @endif
             </div>
             <div class="input-group input-group-merge">
-                <input
-                    wire:model="password"
-                    type="password"
-                    class="form-control @error('password') is-invalid @enderror"
-                    id="password"
-                    required
-                    autocomplete="current-password"
-                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                >
+                <input wire:model="password" type="password"
+                    class="form-control @error('password') is-invalid @enderror" id="password" required
+                    autocomplete="current-password" placeholder="{{ __('login.password_placeholder') }}">
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -141,22 +152,29 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 <div class="form-check mb-0 ms-2">
                     <input wire:model="remember" type="checkbox" class="form-check-input" id="remember">
                     <label class="form-check-label" for="remember">
-                        {{ __('Se souvenir de moi') }}
+                        {{ __('login.remember_me') }}
                     </label>
                 </div>
             </div>
         </div>
 
         <div class="mb-6">
-            <button type="submit" class="btn btn-primary d-grid w-100">{{ __('Se connecter') }}</button>
+            <button type="submit" class="btn btn-primary d-grid w-100" wire:loading.attr="disabled"
+                wire:target="login">
+                <span wire:loading wire:target="login" class="spinner-border spinner-border-sm me-2"
+                    role="status"></span>
+                <span wire:loading.remove wire:target="login">
+                    {{ __('login.login') }}
+                </span>
+            </button>
         </div>
     </form>
 
     @if (Route::has('register'))
         <p class="text-center">
-            <span>{{ __('Nouveau sur notre plateforme ?') }}</span>
+            <span>{{ __('login.new_here') }}</span>
             <a href="{{ route('register') }}" wire:navigate>
-                <span>{{ __('Créer un compte') }}</span>
+                <span>{{ __('login.register') }}</span>
             </a>
         </p>
     @endif

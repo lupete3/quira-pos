@@ -33,7 +33,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 };
 ?>
 
-@section('title', __('Confirmer le mot de passe'))
+@section('title', __('confirm_password.page_title'))
 
 @section('page-style')
 @vite([
@@ -42,8 +42,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 @endsection
 
 <div>
-    <h4 class="mb-1">{{ __('Vérification de sécurité') }} 🔐</h4>
-    <p class="mb-6">{{ __('Ceci est une zone sécurisée. Veuillez confirmer votre mot de passe avant de continuer.') }}</p>
+    <h4 class="mb-1">{{ __('confirm_password.heading') }}</h4>
+    <p class="mb-6">{{ __('confirm_password.description') }}</p>
 
     <!-- Session Status -->
     @if (session('status'))
@@ -54,7 +54,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     <form wire:submit="confirmPassword" class="mb-6">
         <div class="mb-6 form-password-toggle">
-            <label class="form-label" for="password">{{ __('Mot de passe') }}</label>
+            <label class="form-label" for="password">{{ __('confirm_password.password') }}</label>
             <div class="input-group input-group-merge">
                 <input
                     wire:model="password"
@@ -63,7 +63,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     id="password"
                     required
                     autocomplete="current-password"
-                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                    placeholder="{{ __('confirm_password.password_placeholder') }}"
                 >
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                 @error('password')
@@ -73,14 +73,14 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </div>
 
         <button type="submit" class="btn btn-primary d-grid w-100 mb-6">
-            {{ __('Confirmer le mot de passe') }}
+            {{ __('confirm_password.confirm_password_button') }}
         </button>
     </form>
 
     <div class="text-center">
         <a href="{{ route('dashboard') }}" class="d-flex justify-content-center" wire:navigate>
             <i class="bx bx-chevron-left scaleX-n1-rtl me-1"></i>
-            {{ __('Retour au tableau de bord') }}
+            {{ __('confirm_password.back_to_dashboard') }}
         </a>
     </div>
 </div>

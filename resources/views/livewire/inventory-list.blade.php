@@ -2,7 +2,9 @@
     {{-- Add button --}}
     <div class="d-flex justify-content-end align-items-center mb-3">
         <a href="{{ route('inventories.create') }}" class="btn btn-primary">
-            <i class="bx bx-plus me-1"></i> {{ __('Démarrer un nouvel inventaire') }}
+            <i class="bx bx-plus me-1"></i> 
+            {{-- Clé : demarrer_nouvel_inventaire --}}
+            {{ __('inventory.demarrer_nouvel_inventaire') }}
         </a>
     </div>
 
@@ -11,12 +13,12 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{{ __('ID') }}</th>
-                    <th>{{ __('Date') }}</th>
-                    <th>{{ __('Utilisateur') }}</th>
-                    <th>{{ __('Magasin') }}</th>
-                    <th>{{ __('Statut') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th>{{ __('inventory.id') }}</th>
+                    <th>{{ __('inventory.date') }}</th>
+                    <th>{{ __('inventory.utilisateur') }}</th>
+                    <th>{{ __('inventory.magasin') }}</th>
+                    <th>{{ __('inventory.statut') }}</th>
+                    <th>{{ __('inventory.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -24,22 +26,28 @@
                     <tr wire:key="{{ $inventory->id }}">
                         <td>{{ $inventory->id }}</td>
                         <td>{{ $inventory->inventory_date }}</td>
+                        <td>{{ $inventory->user->name ?? __('inventory.na') }}</td>
                         <td>{{ $inventory->store->name }}</td>
-                        <td>{{ $inventory->user->name ?? __('N/A') }}</td>
                         <td>
                             <span class="badge bg-label-{{ $inventory->status == 'validated' ? 'success' : 'warning' }}">
-                                {{ $inventory->status == 'validated' ? __('Validé') : __('En attente') }}
+                                {{-- Clés : valide / en_attente --}}
+                                {{ $inventory->status == 'validated' ? __('inventory.valide') : __('inventory.en_attente') }}
                             </span>
                         </td>
                         <td>
                             <a href="{{ route('inventories.show', $inventory->id) }}" class="btn btn-info btn-sm" wire:navigate>
-                                <i class="bx bx-show me-1"></i> {{ __('Voir') }}
+                                <i class="bx bx-show me-1"></i> 
+                                {{-- Clé : voir --}}
+                                {{ __('inventory.voir') }}
                             </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">{{ __('Aucun inventaire trouvé.') }}</td>
+                        <td colspan="6" class="text-center">
+                            {{-- Clé : aucun_inventaire --}}
+                            {{ __('inventory.aucun_inventaire') }}
+                        </td>
                     </tr>
                 @endforelse
             </tbody>

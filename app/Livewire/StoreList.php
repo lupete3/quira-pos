@@ -79,7 +79,7 @@ class StoreList extends Component
             ->first();
 
         if (!$subscription) {
-            notyf()->error(__("Vous devez avoir une souscription active pour créer un point de vente."));
+            notyf()->error(__('store.erreur_point_vente'));
             return;
         }
 
@@ -91,7 +91,7 @@ class StoreList extends Component
 
             // Seulement si on crée un nouveau magasin (pas en édition)
             if (!$this->storeId && $currentStoresCount >= $plan->max_stores) {
-                notyf()->error(__("Votre plan ne permet pas de créer plus de {$plan->max_stores} magasins."));
+                notyf()->error(__('store.erreur_point_vente') . " ({$plan->max_stores})");
                 return;
             }
         }
@@ -110,7 +110,10 @@ class StoreList extends Component
             'email' => 'nullable|email|max:100',
         ];
 
-        $this->validate($rules);
+        $this->validate($rules, [
+            'name.required' => __('store.nom_requis'),
+            'email.email' => __('store.email_invalide'),
+        ]);
 
         $store = Store::updateOrCreate(
             ['id' => $this->storeId],
@@ -140,7 +143,8 @@ class StoreList extends Component
         }
         $store->users()->sync($syncData);
 
-        notyf()->success(__($this->isEditMode ? 'Point de vente mis à jour.' : 'Point de vente créé.'));
+        // Notification
+        notyf()->success($this->isEditMode ? __('store.point_vente_modifie') : __('store.point_vente_cree'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -158,7 +162,7 @@ class StoreList extends Component
         $store->users()->detach();
         $store->delete();
 
-        notyf()->success(__('Point de vente supprimé.'));
+        notyf()->success(__('store.point_vente_supprime'));
     }
 
     private function resetInputFields()

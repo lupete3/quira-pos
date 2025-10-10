@@ -6,13 +6,11 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Str;
 
 class CategoryList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-
 
     public $search = '';
     public $categoryId;
@@ -22,15 +20,10 @@ class CategoryList extends Component
 
     protected $listeners = ['deleteConfirmed' => 'delete'];
 
-    protected $rules = [
-        'name' => 'required|string|max:100|unique:categories,name',
-        'description' => 'nullable|string',
-    ];
-
     public function render()
     {
         $categories = Category::where('tenant_id', Auth::user()->tenant_id)
-          ->where('name', 'like', '%' . $this->search . '%')
+            ->where('name', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate(10);
 
@@ -57,10 +50,10 @@ class CategoryList extends Component
     public function save()
     {
         $rules = [
-            'name' => 'required|string|max:100|unique:categories,name,' . $this->categoryId,
+            'name' => 'required|string|max:100|unique:categories,name,' . $this->categoryId . ',id,tenant_id,' . Auth::user()->tenant_id,
             'description' => 'nullable|string',
         ];
-        
+
         $this->validate($rules);
 
         Category::updateOrCreate(
@@ -72,7 +65,9 @@ class CategoryList extends Component
             ]
         );
 
-        notyf()->success(__($this->isEditMode ? 'Catégorie mise à jour avec succès.' : 'Catégorie créée avec succès.'));
+        notyf()->success(
+            __($this->isEditMode ? 'category.categorie_mise_a_jour' : 'category.categorie_creee')
+        );
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -86,8 +81,9 @@ class CategoryList extends Component
 
     public function delete()
     {
-        Category::find($this->categoryId)->delete();
-        notyf()->success(__('Catégorie supprimée avec succès.'));
+        Category::findOrFail($this->categoryId)->delete();
+
+        notyf()->success(__('category.categorie_supprimee'));
         $this->dispatch('close-delete-confirmation');
     }
 

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>{{ __('Reçu #') }}{{ $sale->id }}</title>
+  <title>{{ __('facture.receipt') }} #{{ $sale->id }}</title>
   <style>
     @media print {
       @page { margin:0; }
@@ -37,13 +37,13 @@
   <div class="line"></div>
 
   <!-- Titre et date -->
-  <div class="center bold">{{ __('FACTURE DE VENTE') }}</div>
+  <div class="center bold">{{ __('facture.sale_invoice') }}</div>
   <div class="center">{{ \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y H:i') }}</div>
   <div class="line"></div>
 
   <!-- Infos client -->
-  <div><strong>{{ __('Client') }} :</strong> {{ $client->name ?? __('Non défini') }}</div>
-  <div><strong>{{ __('Tél') }} :</strong> {{ $client->phone ?? '-' }}</div>
+  <div><strong>{{ __('facture.client') }} :</strong> {{ $client->name ?? __('facture.undefined') }}</div>
+  <div><strong>{{ __('facture.phone') }} :</strong> {{ $client->phone ?? '-' }}</div>
   <div class="line"></div>
 
   <!-- Blocs des produits -->
@@ -65,37 +65,37 @@
 
   <!-- Totaux -->
   <div class="item-qty-price">
-    <span>{{ __('Prix HT') }} :</span><br>
+    <span>{{ __('facture.price_ht') }} :</span><br>
     <span>{{ round(($sale->total_amount - $tva), 2) }}</span>
   </div>
   <div class="item-qty-price">
-    <span>{{ __('Reduction') }} :</span><br>
+    <span>{{ __('facture.discount') }} :</span><br>
     <span>{{ round(($sale->discount ?? 0), 2) }}</span>
   </div>
   <div class="item-qty-price">
-    <span>{{ __('TVA (16%)') }} :</span><br>
+    <span>{{ __('facture.vat') }} :</span><br>
     <span>{{ round((($sale->total_paid * 16 /100) ?? 0), 2) }}</span>
   </div>
 
   <div class="item-qty-price">
-    <span>{{ __('Prix TTC') }} :</span><br>
+    <span>{{ __('facture.price_ttc') }} :</span><br>
     <span>{{ round(($sale->total_amount + ($sale->discount ?? 0)), 2) }}</span>
   </div>
   <div class="item-total">
-    <span>{{ __('Total payé') }} :</span> {{ round($sale->total_paid, 2) }}{{ company()->devise ?? '' }}
+    <span>{{ __('facture.total_paid') }} :</span> {{ round($sale->total_paid, 2) }}{{ company()->devise ?? '' }}
   </div>
   <div class="item-total">
-    <span>{{ __('Reste') }} :</span> {{ round(($sale->total_amount - $sale->total_paid + ($sale->discount ?? 0)), 2) }}{{ company()->devise ?? '' }}
+    <span>{{ __('facture.remaining') }} :</span> {{ round(($sale->total_amount - $sale->total_paid + ($sale->discount ?? 0)), 2) }}{{ company()->devise ?? '' }}
   </div>
-  <p><strong>{{ __('Agent') }} :</strong> {{ $sale->user?->name ?? __('Non défini') }}</p>
+  <p><strong>{{ __('facture.agent') }} :</strong> {{ $sale->user?->name ?? __('facture.undefined') }}</p>
 
   <div class="line"></div>
-  <div class="center bold">{{ __('Merci pour votre confiance !') }}</div>
+  <div class="center bold">{{ __('facture.thank_you') }}</div>
 
   <!-- Pied de page -->
   <div class="footer">
-    {{ __('Ce document fait office de facture.') }}<br>
-    {{ __('Aucun remboursement sans ce reçu.') }}
+    {{ __('facture.footer_note') }}<br>
+    {{ __('facture.footer_note2') }}
   </div>
 
   <script>
