@@ -54,9 +54,10 @@ class ClientList extends Component
 
     public function save()
     {
+        $tenantId = Auth::user()->tenant_id;
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:100|unique:clients,email,' . $this->clientId,
+            'email' => 'nullable|email|max:100|unique:clients,email,' . $this->clientId . ',id,tenant_id,' . $tenantId,
             'phone' => 'nullable|string|max:50',
             'address' => 'nullable|string',
             'debt' => 'nullable|numeric|min:0',

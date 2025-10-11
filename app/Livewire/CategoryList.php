@@ -56,8 +56,9 @@ class CategoryList extends Component
 
     public function save()
     {
+        $tenantId = Auth::user()->tenant_id;
         $rules = [
-            'name' => 'required|string|max:100|unique:categories,name,' . $this->categoryId,
+            'name' => 'required|string|max:100|unique:categories,name,' . $this->categoryId . ',id,tenant_id,' . $tenantId,
             'description' => 'nullable|string',
         ];
         

@@ -46,8 +46,9 @@ class BrandList extends Component
 
     public function save()
     {
+        $tenantId = Auth::user()->tenant_id;
         $rules = [
-            'name' => 'required|string|max:100|unique:brands,name,' . $this->brandId,
+            'name' => 'required|string|max:100|unique:brands,name,' . $this->brandId . ',id,tenant_id,' . $tenantId,
         ];
 
         $this->validate($rules);

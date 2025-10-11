@@ -22,8 +22,9 @@ class ExpenseCategoryList extends Component
 
     protected function rules()
     {
+      $tenantId = Auth::user()->tenant_id;
         return [
-            'name' => 'required|string|max:100|unique:expense_categories,name,' . $this->categoryId,
+            'name' => 'required|string|max:100|unique:expense_categories,name,' . $this->categoryId . ',id,tenant_id,' . $tenantId,
             'description' => 'nullable|string',
         ];
     }

@@ -54,8 +54,10 @@ class UnitList extends Component
 
     public function save()
     {
+      $tenantId = Auth::user()->tenant_id;
+
         $rules = [
-            'name' => 'required|string|max:50|unique:units,name,' . $this->unitId,
+            'name' => 'required|string|max:50|unique:units,name,' . $this->unitId . ',id,tenant_id,' . $tenantId,
             'abbreviation' => 'nullable|string|max:20',
         ];
 

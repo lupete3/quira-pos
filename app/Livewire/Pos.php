@@ -36,8 +36,8 @@ class Pos extends Component
 
   public function mount()
   {
-    $this->categories = Category::orderBy('name')->get();
-    $this->brands = Brand::orderBy('name')->get();
+    $this->categories = Category::where('tenant_id', Auth::user()->tenant_id)->orderBy('name')->get();
+    $this->brands = Brand::where('tenant_id', Auth::user()->tenant_id)->get()->orderBy('name')->get();
   }
 
   public function render()
@@ -99,7 +99,6 @@ class Pos extends Component
         'subtotal' => $product->sale_price,
       ];
     }
-
     notyf()->success(__('Produit ajouté au panier.'));
   }
 
