@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
-            $table->string('reference', 50)->unique();
+            $table->string('reference', 50);
             $table->string('name');
             $table->foreignId('category_id')->constrained();
             $table->foreignId('brand_id')->nullable()->constrained();

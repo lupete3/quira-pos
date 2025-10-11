@@ -48,7 +48,7 @@ class BrandList extends Component
     {
         // 1. Définition des règles
         $rules = [
-            'name' => 'required|string|max:100|unique:brands,name,' . $this->brandId,
+            'name' => 'required|string|max:100',
         ];
 
         // 2. Définition des messages d'erreur de validation traduits

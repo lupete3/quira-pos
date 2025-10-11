@@ -91,9 +91,10 @@ class ProductList extends Component
 
     public function save()
     {
+        $tenantId = Auth::user()->tenant_id;
         $rules = [
             'name' => 'required|string|max:255',
-            'reference' => 'required|string|max:50|unique:products,reference,' . $this->productId,
+            'reference' => 'required|string|max:50|unique:products,reference,' . $this->productId . ',id,tenant_id,' . $tenantId,
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'unit_id' => 'required|exists:units,id',

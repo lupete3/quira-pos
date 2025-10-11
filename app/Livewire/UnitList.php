@@ -56,7 +56,7 @@ class UnitList extends Component
     {
         // 1. Définition des règles
         $rules = [
-            'name' => 'required|string|max:50|unique:units,name,' . $this->unitId,
+            'name' => 'required|string|max:50',
             'abbreviation' => 'nullable|string|max:20',
         ];
 

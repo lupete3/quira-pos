@@ -56,7 +56,7 @@ class ClientList extends Component
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:100|unique:clients,email,' . $this->clientId,
+            'email' => 'nullable|email|max:100',
             'phone' => 'nullable|string|max:50',
             'address' => 'nullable|string',
             'debt' => 'nullable|numeric|min:0',

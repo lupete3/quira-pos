@@ -50,7 +50,7 @@ class CategoryList extends Component
     public function save()
     {
         $rules = [
-            'name' => 'required|string|max:100|unique:categories,name,' . $this->categoryId . ',id,tenant_id,' . Auth::user()->tenant_id,
+            'name' => 'required|string|max:100',
             'description' => 'nullable|string',
         ];
 
