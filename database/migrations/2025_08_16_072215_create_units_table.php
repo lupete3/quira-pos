@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
-            $table->string('name', 50)->unique();
+            $table->string('name', 50);
             $table->string('abbreviation', 20)->nullable();
             $table->timestamps();
         });

@@ -37,7 +37,7 @@ class Pos extends Component
   public function mount()
   {
     $this->categories = Category::where('tenant_id', Auth::user()->tenant_id)->orderBy('name')->get();
-    $this->brands = Brand::where('tenant_id', Auth::user()->tenant_id)->get()->orderBy('name')->get();
+    $this->brands = Brand::where('tenant_id', Auth::user()->tenant_id)->orderBy('name')->get();
   }
 
   public function render()
