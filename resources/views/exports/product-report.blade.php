@@ -1,22 +1,24 @@
 @extends('components.layouts.pdf')
 
-@section('title', __('Rapport Produits'))
-@section('report-title', __('RAPPORT PRODUITS'))
+@section('title', __('productreport.report_title'))
+@section('report-title', __('productreport.report_title'))
 
 @section('content')
-    <h4>{{ __('Magasin') }}: {{ $store ? $store->name : __('Tous les magasins') }}</h4>
+    {{-- Filtre du rapport --}}
+    <h4>{{ __('productreport.store') }}: {{ $store ? $store->name : __('productreport.all_stores') }}</h4>
+    
     {{-- Tableau produits --}}
     <table class="table table-bordered" width="100%" cellspacing="0" cellpadding="4" style="font-size: 9px;">
         <thead>
             <tr>
-                <th>{{ __('Ref') }}</th>
-                <th>{{ __('Nom') }}</th>
-                <th>{{ __('Catégorie') }}</th>
-                <th>{{ __('Marque') }}</th>
-                <th>{{ __('Stock') }}</th>
-                <th>{{ __('Prix Achat') }}</th>
-                <th>{{ __('Prix Vente') }}</th>
-                <th>{{ __('Valeur Stock') }}</th>
+                <th>{{ __('productreport.ref') }}</th>
+                <th>{{ __('productreport.name') }}</th>
+                <th>{{ __('productreport.category') }}</th>
+                <th>{{ __('productreport.brand') }}</th>
+                <th>{{ __('productreport.stock') }}</th>
+                <th>{{ __('productreport.purchase_price') }}</th>
+                <th>{{ __('productreport.sale_price') }}</th>
+                <th>{{ __('productreport.stock_value') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -30,8 +32,8 @@
                 <tr>
                     <td>{{ $prod->reference }}</td>
                     <td>{{ $prod->name }}</td>
-                    <td>{{ $prod->category?->name ?? '-' }}</td>
-                    <td>{{ $prod->brand?->name ?? '-' }}</td>
+                    <td>{{ $prod->category?->name ?? __('productreport.undefined') }}</td>
+                    <td>{{ $prod->brand?->name ?? __('productreport.undefined') }}</td>
                     <td>{{ $storeStock }}</td>
                     <td>{{ number_format($prod->purchase_price, 2, ',', ' ') }} {{ company()?->devise }}</td>
                     <td>{{ number_format($prod->sale_price, 2, ',', ' ') }} {{ company()?->devise }}</td>

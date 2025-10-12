@@ -30,4 +30,7 @@ return [
     'store' => 'Store',
     'date' => 'Date',
     'no_sales_found' => 'No sales found',
+
+    'index_title' => 'Sale Report',
+    'title' => 'Sale Report',
 ];

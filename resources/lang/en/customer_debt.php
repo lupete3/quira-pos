@@ -32,4 +32,7 @@ return [
     'paiement_enregistre' => 'Payment recorded successfully.',
     'erreur_operation' => 'An error occurred during the operation.',
 
+    'index_title' => 'Customer Debt Management',
+    'title' => 'Customer Debts',
+
 ];

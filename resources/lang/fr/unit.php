@@ -32,4 +32,7 @@ return [
     'unite_supprimee' => 'Unité de mesure supprimée avec succès.',
     'erreur_unite' => 'Une erreur est survenue lors de l\'opération.',
 
+    'index_title' => 'Gestion des Unités',
+    'title' => 'Unités',
+
 ];

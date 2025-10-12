@@ -1,6 +1,6 @@
 <x-layouts.app>
     <x-slot:title>
-        {{ __('Gestion des Points de vente') }}
+        {{ __('store.store_management') }}
     </x-slot:title>
 
     <div class="card">

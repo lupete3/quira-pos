@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>@yield('title', __('Rapport'))</title>
+    <title>@yield('title', __('pdf.report'))</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,30 +38,30 @@
             <tr>
                 <td style="width: 15%;">
                     @if(company()?->logo && file_exists(public_path(company()->logo)))
-                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="logo" alt="{{ __('Logo') }}">
+                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path(company()->logo))) }}" class="logo" alt="{{ __('pdf.logo') }}">
                     @else
-                        <img src="{{ public_path('default-logo.png') }}" class="logo" alt="{{ __('Logo') }}">
+                        <img src="{{ public_path('default-logo.png') }}" class="logo" alt="{{ __('pdf.logo') }}">
                     @endif
                 </td>
                 <td style="width: 60%; text-align:center;">
                     <h2 style="margin: 0; font-size: 14px;">{{ strtoupper(company()?->name ?? config('app.name')) }}</h2>
-                    <p style="margin: 0;">{{ __('Adresse') }} : {{ company()?->address ?? __('Non définie') }}</p>
-                    <p style="margin: 0;">{{ __('Tel') }} : {{ company()?->phone ?? '-' }} – {{ __('Email') }} : {{ company()?->email ?? '-' }}</p>
+                    <p style="margin: 0;">{{ __('pdf.address') }} : {{ company()?->address ?? __('pdf.undefined') }}</p>
+                    <p style="margin: 0;">{{ __('pdf.phone') }} : {{ company()?->phone ?? '-' }} – {{ __('pdf.email') }} : {{ company()?->email ?? '-' }}</p>
                     @if(company()?->rccm || company()?->id_nat)
-                        <p style="margin: 0;">{{ __('RCCM') }} : {{ company()?->rccm }} | {{ __('ID Nat') }} : {{ company()?->id_nat }}</p>
+                        <p style="margin: 0;">{{ __('pdf.rccm') }} : {{ company()?->rccm }} | {{ __('pdf.id_nat') }} : {{ company()?->id_nat }}</p>
                     @endif
                 </td>
                 <td style="width: 25%; text-align:right; font-size: 9px;">
-                    <strong>{{ __('Date') }} :</strong> {{ now()->format('d/m/Y') }}<br>
-                    <strong>{{ __('Heure') }} :</strong> {{ now()->format('H:i') }}<br>
-                    <strong>{{ __('Utilisateur') }} :</strong><br>
+                    <strong>{{ __('pdf.date') }} :</strong> {{ now()->format('d/m/Y') }}<br>
+                    <strong>{{ __('pdf.time') }} :</strong> {{ now()->format('H:i') }}<br>
+                    <strong>{{ __('pdf.user') }} :</strong><br>
                     {{ auth()->user()->name ?? '-' }}
                 </td>
             </tr>
         </table>
         <hr style="margin: 10px 0; border-bottom: 2px solid #6EB8F1;">
         <h3 class="text-center" style="text-decoration: underline; margin-bottom: 2px;">
-            @yield('report-title', __('RAPPORT'))
+            @yield('report-title', __('pdf.report_title'))
         </h3>
     </div>
 
@@ -72,7 +72,7 @@
 
     {{-- FOOTER --}}
     <div class="footer">
-        {{ __('Rapport généré le') }} {{ now()->format('d/m/Y H:i') }} - {{ company()?->name ?? config('app.name') }}
+        {{ __('pdf.generated_on') }} {{ now()->format('d/m/Y H:i') }} - {{ company()?->name ?? config('app.name') }}
     </div>
 
 </body>

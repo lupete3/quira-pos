@@ -1,27 +1,29 @@
 @extends('components.layouts.pdf')
 
-@section('title', __('Rapport Inventaires'))
-@section('report-title', __('RAPPORT INVENTAIRES'))
+@section('title', __('inventoryreport.report_title'))
+@section('report-title', __('inventoryreport.report_title'))
 
 @section('content')
-    <p><strong>{{ __('Date') }}:</strong> {{ $inventory->inventory_date }}</p>
-    <p><strong>{{ __('Utilisateur') }}:</strong> {{ $inventory->user->name ?? __('N/A') }}</p>
-    <p><strong>{{ __('Magasin') }}:</strong> {{ $inventory->store->name ?? __('N/A') }}</p>
-    <p><strong>{{ __('Statut') }}:</strong> {{ $inventory->status }}</p>
+    {{-- Informations de l'inventaire --}}
+    <p><strong>{{ __('inventoryreport.date') }}:</strong> {{ $inventory->inventory_date }}</p>
+    <p><strong>{{ __('inventoryreport.user') }}:</strong> {{ $inventory->user->name ?? __('inventoryreport.undefined') }}</p>
+    <p><strong>{{ __('inventoryreport.store') }}:</strong> {{ $inventory->store->name ?? __('inventoryreport.undefined') }}</p>
+    <p><strong>{{ __('inventoryreport.status') }}:</strong> {{ $inventory->status }}</p>
 
+    {{-- Détail des articles --}}
     <table class="table">
         <thead>
             <tr>
-                <th>{{ __('Produit') }}</th>
-                <th>{{ __('Stock Théorique') }}</th>
-                <th>{{ __('Stock Physique') }}</th>
-                <th>{{ __('Différence') }}</th>
+                <th>{{ __('inventoryreport.product') }}</th>
+                <th>{{ __('inventoryreport.theoretical_stock') }}</th>
+                <th>{{ __('inventoryreport.physical_stock') }}</th>
+                <th>{{ __('inventoryreport.difference') }}</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($inventory->items as $item)
                 <tr>
-                    <td>{{ $item->product->name ?? __('N/A') }}</td>
+                    <td>{{ $item->product->name ?? __('inventoryreport.undefined') }}</td>
                     <td>{{ $item->theoretical_quantity }}</td>
                     <td>{{ $item->physical_quantity }}</td>
                     <td>

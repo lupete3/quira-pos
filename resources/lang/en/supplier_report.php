@@ -17,4 +17,7 @@ return [
 
     // Messages
     'no_results_found' => 'No results found',
+
+    'index_title' => 'Supplier Report',
+    'title' => 'Supplier Report',
 ];

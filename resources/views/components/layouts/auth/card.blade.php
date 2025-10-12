@@ -6,7 +6,7 @@
         <div class="card-body">
           <!-- Logo -->
           <div class="app-brand justify-content-center">
-            <a href="index.html" class="app-brand-link gap-2"><x-app-logo /></a>
+            <a href="{{ url('/') }}" class="app-brand-link gap-2"><x-app-logo /></a>
           </div>
           <!-- /Logo -->
 

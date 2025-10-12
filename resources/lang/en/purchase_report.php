@@ -28,4 +28,7 @@ return [
     'status' => 'Status',
     'date' => 'Date',
     'no_purchases_found' => 'No purchases found',
+
+    'index_title' => 'Purchase Report',
+    'title' => 'Purchase Report',
 ];

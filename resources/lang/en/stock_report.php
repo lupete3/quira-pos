@@ -15,4 +15,7 @@ return [
     'purchase_value' => 'Purchase Value',
     'sale_value' => 'Sale Value',
     'expected_profit' => 'Expected Profit',
+
+    'index_title' => 'Stock Report',
+    'title' => 'Stock Report',
 ];

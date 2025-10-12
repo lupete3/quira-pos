@@ -15,4 +15,7 @@ return [
     'purchase_value' => 'Valeur Achat',
     'sale_value' => 'Valeur Vente',
     'expected_profit' => 'Bénéfice Attendu',
+
+    'index_title' => 'Rapport de stock',
+    'title' => 'Rapport de stock',
 ];

@@ -21,4 +21,7 @@ return [
 
     // Pagination ou messages
     'no_clients_found' => 'Aucun client trouvé',
+
+    'index_title' => 'Rapport des clients',
+    'title' => 'Rapport des clients',
 ];

@@ -27,4 +27,7 @@ return [
 
     // Messages
     'no_expense_found' => 'Aucune dépense trouvée',
+
+    'index_title' => 'Rapport de dépenses',
+    'title' => 'Rapport de dépenses',
 ];

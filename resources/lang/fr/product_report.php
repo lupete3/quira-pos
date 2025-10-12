@@ -33,4 +33,7 @@ return [
     // Autres
     'aucun_produit' => 'Aucun produit trouvé',
 
+    'index_title' => 'Rapport des produits',
+    'title' => 'Rapport des produits',
+
 ];

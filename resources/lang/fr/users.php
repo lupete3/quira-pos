@@ -28,8 +28,11 @@ return [
 
     // Notifications
     'no_active_subscription' => 'Aucune souscription active.',
-    'user_limit_reached' => 'La limite de nombre d\'utilisateurs a été atteinte.',
+    'user_limit_reached' => 'La limite d\'utilisateurs a été atteinte pour votre plan (max :limit utilisateurs).',
     'user_created' => 'Utilisateur créé avec succès.',
     'user_updated' => 'Utilisateur mis à jour.',
     'user_deleted' => 'Utilisateur supprimé avec succès.',
+
+    'index_title' => 'Gestion des Utilisateurs',
+    'title' => 'Utilisateurs',
 ];

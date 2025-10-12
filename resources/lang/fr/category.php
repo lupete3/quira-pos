@@ -32,4 +32,7 @@ return [
     'categorie_supprimee' => 'Catégorie supprimée avec succès.',
     'erreur_categorie' => 'Une erreur est survenue lors de l\'opération.',
 
+    'index_title' => 'Gestion des Catégories',
+    'title' => 'Catégories',
+
 ];

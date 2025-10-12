@@ -1,26 +1,29 @@
 @extends('components.layouts.pdf')
 
-@section('title', __('Rapport Stocks'))
-@section('report-title', __('RAPPORT STOCK'))
+@section('title', __('stockreport.report_title'))
+@section('report-title', __('stockreport.report_title'))
 
 @section('content')
-    <h3><strong>Magasin :</strong>
-      @if($store)
-        {{ $store->name ?? '-' }}
-      @else
-        {{ __('Tous les magasins') }}
-      @endif
+    {{-- Information Magasin --}}
+    <h3><strong>{{ __('stockreport.store') }}:</strong>
+        @if($store)
+            {{ $store->name ?? '-' }}
+        @else
+            {{ __('stockreport.all_stores') }}
+        @endif
     </h3>
+    
+    {{-- Tableau de stock --}}
     <table class="table">
         <thead class="table-light">
-              <tr>
-                <th>{{ __('Produit') }}</th>
-                <th>{{ __('Catégorie') }}</th>
-                <th>{{ __('Magasin') }}</th>
-                <th>{{ __('Stock Actuel') }}</th>
-                <th>{{ __('Valeur Achat') }}</th>
-                <th>{{ __('Valeur Vente') }}</th>
-                <th>{{ __('Bénéfice Attendu') }}</th>
+            <tr>
+                <th>{{ __('stockreport.product') }}</th>
+                <th>{{ __('stockreport.category') }}</th>
+                <th>{{ __('stockreport.store') }}</th>
+                <th>{{ __('stockreport.current_stock') }}</th>
+                <th>{{ __('stockreport.purchase_value') }}</th>
+                <th>{{ __('stockreport.sale_value') }}</th>
+                <th>{{ __('stockreport.expected_profit') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -37,10 +40,11 @@
                     <td>{{ $prod->name }}</td>
                     <td>{{ $prod->category->name ?? '-' }}</td>
                     <td>
+                        {{-- Affichage du magasin dans la ligne du tableau --}}
                         @if($store)
                             {{ $store->name ?? '-' }}
                         @else
-                            {{ __('Tous magasins') }}
+                            {{ __('stockreport.all_stores') }}
                         @endif
                     </td>
                     <td>{{ $stock }}</td>

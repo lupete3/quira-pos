@@ -28,4 +28,7 @@ return [
     'status' => 'Statut',
     'date' => 'Date',
     'no_purchases_found' => 'Aucun achat trouvé',
+
+    'index_title' => 'Rapport des achats',
+    'title' => 'Rapport des achats',
 ];

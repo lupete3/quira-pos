@@ -50,4 +50,7 @@ return [
     'depense_erreur_validation' => 'An error occurred while validating the expense.',
     'montant_depasse_solde' => 'The spent amount exceeds the cash balance.',
 
+    'index_title' => 'Expense Management',
+    'title' => 'Expenses',
+
 ];

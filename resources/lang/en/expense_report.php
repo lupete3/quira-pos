@@ -27,4 +27,7 @@ return [
 
     // Messages
     'no_expense_found' => 'No expense found',
+
+    'index_title' => 'Expense Report',
+    'title' => 'Expense Report',
 ];

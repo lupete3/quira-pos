@@ -30,4 +30,7 @@ return [
     'marque_supprimee' => 'Marque supprimée avec succès.',
     'erreur_marque' => 'Une erreur est survenue lors de l\'opération.',
 
+    'index_title' => 'Gestion des Marques',
+    'title' => 'Marques',
+
 ];

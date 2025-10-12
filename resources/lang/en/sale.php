@@ -49,7 +49,7 @@ return [
     // Notifications / messages
     'erreur_vente' => 'An error occurred while loading sale data.',
 
-    'sales_history' => 'Historique des ventes',
-    'all_sales' => 'Toutes les ventes',
+    'sales_history' => 'Sales History',
+    'all_sales' => 'All Sales',
 
 ];

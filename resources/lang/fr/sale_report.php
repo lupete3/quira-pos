@@ -30,4 +30,7 @@ return [
     'store' => 'Magasin',
     'date' => 'Date',
     'no_sales_found' => 'Aucune vente trouvée',
+
+    'index_title' => 'Rapport des ventes',
+    'title' => 'Rapport des ventes',
 ];

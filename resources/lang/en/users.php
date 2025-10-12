@@ -28,8 +28,11 @@ return [
 
     // Notifications
     'no_active_subscription' => 'No active subscription.',
-    'user_limit_reached' => 'User limit has been reached.',
+    'user_limit_reached' => 'User limit reached for your plan (max :limit users).',
     'user_created' => 'User created successfully.',
     'user_updated' => 'User updated successfully.',
     'user_deleted' => 'User deleted successfully.',
+
+    'index_title' => 'User Management',
+    'title' => 'Users',
 ];

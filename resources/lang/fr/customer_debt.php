@@ -32,4 +32,7 @@ return [
     'paiement_enregistre' => 'Paiement enregistré avec succès.',
     'erreur_operation' => 'Une erreur est survenue lors de l\'opération.',
 
+    'index_title' => 'Gestion des Dettes Clients',
+    'title' => 'Dettes Clients',
+
 ];

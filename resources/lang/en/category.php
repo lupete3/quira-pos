@@ -32,4 +32,7 @@ return [
     'categorie_supprimee' => 'Category deleted successfully.',
     'erreur_categorie' => 'An error occurred during the operation.',
 
+    'index_title' => 'Category Management',
+    'title' => 'Categories',
+
 ];

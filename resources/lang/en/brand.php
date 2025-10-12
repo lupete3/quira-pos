@@ -30,4 +30,7 @@ return [
     'marque_supprimee' => 'Brand deleted successfully.',
     'erreur_marque' => 'An error occurred during the operation.',
 
+    'index_title' => 'Brand Management',
+    'title' => 'Brands',
+
 ];

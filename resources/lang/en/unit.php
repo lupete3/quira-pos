@@ -32,4 +32,7 @@ return [
     'unite_supprimee' => 'Unit deleted successfully.',
     'erreur_unite' => 'An error occurred during the operation.',
 
+    'index_title' => 'Unit Management',
+    'title' => 'Units',
+
 ];

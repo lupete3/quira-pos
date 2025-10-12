@@ -32,4 +32,7 @@ return [
     'categorie_supprimee' => 'Category deleted.',
     'erreur' => 'An error occurred during the operation.',
 
+    'index_title' => 'Expense Categories Management',
+    'title' => 'Expense Categories',
+
 ];

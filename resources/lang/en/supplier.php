@@ -38,4 +38,7 @@ return [
     'fournisseur_supprime' => 'Supplier deleted successfully.',
     'erreur_fournisseur' => 'An error occurred during the operation.',
 
+    'index_title' => 'Supplier Management',
+    'title' => 'Suppliers',
+
 ];

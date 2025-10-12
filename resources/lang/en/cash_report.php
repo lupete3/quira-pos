@@ -30,4 +30,7 @@ return [
 
     // Messages
     'no_transaction_found' => 'No transaction found',
+
+    'index_title' => 'Cash Report',
+    'title' => 'Cash Report',
 ];

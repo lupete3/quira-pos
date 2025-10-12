@@ -30,4 +30,7 @@ return [
     'fournisseur_inexistant' => 'Ce fournisseur n\'existe pas ou n\'est plus actif.',
     'montant_depasse' => 'Le montant du paiement dépasse le reste à payer sur la facture.',
 
+    'index_title' => 'Gestion des Dettes Fournisseurs',
+    'title' => 'Dettes Fournisseurs',
+
 ];

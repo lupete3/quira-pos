@@ -1,26 +1,31 @@
 @extends('components.layouts.pdf')
 
-@section('title', __('Rapport Fournisseurs'))
-@section('report-title', __('RAPPORT FOURNISSEUR'))
+@section('title', __('supplierreport.report_title'))
+@section('report-title', __('supplierreport.report_title'))
 
 @section('content')
+    {{-- Période du rapport --}}
     @if($date_from && $date_to)
-        <p>{{ __('Période') }} : {{ $date_from }} {{ __('au') }} {{ $date_to }}</p>
+        <p>{{ __('supplierreport.period') }} : {{ $date_from }} {{ __('supplierreport.to') }} {{ $date_to }}</p>
     @endif
+    
+    {{-- Tableau des fournisseurs --}}
     <table class="table">
         <thead>
             <tr>
-                <th>{{ __('Fournisseur') }}</th>
-                <th>{{ __('Contact') }}</th>
-                <th>{{ __('Nb Achats') }}</th>
-                <th>{{ __('Total Achats') }}</th>
-                <th>{{ __('Total Payé') }}</th>
-                <th>{{ __('Solde') }}</th>
+                <th>{{ __('supplierreport.supplier') }}</th>
+                <th>{{ __('supplierreport.contact') }}</th>
+                <th>{{ __('supplierreport.purchases_count') }}</th>
+                <th>{{ __('supplierreport.total_purchases') }}</th>
+                <th>{{ __('supplierreport.total_paid') }}</th>
+                <th>{{ __('supplierreport.balance') }}</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($suppliers as $supplier)
                 @php
+                    // Assurez-vous que la logique de calcul de la période est gérée dans le contrôleur si des filtres sont appliqués.
+                    // Ici, nous utilisons les totaux des achats disponibles.
                     $totalAchats = $supplier->purchases->sum('total_amount');
                     $totalPaye = $supplier->purchases->sum('total_paid');
                     $solde = $totalAchats - $totalPaye;

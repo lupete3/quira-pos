@@ -20,4 +20,7 @@ return [
     // Autres
     'na' => 'N/A',
 
+    'index_title' => 'Gestion des Inventaires',
+    'title' => 'Inventaires',
+
 ];

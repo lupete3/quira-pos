@@ -1,22 +1,24 @@
 @extends('components.layouts.pdf')
 
-@section('title', __('Rapport Dépenses'))
-@section('report-title', __('RAPPORT DÉPENSES'))
+@section('title', __('expensereport.title'))
+@section('report-title', __('expensereport.header'))
 
 @section('content')
-    <h4>{{ __('Magasin') }}: {{ $store ? $store->name : __('Tous les magasins') }}</h4>
-    <h4>{{ __('Catégorie') }}: {{ $category ? $category->name : __('Toutes catégories') }}</h4>
+    {{-- Filtres du rapport --}}
+    <h4>{{ __('expensereport.store') }}: {{ $store ? $store->name : __('expensereport.all_stores') }}</h4>
+    <h4>{{ __('expensereport.category') }}: {{ $category ? $category->name : __('expensereport.all_categories') }}</h4>
 
+    {{-- Tableau des dépenses --}}
     <table class="table">
         <thead>
             <tr>
-                <th>#</th>
-                <th>{{ __('Description') }}</th>
-                <th>{{ __('Montant') }}</th>
-                <th>{{ __('Catégorie') }}</th>
-                <th>{{ __('Magasin') }}</th>
-                <th>{{ __('Utilisateur') }}</th>
-                <th>{{ __('Date') }}</th>
+                <th>{{ __('expensereport.id') }}</th>
+                <th>{{ __('expensereport.description') }}</th>
+                <th>{{ __('expensereport.amount') }}</th>
+                <th>{{ __('expensereport.category') }}</th>
+                <th>{{ __('expensereport.store') }}</th>
+                <th>{{ __('expensereport.user') }}</th>
+                <th>{{ __('expensereport.date') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +42,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="2" class="text-end">{{ __('Total Dépenses') }}</th>
+                <th colspan="2" class="text-end">{{ __('expensereport.total_out') }}</th>
                 <th colspan="5" class="text-danger">
                     {{ number_format($total_amount, 2) }} {{ company()?->devise }}
                 </th>

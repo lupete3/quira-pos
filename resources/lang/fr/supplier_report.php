@@ -17,4 +17,7 @@ return [
 
     // Messages
     'no_results_found' => 'Aucun résultat trouvé',
+
+    'index_title' => 'Rapport des fournisseurs',
+    'title' => 'Rapport des fournisseurs',
 ];

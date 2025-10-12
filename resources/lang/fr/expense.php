@@ -50,4 +50,7 @@ return [
     'depense_erreur_validation' => 'Une erreur s\'est produite lors de la validation de la dépense.',
     'montant_depasse_solde' => 'Le montant dépensé est supérieur au solde de la caisse.',
 
+    'index_title' => 'Gestion des Dépenses',
+    'title' => 'Dépenses',
+
 ];

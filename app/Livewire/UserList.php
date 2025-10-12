@@ -68,7 +68,7 @@ class UserList extends Component
             ->first();
 
         if (!$subscription) {
-            notyf()->error(__('Aucune souscription active.'));
+            notyf()->error(__('users.no_active_subscription'));
             return;
         }
 
@@ -80,7 +80,7 @@ class UserList extends Component
 
             // Seulement si on crée un nouvel utilisateur (pas en édition)
             if (!$this->userId && $currentUsersCount >= $plan->max_users) {
-                notyf()->error(__('La limite de nombre d\'utilisateurs a été atteinte.'));
+                notyf()->error(__('users.user_limit_reached', ['limit' => $plan->max_users]));
                 return;
             }
         }
@@ -107,7 +107,7 @@ class UserList extends Component
 
         User::updateOrCreate(['id' => $this->userId], $data);
 
-        notyf()->success(__($this->isEditMode ? 'Utilisateur mis à jour.' : 'Utilisateur créé avec succès.'));
+        notyf()->success(__($this->isEditMode ? 'users.user_updated' : 'users.user_created'));
 
         $this->dispatch('close-modal');
         $this->resetInputFields();
@@ -122,7 +122,7 @@ class UserList extends Component
     public function delete()
     {
         User::find($this->userId)->delete();
-        notyf()->success(__('Utilisateur supprimé avec succès.'));
+        notyf()->success(__('users.user_deleted'));
     }
 
     private function resetInputFields()

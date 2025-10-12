@@ -30,4 +30,7 @@ return [
     'montant_depasse' => 'The payment amount exceeds the remaining amount on the invoice.',
     'erreur_operation' => 'An error occurred during the operation.',
 
+    'index_title' => 'Supplier Debt Management',
+    'title' => 'Supplier Debts',
+
 ];

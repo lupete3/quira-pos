@@ -21,4 +21,7 @@ return [
 
     // Pagination or messages
     'no_clients_found' => 'No clients found',
+
+    'index_title' => 'Client Report',
+    'title' => 'Client Report',
 ];

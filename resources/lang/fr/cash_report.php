@@ -30,4 +30,7 @@ return [
 
     // Messages
     'no_transaction_found' => 'Aucune transaction trouvée',
+
+    'index_title' => 'Rapport des caisses',
+    'title' => 'Rapport des caisses',
 ];

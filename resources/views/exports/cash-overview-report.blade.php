@@ -1,21 +1,22 @@
 @extends('components.layouts.pdf')
 
-@section('title', __('Rapport de Caisse'))
-@section('report-title', __('RAPPORT DE CAISSE'))
+@section('title', __('cashreport.title'))
+@section('report-title', __('cashreport.header'))
 
 @section('content')
-    <h4>{{ __('Magasin') }}: {{ $store ? $store->name : __('Tous les magasins') }}</h4>
-    <h4>{{ __('Période') }}: {{ $start_date }} - {{ $end_date }}</h4>
+    {{-- Informations principales --}}
+    <h4>{{ __('cashreport.store') }}: {{ $store ? $store->name : __('cashreport.all_stores') }}</h4>
+    <h4>{{ __('cashreport.period') }}: {{ $start_date }} - {{ $end_date }}</h4>
 
-    <!-- Résumé -->
+    {{-- Résumé --}}
     <table class="table mb-4" style="width:100%; border-collapse: collapse; text-align:center;">
         <thead>
             <tr>
-                <th>{{ __('Total Entrées') }}</th>
-                <th>{{ __('Total Dépenses') }}</th>
-                <th>{{ __('Solde Net') }}</th>
+                <th>{{ __('cashreport.total_in') }}</th>
+                <th>{{ __('cashreport.total_out') }}</th>
+                <th>{{ __('cashreport.net_balance') }}</th>
                 @if($current_balance !== null)
-                    <th>{{ __('Solde Actuel en Caisse') }}</th>
+                    <th>{{ __('cashreport.current_balance') }}</th>
                 @endif
             </tr>
         </thead>
@@ -39,17 +40,17 @@
         </tbody>
     </table>
 
-    <!-- Détail des opérations -->
-    <h5 class="mt-3">{{ __('Détails des opérations') }}</h5>
+    {{-- Détail des opérations --}}
+    <h5 class="mt-3">{{ __('cashreport.details') }}</h5>
     <table class="table" style="width:100%; border-collapse: collapse;">
         <thead>
             <tr>
                 <th>#</th>
-                <th>{{ __('Type') }}</th>
-                <th>{{ __('Description') }}</th>
-                <th>{{ __('Montant') }}</th>
-                <th>{{ __('Utilisateur') }}</th>
-                <th>{{ __('Date') }}</th>
+                <th>{{ __('cashreport.type') }}</th>
+                <th>{{ __('cashreport.description') }}</th>
+                <th>{{ __('cashreport.amount') }}</th>
+                <th>{{ __('cashreport.user') }}</th>
+                <th>{{ __('cashreport.date') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -59,13 +60,13 @@
                     <td>{{ $i++ }}</td>
                     <td>
                         @if($t->type === 'in')
-                            <span class="text-success">{{ __('Entrée') }}</span>
+                            <span class="text-success">{{ __('cashreport.in') }}</span>
                         @elseif($t->type === 'out')
-                            <span class="text-danger">{{ __('Dépense') }}</span>
+                            <span class="text-danger">{{ __('cashreport.out') }}</span>
                         @elseif($t->type === 'opening')
-                            <span class="text-primary">{{ __('Ouverture') }}</span>
+                            <span class="text-primary">{{ __('cashreport.opening') }}</span>
                         @elseif($t->type === 'closing')
-                            <span class="text-warning">{{ __('Décaissement') }}</span>
+                            <span class="text-warning">{{ __('cashreport.closing') }}</span>
                         @endif
                     </td>
                     <td>{{ $t->description ?? '-' }}</td>

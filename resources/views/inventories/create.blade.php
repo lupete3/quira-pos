@@ -1,6 +1,6 @@
 <x-layouts.app>
     <x-slot:title>
-        {{ __('Nouvel Inventaire') }}
+        {{ __('inventory.demarrer_nouvel_inventaire') }}
     </x-slot:title>
 
     @livewire('inventory-form')

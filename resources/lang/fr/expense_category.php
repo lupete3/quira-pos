@@ -32,4 +32,7 @@ return [
     'categorie_supprimee' => 'Catégorie supprimée.',
     'erreur' => 'Une erreur est survenue lors de l\'opération.',
 
+    'index_title' => 'Gestion des Catégories de dépenses',
+    'title' => 'Catégories dépenses',
+
 ];

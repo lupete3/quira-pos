@@ -5,18 +5,26 @@
 
       <!-- Left: copyright & creator -->
       <div class="text-body">
-        © <?php echo date('Y'); ?>, fait avec ❤️ par
+        © {{ date('Y') }}, {{ __('footer.made_with') }} ❤️ {{ __('footer.by') }}
         <a href="{{ config('variables.creatorUrl') ?? '#' }}" target="_blank" class="footer-link">
           {{ config('variables.creatorName') ?? '' }}
         </a>
       </div>
 
-      <!-- Right: links (visible sur lg et plus) -->
+      <!-- Right: links -->
       <div class="d-none d-lg-inline-block">
-        <a href="{{ config('variables.licenseUrl') ?? '#' }}" class="footer-link me-4" target="_blank">Licence</a>
-        {{-- <a href="{{ config('variables.moreThemes') ?? '#' }}" target="_blank" class="footer-link me-4">Plus de Thèmes</a> --}}
-        <a href="{{ config('variables.documentation') ? config('variables.documentation').'/laravel-introduction.html' : '#' }}" target="_blank" class="footer-link me-4">Documentation</a>
-        <a href="{{ config('variables.support') ?? '#' }}" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
+        <a href="{{ config('variables.licenseUrl') ?? '#' }}" class="footer-link me-4" target="_blank">
+          {{ __('footer.license') }}
+        </a>
+        {{-- <a href="{{ config('variables.moreThemes') ?? '#' }}" target="_blank" class="footer-link me-4">
+          {{ __('footer.more_themes') }}
+        </a> --}}
+        <a href="{{ config('variables.documentation') ? config('variables.documentation').'/laravel-introduction.html' : '#' }}" target="_blank" class="footer-link me-4">
+          {{ __('footer.documentation') }}
+        </a>
+        <a href="{{ config('variables.support') ?? '#' }}" target="_blank" class="footer-link d-none d-sm-inline-block">
+          {{ __('footer.support') }}
+        </a>
       </div>
 
     </div>

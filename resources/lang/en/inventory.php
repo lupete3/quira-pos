@@ -20,4 +20,7 @@ return [
     // Other
     'na' => 'N/A',
 
+    'index_title' => 'Inventory Management',
+    'title' => 'Inventories',
+
 ];

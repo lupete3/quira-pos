@@ -38,4 +38,7 @@ return [
     'fournisseur_supprime' => 'Le fournisseur a été supprimé avec succès.',
     'erreur_fournisseur' => 'Une erreur est survenue lors de l\'opération.',
 
+    'index_title' => 'Gestion des Fournisseurs',
+    'title' => 'Fournisseurs',
+
 ];

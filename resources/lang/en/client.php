@@ -41,4 +41,7 @@ return [
     'client_supprime' => 'Client deleted successfully.',
     'erreur_client' => 'An error occurred during the operation.',
 
+    'index_title' => 'Client Management',
+    'title' => 'Clients',
+
 ];
