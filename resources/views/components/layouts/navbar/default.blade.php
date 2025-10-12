@@ -13,7 +13,7 @@
     <!-- Search -->
     <div class="navbar-nav align-items-center me-auto ">
       <div class="nav-item d-flex align-items-center">
-        <h3 class="text-primary mt-4">
+        {{-- <p class="text-primary mt-4">
           @php
             if(Auth::check()){
               if (Auth::user()->role_id == 1) {
@@ -28,16 +28,16 @@
               echo __('navbar.application_name');
             }
           @endphp
-        </h3>
+        </p> --}}
       </div>
     </div>
     <!-- /Search -->
 
-    <ul class="navbar-nav flex-row align-items-center ms-md-auto">
+    <ul class="navbar-nav d-flex  flex-row align-items-center ms-md-auto">
       @livewire('language-switcher')
 
       <!-- User -->
-      <li class="nav-item navbar-dropdown dropdown-user dropdown">
+      <li class="nav-item navbar-dropdown dropdown-user dropdown ms-3">
         @if (Auth::check())
           <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
             <div class="avatar avatar-online">
