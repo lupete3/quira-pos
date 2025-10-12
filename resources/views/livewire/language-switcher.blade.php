@@ -1,7 +1,7 @@
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="languageDropdown"
        role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        @if(app()->getLocale() === 'fr')
+        @if(Auth::check() && Auth::user()->language?->locale === 'fr')
             <img src="{{ asset('assets/img/flags/fr.png') }}" alt="Français" width="20" class="me-1 rounded-circle">
             <span class="fw-semibold">FR</span>
         @else
@@ -25,3 +25,17 @@
         </li>
     </ul>
 </li>
+
+<script>
+    // 🔁 Rafraîchir dynamiquement les textes sans reload
+    document.addEventListener('livewire:navigated', () => {
+        window.dispatchEvent(new CustomEvent('update-locale'));
+    });
+
+    Livewire.on('updateLocale', ({ locale }) => {
+        document.documentElement.lang = locale;
+
+        // Facultatif : mettre à jour les balises dynamiques (titre, etc.)
+        console.log('Langue mise à jour :', locale);
+    });
+</script>

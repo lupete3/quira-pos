@@ -1,11 +1,13 @@
 <?php
 
+
 use App\Models\User;
 use App\Models\Tenant;
 use App\Models\Store;
 use App\Models\Role;
 use App\Models\Plan;
 use App\Models\Subscription;
+use App\Models\Language;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,82 +26,97 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public function register(): void
     {
         try {
-          $validated = $this->validate([
-              'name' => ['required', 'string', 'max:255'],
-              'email' => ['required', 'string', 'email', 'unique:'.User::class],
-              'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-              'terms' => ['accepted'],
-          ], [
-              'name.required' => __('register.required_name'),
-              'name.string' => __('register.invalid_name_format'),
-              'name.max' => __('register.name_too_long'),
-              'email.required' => __('register.required_email'),
-              'email.email' => __('register.invalid_email_format'),
-              'email.unique' => __('register.email_taken'),
-              'password.required' => __('register.required_password'),
-              'password.min' => __('register.too_short_password'),
-              'password.confirmed' => __('register.password_mismatch'),
-              'terms.accepted' => __('register.terms_accepted'),
+            $validated = $this->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'unique:' . User::class],
+                'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+                'terms' => ['accepted'],
+            ], [
+                'name.required' => __('register.required_name'),
+                'name.string' => __('register.invalid_name_format'),
+                'name.max' => __('register.name_too_long'),
+                'email.required' => __('register.required_email'),
+                'email.email' => __('register.invalid_email_format'),
+                'email.unique' => __('register.email_taken'),
+                'password.required' => __('register.required_password'),
+                'password.min' => __('register.too_short_password'),
+                'password.confirmed' => __('register.password_mismatch'),
+                'terms.accepted' => __('register.terms_accepted'),
+            ]);
 
-          ]);
+            $validated['password'] = Hash::make($validated['password']);
 
-          $validated['password'] = Hash::make($validated['password']);
+            // 🌍 Récupérer la langue active avant création
+            $currentLocale = session('locale', config('app.locale'));
 
-          // 1️⃣ Création du tenant
-          $tenant = Tenant::create([
-              'name' => $this->name,
-              'contact_name' => $this->name,
-              'email' => $this->email,
-              'phone' => null,
-              'address' => null,
-              'is_active' => true,
-          ]);
+            // 1️⃣ Création du tenant
+            $tenant = Tenant::create([
+                'name' => $this->name,
+                'contact_name' => $this->name,
+                'email' => $this->email,
+                'phone' => null,
+                'address' => null,
+                'is_active' => true,
+            ]);
 
-          // 2️⃣ Création du magasin par défaut
-          $store = Store::create([
-              'tenant_id' => $tenant->id,
-              'name' => 'Magasin Principal',
-              'location' => 'Adresse par défaut',
-              'is_active' => true,
-          ]);
+            // 2️⃣ Magasin principal
+            $store = Store::create([
+                'tenant_id' => $tenant->id,
+                'name' => 'Magasin Principal',
+                'location' => 'Adresse par défaut',
+                'is_active' => true,
+            ]);
 
-          // 3️⃣ Rôle Admin (créé si inexistant)
-          $adminRole = Role::firstOrCreate(['name' => 'Admin'], ['description' => 'Administrateur du tenant']);
+            // 3️⃣ Rôle Admin
+            $adminRole = Role::firstOrCreate(['name' => 'Admin'], ['description' => 'Administrateur du tenant']);
 
-          // 4️⃣ Création du user (propriétaire)
-          $user = User::create([
-              'tenant_id' => $tenant->id,
-              'store_id' => $store->id,
-              'role_id' => $adminRole->id,
-              'name' => $this->name,
-              'email' => $this->email,
-              'password' => $validated['password'],
-              'is_active' => true,
-          ]);
+            // 4️⃣ Création du user (propriétaire)
+            $user = User::create([
+                'tenant_id' => $tenant->id,
+                'store_id' => $store->id,
+                'role_id' => $adminRole->id,
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => $validated['password'],
+                'is_active' => true,
+            ]);
 
-          event(new Registered($user));
+            // 🗣️ 5️⃣ Enregistrement automatique de la langue choisie
+            Language::updateOrCreate(
+                ['user_id' => $user->id],
+                ['locale' => $currentLocale]
+    
+              );
 
-          // 5️⃣ Assigner une souscription gratuite
-          $freePlan = Plan::where('price', 0)->first(); // ⚡ ton plan gratuit seedé
-          if ($freePlan) {
-              Subscription::create([
-                  'tenant_id' => $tenant->id,
-                  'plan_id' => $freePlan->id,
-                  'amount' => 0,
-                  'start_date' => Carbon::now(),
-                  'end_date' => Carbon::now()->addDays($freePlan->duration_days),
-                  'status' => 'active',
-              ]);
-          }
+            // 6️⃣ Souscription gratuite
+            $freePlan = Plan::where('price', 0)->first();
+            if ($freePlan) {
+                Subscription::create([
+                    'tenant_id' => $tenant->id,
+                    'plan_id' => $freePlan->id,
+                    'amount' => 0,
+                    'start_date' => Carbon::now(),
+                    'end_date' => Carbon::now()->addDays($freePlan->duration_days),
+                    'status' => 'active',
+                ]);
+            }
 
-          // 6️⃣ Connexion auto
-          Auth::login($user);
+            //    en précisant le rôle (ici stock_keeper par défaut)
+            $store->users()->syncWithoutDetaching([
+                $user->id => ['role' => 'stock_keeper']
+            ]);
 
-          notyf()->success(__('register.success_message'));
+            // 7️⃣ Connexion auto
+            Auth::login($user);
 
-          $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
-        
-        } catch (ValidationException $e) {
+            // 8️⃣ Appliquer immédiatement la langue
+            app()->setLocale($currentLocale);
+
+            notyf()->success(__('register.success_message'));
+
+            $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
             $errors = collect($e->errors())->flatten()->toArray();
             notyf()->error(implode("\n", $errors));
             throw $e;

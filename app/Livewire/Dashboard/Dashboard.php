@@ -18,8 +18,18 @@ class Dashboard extends Component
 
   public $storeId = null; // null = tous les magasins
 
+  protected $listeners = ['localeUpdatedGlobally' => 'refreshLocale'];
+
+  public function refreshLocale($locale)
+  {
+      app()->setLocale($locale);
+      $this->render();
+  }
+
   public function mount()
   {
+    app()->getLocale(Auth::user()->language->locale);
+
     if (Auth::user()->role_id == 1) {
       $this->storeId = null;
     } else {

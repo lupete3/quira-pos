@@ -94,4 +94,14 @@ class User extends Authenticatable
         return $this->belongsTo(Tenant::class);
     }
 
+    public function language()
+    {
+        return $this->hasOne(Language::class);
+    }
+
+    public function getLocaleAttribute()
+    {
+        return $this->language?->locale ?? config('app.locale');
+    }
+
 }

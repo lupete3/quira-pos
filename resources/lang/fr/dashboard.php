@@ -35,4 +35,6 @@ return [
     'stock' => 'Stock',
     'vendus' => 'Vendus',
 
+    'language_change' => 'Langue changée avec succès.',
+
 ];
