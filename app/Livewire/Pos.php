@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Brand;
+use App\Models\CashRegister;
 use App\Models\CashTransaction;
 use App\Models\Category;
 use App\Models\Client;
@@ -190,8 +191,20 @@ class Pos extends Component
         }
       }
 
-      // Enregistrer l'entrée en caisse
+      // Vérifier ou créer la caisse
       $store = Auth::user()->stores()->first();
+
+      $cashRegister = CashRegister::firstOrCreate(
+          [
+              'tenant_id' => Auth::user()->tenant_id,
+              'store_id'  => $store->id,
+          ],
+          [
+              'opening_balance' => 0,
+              'current_balance' => 0,
+          ]
+      );
+
       $cashRegister = $store->cashRegister;
 
       if ($this->total_paid > 0) {
