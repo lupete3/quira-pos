@@ -28,8 +28,6 @@ class Dashboard extends Component
 
   public function mount()
   {
-    app()->getLocale(Auth::user()->language->locale);
-
     if (Auth::user()->role_id == 1) {
       $this->storeId = null;
     } else {
