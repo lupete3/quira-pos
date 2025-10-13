@@ -20,6 +20,9 @@ class UserList extends Component
     public $name, $email, $role_id, $password, $password_confirmation;
     public $isEditMode = false;
 
+    public $showPassword = false;
+    public $showPasswordConfirmation = false;
+
     public function render()
     {
         $users = User::with('role')
@@ -133,5 +136,8 @@ class UserList extends Component
         $this->role_id = '';
         $this->password = '';
         $this->password_confirmation = '';
+        $this->showPassword = false;
+        $this->showPasswordConfirmation = false;
     }
+
 }

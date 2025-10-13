@@ -94,8 +94,17 @@
                         <div class="mb-3 form-password-toggle">
                             <label class="form-label">{{ __('users.password') }}</label>
                             <div class="input-group input-group-merge">
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" wire:model="password">
-                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                <input 
+                                    type="{{ $showPassword ? 'text' : 'password' }}" 
+                                    class="form-control @error('password') is-invalid @enderror" 
+                                    wire:model="password"
+                                >
+                                <span 
+                                    class="input-group-text cursor-pointer" 
+                                    wire:click="$toggle('showPassword')"
+                                >
+                                    <i class="bx {{ $showPassword ? 'bx-show' : 'bx-hide' }}"></i>
+                                </span>
                             </div>
                             @if($isEditMode)
                                 <small class="form-text text-muted">{{ __('users.leave_blank_to_keep') }}</small>
@@ -106,10 +115,20 @@
                         <div class="mb-3 form-password-toggle">
                             <label class="form-label">{{ __('users.password_confirmation') }}</label>
                             <div class="input-group input-group-merge">
-                                <input type="password" class="form-control" wire:model="password_confirmation">
-                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                <input 
+                                    type="{{ $showPasswordConfirmation ? 'text' : 'password' }}" 
+                                    class="form-control" 
+                                    wire:model="password_confirmation"
+                                >
+                                <span 
+                                    class="input-group-text cursor-pointer" 
+                                    wire:click="$toggle('showPasswordConfirmation')"
+                                >
+                                    <i class="bx {{ $showPasswordConfirmation ? 'bx-show' : 'bx-hide' }}"></i>
+                                </span>
                             </div>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('users.close') }}</button>
