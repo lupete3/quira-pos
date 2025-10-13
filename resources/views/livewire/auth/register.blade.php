@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Models\User;
 use App\Models\Tenant;
 use App\Models\Store;
@@ -8,7 +7,6 @@ use App\Models\Role;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Language;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -22,6 +20,20 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $password = '';
     public string $password_confirmation = '';
     public bool $terms = false;
+
+    // 👁️‍🗨️ Ajout des propriétés de visibilité
+    public bool $showPassword = false;
+    public bool $showPasswordConfirmation = false;
+
+    public function togglePasswordVisibility()
+    {
+        $this->showPassword = !$this->showPassword;
+    }
+
+    public function togglePasswordConfirmationVisibility()
+    {
+        $this->showPasswordConfirmation = !$this->showPasswordConfirmation;
+    }
 
     public function register(): void
     {
@@ -54,8 +66,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 'name' => $this->name,
                 'contact_name' => $this->name,
                 'email' => $this->email,
-                'phone' => null,
-                'address' => null,
                 'is_active' => true,
             ]);
 
@@ -85,8 +95,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             Language::updateOrCreate(
                 ['user_id' => $user->id],
                 ['locale' => $currentLocale]
-    
-              );
+            );
 
             // 6️⃣ Souscription gratuite
             $freePlan = Plan::where('price', 0)->first();
@@ -101,19 +110,16 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 ]);
             }
 
-            //    en précisant le rôle (ici stock_keeper par défaut)
+            // 7️⃣ Affecter le rôle "stock_keeper"
             $store->users()->syncWithoutDetaching([
                 $user->id => ['role' => 'stock_keeper']
             ]);
 
-            // 7️⃣ Connexion auto
+            // 8️⃣ Connexion automatique
             Auth::login($user);
-
-            // 8️⃣ Appliquer immédiatement la langue
             app()->setLocale($currentLocale);
 
             notyf()->success(__('register.success_message'));
-
             $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -123,7 +129,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
         }
     }
 };
-
 ?>
 
 @section('title', __('register.register_page_title'))
@@ -135,13 +140,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
 <div>
     <h4 class="mb-1">{{ __('register.welcome') }}</h4>
     <p class="mb-6">{{ __('register.description') }}</p>
-
-    <!-- Session Status -->
-    @if (session('status'))
-        <div class="alert alert-info mb-4">
-            {{ session('status') }}
-        </div>
-    @endif
 
     <form wire:submit="register" class="mb-6">
         <div class="mb-6">
@@ -163,37 +161,55 @@ new #[Layout('components.layouts.auth')] class extends Component {
             @enderror
         </div>
 
+        <!-- 🟢 Mot de passe -->
         <div class="mb-6 form-password-toggle">
             <label class="form-label" for="password">{{ __('register.password') }}</label>
             <div class="input-group input-group-merge">
-                <input wire:model="password" type="password"
-                    class="form-control @error('password') is-invalid @enderror" id="password" required
-                    autocomplete="new-password" placeholder="{{ __('register.password_placeholder') }}">
-                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                <input wire:model="password"
+                    type="{{ $showPassword ? 'text' : 'password' }}"
+                    class="form-control @error('password') is-invalid @enderror"
+                    id="password" required autocomplete="new-password"
+                    placeholder="{{ __('register.password_placeholder') }}">
+                <span class="input-group-text cursor-pointer" wire:click="togglePasswordVisibility">
+                    @if ($showPassword)
+                        <i class="bx bx-show"></i>
+                    @else
+                        <i class="bx bx-hide"></i>
+                    @endif
+                </span>
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         </div>
 
+        <!-- 🟢 Confirmation mot de passe -->
         <div class="mb-6 form-password-toggle">
             <label class="form-label" for="password_confirmation">{{ __('register.password_confirmation') }}</label>
             <div class="input-group input-group-merge">
-                <input wire:model="password_confirmation" type="password"
-                    class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation"
-                    required autocomplete="new-password"
+                <input wire:model="password_confirmation"
+                    type="{{ $showPasswordConfirmation ? 'text' : 'password' }}"
+                    class="form-control @error('password_confirmation') is-invalid @enderror"
+                    id="password_confirmation" required autocomplete="new-password"
                     placeholder="{{ __('register.password_confirmation_placeholder') }}">
-                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                <span class="input-group-text cursor-pointer" wire:click="togglePasswordConfirmationVisibility">
+                    @if ($showPasswordConfirmation)
+                        <i class="bx bx-show"></i>
+                    @else
+                        <i class="bx bx-hide"></i>
+                    @endif
+                </span>
                 @error('password_confirmation')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         </div>
 
+        <!-- Conditions -->
         <div class="mb-8">
             <div class="form-check mb-0 ms-2">
-                <input wire:model="terms" type="checkbox" class="form-check-input @error('terms') is-invalid @enderror"
-                    id="terms">
+                <input wire:model="terms" type="checkbox"
+                    class="form-check-input @error('terms') is-invalid @enderror" id="terms">
                 <label class="form-check-label" for="terms">
                     {{ __('register.terms') }}
                     <a href="javascript:void(0);">{{ __('register.terms_link') }}</a>
@@ -203,6 +219,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 @enderror
             </div>
         </div>
+
+        <!-- Bouton -->
         <button type="submit" class="btn btn-primary d-grid w-100" wire:loading.attr="disabled" wire:target="register">
             <span wire:loading wire:target="register" class="spinner-border spinner-border-sm me-2" role="status"></span>
             <span wire:loading.remove wire:target="register">

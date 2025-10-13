@@ -20,6 +20,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     public bool $remember = false;
 
+    public bool $showPassword = false;
+
     /**
      * Messages personnalisés de validation
      */
@@ -31,6 +33,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'password.required' => __('login.required_password'),
             'password.min' => __('login.too_short_password'),
         ];
+    }
+
+    public function togglePasswordVisibility()
+    {
+        $this->showPassword = !$this->showPassword;
     }
 
     /**
@@ -136,11 +143,24 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     </a>
                 @endif
             </div>
+
             <div class="input-group input-group-merge">
-                <input wire:model="password" type="password"
-                    class="form-control @error('password') is-invalid @enderror" id="password" required
-                    autocomplete="current-password" placeholder="{{ __('login.password_placeholder') }}">
-                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                <input wire:model="password"
+                    type="{{ $showPassword ? 'text' : 'password' }}"
+                    class="form-control @error('password') is-invalid @enderror"
+                    id="password"
+                    required
+                    autocomplete="current-password"
+                    placeholder="{{ __('login.password_placeholder') }}">
+
+                <span class="input-group-text cursor-pointer" wire:click="togglePasswordVisibility">
+                    @if ($showPassword)
+                        <i class="bx bx-show"></i>
+                    @else
+                        <i class="bx bx-hide"></i>
+                    @endif
+                </span>
+
                 @error('password')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

@@ -18,6 +18,24 @@
     <div class="menu-inner-shadow mt-4"></div>
 
     <ul class="menu-inner py-1">
+      {{-- <li class="menu-item">
+        <p class="menu-link text-primary">
+            @php
+              if(Auth::check()){
+                if (Auth::user()->role_id == 1) {
+                  echo company()?->name ?? config('app.name');
+                } else {
+                  $store = Auth::user()->stores()->first();
+                  if($store){
+                    echo __('navbar.point_de_vente: ').$store?->name ?? company()?->name;
+                  }
+                }
+              } else{
+                echo __('navbar.application_name');
+              }
+            @endphp
+        </p>
+      </li> --}}
 
       <!-- Tableau de bord -->
       <li class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">

@@ -13,22 +13,7 @@
     <!-- Search -->
     <div class="navbar-nav align-items-center me-auto ">
       <div class="nav-item d-flex align-items-center">
-        {{-- <p class="text-primary mt-4">
-          @php
-            if(Auth::check()){
-              if (Auth::user()->role_id == 1) {
-                echo company()?->name ?? config('app.name');
-              } else {
-                $store = Auth::user()->stores()->first();
-                if($store){
-                  echo __('navbar.point_de_vente: ').$store?->name ?? company()?->name;
-                }
-              }
-            } else{
-              echo __('navbar.application_name');
-            }
-          @endphp
-        </p> --}}
+        
       </div>
     </div>
     <!-- /Search -->
