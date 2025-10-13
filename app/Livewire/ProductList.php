@@ -129,7 +129,7 @@ class ProductList extends Component
                 'name' => $this->name,
                 'reference' => $this->reference,
                 'category_id' => $this->category_id,
-                'brand_id' => $this->brand_id,
+                'brand_id' => $this->brand_id = $this->brand_id ?: null,
                 'unit_id' => $this->unit_id,
                 'purchase_price' => $this->purchase_price,
                 'sale_price' => $this->sale_price,
