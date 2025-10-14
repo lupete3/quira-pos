@@ -36,6 +36,7 @@ return [
     'panier_vide_erreur' => 'Le panier est vide.',
     'vente_reussie' => 'Vente effectuée avec succès.',
     'vente_erreur' => 'Une erreur est survenue lors de la vente.',
+    'client_inexistant' => 'Aucun client disponible pour cette entreprise',
 
     'pos' => 'Point de vente',
 

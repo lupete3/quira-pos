@@ -36,6 +36,7 @@ return [
     'panier_vide_erreur' => 'The cart is empty.',
     'vente_reussie' => 'Sale completed successfully.',
     'vente_erreur' => 'An error occurred during the sale.',
+    'client_inexistant' => 'No customer available for this company',
 
     'pos' => 'Point of Sale',
 ];

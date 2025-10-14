@@ -17,7 +17,7 @@ Route::get('dashboard', [DashboardController::class, 'index'])
   ->middleware(['auth', 'verified', 'check.subscription'])
   ->name('dashboard');
 
-Route::middleware(['auth', 'verified', 'check.subscription'])->group(function () {
+Route::middleware(['auth', 'verified', 'check.subscription', 'check.superadmin'])->group(function () {
     Route::get('plans', [PlanController::class, 'index'])->name('plan.index');
     Route::get('tenants', [TenantController::class, 'index'])->name('tenant.index');
     Route::get('souscription', [SubscriptionController::class, 'index'])->name('souscription.index');

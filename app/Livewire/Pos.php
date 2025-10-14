@@ -56,7 +56,7 @@ class Pos extends Component
           ->orWhere('reference', 'like', '%' . $this->search . '%');
       });
       // Limiter à 9 résultats max pour la recherche précise
-      $products = $query->paginate(9);
+      $products = $query->paginate(12);
     } else {
       if ($this->selectedCategory) {
         $query->where('category_id', $this->selectedCategory);
@@ -66,7 +66,7 @@ class Pos extends Component
         $query->where('brand_id', $this->selectedBrand);
       }
 
-      $products = $query->orderBy('name')->paginate(9);
+      $products = $query->orderBy('name')->paginate(12);
     }
 
     $clients = Client::where('tenant_id', Auth::user()->tenant_id)->get();
@@ -150,87 +150,98 @@ class Pos extends Component
     }
 
     DB::beginTransaction();
+
     try {
-      $customer_id = $this->client_id ?? Client::first()->id;
-      $sale = Sale::create([
-        'tenant_id' => Auth::user()->tenant_id,
-        'client_id'   => $customer_id,
-        'user_id'     => Auth::id(),
-        'store_id'    => Auth::user()->stores()->first()->id, // ✅ on enregistre le magasin
-        'total_amount' => $this->total,
-        'total_paid'  => $this->total_paid,
-        'sale_date'   => now(),
-        'status'      => 'validated',
-      ]);
+        $user = Auth::user();
+        $tenantId = $user->tenant_id;
+        $store = $user->stores()->first();
 
-      foreach ($this->cart as $item) {
-        SaleItem::create([
-          'tenant_id' => Auth::user()->tenant_id,
-          'sale_id' => $sale->id,
-          'product_id' => $item['id'],
-          'quantity' => $item['quantity'],
-          'unit_price' => $item['price'],
-          'total_price' => $item['subtotal'],
+        // Récupérer le client choisi ou le premier client du tenant
+        $client = $this->client_id 
+            ? Client::find($this->client_id) 
+            : Client::where('tenant_id', $tenantId)->first();
+
+        if (!$client) {
+            notyf()->error(__('pos.client_inexistant'));
+            DB::rollBack();
+            return;
+            throw new \Exception('Aucun client disponible pour ce tenant.');
+        }
+
+        // Création de la vente
+        $sale = Sale::create([
+            'tenant_id'    => $tenantId,
+            'client_id'    => $client->id,
+            'user_id'      => $user->id,
+            'store_id'     => $store->id,
+            'total_amount' => $this->total,
+            'total_paid'   => $this->total_paid,
+            'sale_date'    => now(),
+            'status'       => 'validated',
         ]);
 
-        $store = Auth::user()->stores()->first();
+        // Création des articles et mise à jour du stock
+        foreach ($this->cart as $item) {
+            SaleItem::create([
+                'tenant_id'   => $tenantId,
+                'sale_id'     => $sale->id,
+                'product_id'  => $item['id'],
+                'quantity'    => $item['quantity'],
+                'unit_price'  => $item['price'],
+                'total_price' => $item['subtotal'],
+            ]);
 
-        $product = Product::find($item['id']);
+            $product = Product::find($item['id']);
+            if ($product && $store) {
+                $product->stores()->decrement('quantity', $item['quantity'], [
+                    'store_id' => $store->id
+                ]);
+            }
+        }
 
-        $product->stores()->updateExistingPivot($store, [
-          'quantity' => DB::raw("quantity - {$item['quantity']}")
-        ]);
-      }
-
-      // Update client debt
-      if ($this->client_id) {
-        $client = Client::find($this->client_id);
+        // Mise à jour de la dette client si nécessaire
         $debt = $this->total - $this->total_paid;
         if ($debt > 0) {
-          $client->increment('debt', $debt);
+            $client->increment('debt', $debt);
         }
-      }
 
-      // Vérifier ou créer la caisse
-      $store = Auth::user()->stores()->first();
+        // Vérifier ou créer la caisse
+        $cashRegister = CashRegister::firstOrCreate(
+            [
+                'tenant_id' => $tenantId,
+                'store_id'  => $store->id,
+            ],
+            [
+                'opening_balance' => 0,
+                'current_balance' => 0,
+            ]
+        );
 
-      $cashRegister = CashRegister::firstOrCreate(
-          [
-              'tenant_id' => Auth::user()->tenant_id,
-              'store_id'  => $store->id,
-          ],
-          [
-              'opening_balance' => 0,
-              'current_balance' => 0,
-          ]
-      );
+        // Création de la transaction si paiement effectué
+        if ($this->total_paid > 0) {
+            CashTransaction::create([
+                'tenant_id'        => $tenantId,
+                'cash_register_id' => $cashRegister->id,
+                'type'             => 'in',
+                'amount'           => $this->total_paid,
+                'description'      => 'Vente #' . $sale->id,
+                'user_id'          => $user->id,
+            ]);
 
-      $cashRegister = $store->cashRegister;
+            $cashRegister->increment('current_balance', $this->total_paid);
+        }
 
-      if ($this->total_paid > 0) {
-          // Création de la transaction IN
-          CashTransaction::create([
-              'tenant_id' => Auth::user()->tenant_id,
-              'cash_register_id' => $cashRegister->id,
-              'type' => 'in',
-              'amount' => $this->total_paid,
-              'description' => 'Vente #' . $sale->id,
-              'user_id' => Auth::id(),
-          ]);
+        DB::commit();
 
-          // Mise à jour du solde de la caisse
-          $cashRegister->increment('current_balance', $this->total_paid);
-      }
+        notyf()->success(__('pos.vente_reussie'));
+        $this->clearCart();
+        $this->dispatch('facture-validee', url: route('invoice.print', ['sale' => $sale->id]));
 
-      DB::commit();
-
-      notyf()->success(__('pos.vente_reussie'));
-      $this->clearCart();
-      $this->dispatch('facture-validee', url: route('invoice.print', ['sale' => $sale->id]));
     } catch (\Throwable $th) {
-      DB::rollBack();
-      notyf()->error(__('pos.vente_erreur'));
+        DB::rollBack();
+        notyf()->error(__('pos.vente_erreur'));
     }
+
   }
 
   private function findItemInCart($productId)
@@ -250,5 +261,7 @@ class Pos extends Component
     }, 0);
 
     $this->total = $this->subtotal - intval($this->discount);
+    $this->total_paid = $this->total;
+
   }
 }
