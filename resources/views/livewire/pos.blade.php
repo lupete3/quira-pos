@@ -7,7 +7,7 @@
     <div class="row g-2">
 
         <!-- 🧩 Zone Produits -->
-        <section class="col-12 col-lg-8 d-flex flex-column  p-3">
+        <section class="col-12 col-lg-8 d-flex flex-column ">
 
             <!-- 🔍 Barre de recherche et filtres -->
             <header

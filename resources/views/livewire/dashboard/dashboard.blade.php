@@ -1,17 +1,23 @@
 <div>
     <div class="flex-grow-1">
 
-        @if (Auth::user()->role_id == 1)
-            <div class="mb-4 col-md-4">
-                <label for="storeFilter" class="form-label">{{ __('dashboard.filtrer_par_magasin') }}</label>
-                <select wire:model.lazy="storeId" id="storeFilter" class="form-select">
-                    <option value="">{{ __('dashboard.tous_les_magasins') }}</option>
-                    @foreach ($stores as $store)
-                        <option value="{{ $store->id }}">{{ $store->name }}</option>
-                    @endforeach
-                </select>
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2 text-primary">{{ Str::upper(company()?->name ?? config('app.name')) }}</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    @if (Auth::user()->role_id == 1)
+                        <label for="storeFilter" class="form-label">{{ __('dashboard.filtrer_par_magasin') }}</label>
+                        <select wire:model.lazy="storeId" id="storeFilter" class="form-select">
+                            <option value="">{{ __('dashboard.tous_les_magasins') }}</option>
+                            @foreach ($stores as $store)
+                                <option value="{{ $store->id }}">{{ $store->name }}</option>
+                            @endforeach
+                        </select>
+                    @endif
+                </div>
             </div>
-        @endif
+        </div>
 
         <!-- ===== Stats Cards ===== -->
         <div class="row g-4 mb-4">
@@ -22,9 +28,12 @@
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="content-left">
                                 <span class="d-block text-muted mb-1">{{ __('dashboard.ventes_aujourdhui') }}</span>
-                                <h3 class="card-title mb-2">{{ number_format($todaySales, 2, ',', ' ') }} {{ company()?->devise }}</h3>
-                                <span class="badge rounded-pill bg-label-{{ $salesGrowth >= 0 ? 'success' : 'danger' }}">
-                                    <i class="bx {{ $salesGrowth >= 0 ? 'bx-up-arrow-alt' : 'bx-down-arrow-alt' }} me-1"></i>
+                                <h3 class="card-title mb-2">{{ number_format($todaySales, 2, ',', ' ') }}
+                                    {{ company()?->devise }}</h3>
+                                <span
+                                    class="badge rounded-pill bg-label-{{ $salesGrowth >= 0 ? 'success' : 'danger' }}">
+                                    <i
+                                        class="bx {{ $salesGrowth >= 0 ? 'bx-up-arrow-alt' : 'bx-down-arrow-alt' }} me-1"></i>
                                     {{ number_format($salesGrowth, 1) }}% {{ __('dashboard.vs_hier') }}
                                 </span>
                             </div>
@@ -45,9 +54,12 @@
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="content-left">
                                 <span class="d-block text-muted mb-1">{{ __('dashboard.ventes_du_mois') }}</span>
-                                <h3 class="card-title mb-2">{{ number_format($currentMonthSales, 2, ',', ' ') }} {{ company()?->devise }}</h3>
-                                <span class="badge rounded-pill bg-label-{{ $monthSalesGrowth >= 0 ? 'success' : 'danger' }}">
-                                    <i class="bx {{ $monthSalesGrowth >= 0 ? 'bx-up-arrow-alt' : 'bx-down-arrow-alt' }} me-1"></i>
+                                <h3 class="card-title mb-2">{{ number_format($currentMonthSales, 2, ',', ' ') }}
+                                    {{ company()?->devise }}</h3>
+                                <span
+                                    class="badge rounded-pill bg-label-{{ $monthSalesGrowth >= 0 ? 'success' : 'danger' }}">
+                                    <i
+                                        class="bx {{ $monthSalesGrowth >= 0 ? 'bx-up-arrow-alt' : 'bx-down-arrow-alt' }} me-1"></i>
                                     {{ number_format($monthSalesGrowth, 1) }}% {{ __('dashboard.vs_mois_passe') }}
                                 </span>
                             </div>
@@ -68,9 +80,12 @@
                         <div class="d-flex align-items-start justify-content-between">
                             <div class="content-left">
                                 <span class="d-block text-muted mb-1">{{ __('dashboard.achats_du_mois') }}</span>
-                                <h3 class="card-title mb-2">{{ number_format($currentMonthPurchases, 2, ',', ' ') }} {{ company()?->devise }}</h3>
-                                <span class="badge rounded-pill bg-label-{{ $monthPurchasesGrowth >= 0 ? 'success' : 'danger' }}">
-                                    <i class="bx {{ $monthPurchasesGrowth >= 0 ? 'bx-up-arrow-alt' : 'bx-down-arrow-alt' }} me-1"></i>
+                                <h3 class="card-title mb-2">{{ number_format($currentMonthPurchases, 2, ',', ' ') }}
+                                    {{ company()?->devise }}</h3>
+                                <span
+                                    class="badge rounded-pill bg-label-{{ $monthPurchasesGrowth >= 0 ? 'success' : 'danger' }}">
+                                    <i
+                                        class="bx {{ $monthPurchasesGrowth >= 0 ? 'bx-up-arrow-alt' : 'bx-down-arrow-alt' }} me-1"></i>
                                     {{ number_format($monthPurchasesGrowth, 1) }}% {{ __('dashboard.vs_mois_passe') }}
                                 </span>
                             </div>
@@ -139,7 +154,8 @@
                                             <small class="text-muted">{{ $sale->sale_date }}</small>
                                         </div>
                                     </div>
-                                    <span class="fw-semibold">{{ number_format($sale->total_paid, 2, ',', ' ') }}{{ company()?->devise }}</span>
+                                    <span
+                                        class="fw-semibold">{{ number_format($sale->total_paid, 2, ',', ' ') }}{{ company()?->devise }}</span>
                                 </li>
                             @empty
                                 <span class="badge rounded-pill bg-label-info">
@@ -159,7 +175,8 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h5 class="mb-0">{{ __('dashboard.produits_populaires') }}</h5>
-                        <a href="{{ route('products.index') }}" class="btn btn-sm btn-outline-primary">{{ __('dashboard.afficher_tous') }}</a>
+                        <a href="{{ route('products.index') }}"
+                            class="btn btn-sm btn-outline-primary">{{ __('dashboard.afficher_tous') }}</a>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
@@ -174,7 +191,8 @@
                                                 {{ number_format($product->sale_price, 2, ',', ' ') }}{{ company()?->devise }}
                                             </div>
                                             <small class="text-muted d-block">
-                                                {{ __('dashboard.stock') }} : {{ $product->stores->sum('pivot.quantity') }}
+                                                {{ __('dashboard.stock') }} :
+                                                {{ $product->stores->sum('pivot.quantity') }}
                                             </small>
                                             <small class="text-success d-block fw-semibold">
                                                 {{ __('dashboard.vendus') }} : {{ $product->total_sold ?? 0 }}
@@ -215,7 +233,8 @@
                                             <small class="text-muted">{{ $purchase->purchase_date }}</small>
                                         </div>
                                     </div>
-                                    <span class="fw-semibold">{{ number_format($purchase->total_paid, 2, ',', ' ') }}{{ company()?->devise }}</span>
+                                    <span
+                                        class="fw-semibold">{{ number_format($purchase->total_paid, 2, ',', ' ') }}{{ company()?->devise }}</span>
                                 </li>
                             @empty
                                 <span class="badge rounded-pill bg-label-info">
@@ -236,26 +255,30 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-6 col-md-3">
-                                <a href="{{ route('pos.index') }}" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center py-3">
+                                <a href="{{ route('pos.index') }}"
+                                    class="btn btn-outline-primary w-100 d-flex flex-column align-items-center py-3">
                                     <i class="tf-icons bx bx-receipt fs-2 mb-2"></i>
                                     <span>{{ __('dashboard.nouvelle_vente') }}</span>
                                 </a>
                             </div>
                             <div class="col-6 col-md-3">
-                                <a href="{{ route('clients.index') }}" class="btn btn-outline-success w-100 d-flex flex-column align-items-center py-3">
+                                <a href="{{ route('clients.index') }}"
+                                    class="btn btn-outline-success w-100 d-flex flex-column align-items-center py-3">
                                     <i class="tf-icons bx bx-user-plus fs-2 mb-2"></i>
                                     <span>{{ __('dashboard.nouveau_client') }}</span>
                                 </a>
                             </div>
                             @if (Auth::user()->role_id == 1)
                                 <div class="col-6 col-md-3">
-                                    <a href="{{ route('products.index') }}" class="btn btn-outline-warning w-100 d-flex flex-column align-items-center py-3">
+                                    <a href="{{ route('products.index') }}"
+                                        class="btn btn-outline-warning w-100 d-flex flex-column align-items-center py-3">
                                         <i class="tf-icons bx bx-box fs-2 mb-2"></i>
                                         <span>{{ __('dashboard.ajouter_stock') }}</span>
                                     </a>
                                 </div>
                                 <div class="col-6 col-md-3">
-                                    <a href="{{ route('purchases.index') }}" class="btn btn-outline-info w-100 d-flex flex-column align-items-center py-3">
+                                    <a href="{{ route('purchases.index') }}"
+                                        class="btn btn-outline-info w-100 d-flex flex-column align-items-center py-3">
                                         <i class="tf-icons bx bx-cart-add fs-2 mb-2"></i>
                                         <span>{{ __('dashboard.nouvel_achat') }}</span>
                                     </a>

@@ -3874,7 +3874,17 @@ namespace App\Models {
   /**
    * App\Models\Language
    *
+   * @property \Illuminate\Support\Carbon|null $updated_at
+   * @property \Illuminate\Support\Carbon|null $created_at
+   * @property string $locale
+   * @property int $user_id
+   * @property int $id
    * @property-read \App\Models\User $user
+   * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language whereId($value)
+   * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language whereUserId($value)
+   * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language whereLocale($value)
+   * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language whereCreatedAt($value)
+   * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language whereUpdatedAt($value)
    * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language newModelQuery()
    * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language newQuery()
    * @method static \Illuminate\Database\Eloquent\Builder<Language>|Language query()
