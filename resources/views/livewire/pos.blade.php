@@ -1,6 +1,6 @@
 <div class="" style="min-height: 90vh;">
 
-    <a href="{{ route('dashboard') }}" wire:navigate class="dashboard-btn" title="{{ __('menu.tableau_de_bord') }}">
+    <a href="{{ route('dashboard') }}" class="dashboard-btn" title="{{ __('menu.tableau_de_bord') }}">
         <i class="bx bx-home"></i>
     </a>
 
