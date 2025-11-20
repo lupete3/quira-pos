@@ -24,11 +24,16 @@ class PurchaseForm extends Component
 
     public function render()
     {
-        $products = [];
+        $products = collect();
+
         if (strlen($this->search) >= 2) {
-            $products = Product::where('tenant_id', Auth::user()->tenant_id)
-                ->where('name', 'like', '%' . $this->search . '%')
-                ->orWhere('reference', 'like', '%' . $this->search . '%')
+            $tenantId = Auth::user()->tenant_id;
+
+            $products = Product::where('tenant_id', $tenantId)
+                ->where(function ($query) {
+                    $query->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('reference', 'like', '%' . $this->search . '%');
+                })
                 ->take(5)
                 ->get();
         }
