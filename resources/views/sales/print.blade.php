@@ -99,7 +99,13 @@
   </div>
 
   <script>
-    window.onload = function(){ window.print(); }
+    window.onload = function() {
+        // Attendre un court instant pour s'assurer que tout est rendu
+        setTimeout(function() {
+            window.print();
+            // Optionnel : notifier le parent que l'impression est lancée/terminée si besoin
+        }, 500);
+    }
   </script>
 </body>
 </html>
