@@ -83,14 +83,18 @@ class ProductList extends Component
     $this->fill([
       'name'           => $product->name,
       'reference'      => $product->reference,
-      'category_name'  => $product->category->name ?? '',
-      'brand_name'     => $product->brand->name ?? '',
-      'unit_name'      => $product->unit->name ?? '',
+      'categorySearch'  => $product->category->name ?? '',
+      'brandSearch'     => $product->brand->name ?? '',
+      'unitSearch'      => $product->unit->name ?? '',
       'purchase_price' => $product->purchase_price,
       'sale_price'     => $product->sale_price,
       'stock_quantity' => $product->stock_quantity,
       'min_stock'      => $product->min_stock,
     ]);
+
+    $this->category_name  = $product->category->name ?? '';
+    $this->brand_name     = $product->brand->name ?? '';
+    $this->unit_name      = $product->unit->name ?? '';
 
     $existing = $product->stores->pluck('pivot.quantity', 'id')->toArray();
 
@@ -173,9 +177,9 @@ class ProductList extends Component
       'productId',
       'name',
       'reference',
-      'category_name',
-      'brand_name',
-      'unit_name',
+      'categorySearch',
+      'brandSearch',
+      'unitSearch',
       'purchase_price',
       'sale_price',
       'stock_quantity',
