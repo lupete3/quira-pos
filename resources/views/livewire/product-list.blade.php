@@ -120,63 +120,120 @@
 
                       {{-- Catégorie, Marque et Unité --}}
                       <div class="row">
-                          <div class="col-md-4 mb-3">
-                              {{-- Clé : categorie_label --}}
-                              <label for="category_id" class="form-label">{{ __('product.categorie_label') }}</label>
-                              <select class="form-select @error('category_id') is-invalid @enderror" wire:model="category_id">
-                                  {{-- Clé : selectionner_categorie --}}
-                                  <option value="">{{ __('product.selectionner_categorie') }}</option>
-                                  @foreach($categories as $category)
-                                      <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                  @endforeach
-                              </select>
-                              @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                          
+                          {{-- === AUTOCOMPLETE CATEGORIE === --}}
+                          <div class="col-md-4 mb-3" x-data="{ open: false }">
+                              <label class="form-label">{{ __('product.categorie_label') }}</label>
+
+                              <div class="input-group">
+                                  <span class="input-group-text"><i class="bx bx-category"></i></span>
+
+                                  <input type="text"
+                                      class="form-control"
+                                      placeholder="{{ __('product.selectionner_categorie') }}"
+                                      wire:model.live.debounce.300ms="categorySearch"
+                                      @focus="open = true"
+                                      @click.outside="open = false">
+                              </div>
+
+                              {{-- Résultats --}}
+                              <div class="card shadow-sm mt-1" x-show="open" style="max-height: 180px; overflow: auto;">
+                                  @forelse ($categoryResults as $cat)
+                                      <a href="javascript:void(0)"
+                                        wire:click="chooseCategory({{ $cat['id'] }}, '{{ $cat['name'] }}')"
+                                        class="list-group-item list-group-item-action d-flex align-items-center">
+                                          <i class="bx bx-folder me-2 text-primary"></i>
+                                          {{ $cat['name'] }}
+                                      </a>
+                                  @empty
+
+                                  @endforelse
+                              </div>
+
+                              @error('category_name') <div class="text-danger small">{{ $message }}</div> @enderror
                           </div>
-                          <div class="col-md-4 mb-3">
-                              {{-- Clé : marque --}}
-                              <label for="brand_id" class="form-label">{{ __('product.marque') }}</label>
-                              <select class="form-select @error('brand_id') is-invalid @enderror" wire:model="brand_id">
-                                  {{-- Clé : selectionner_marque --}}
-                                  <option value="">{{ __('product.selectionner_marque') }}</option>
-                                  @foreach($brands as $brand)
-                                      <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                  @endforeach
-                              </select>
-                              @error('brand_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+
+                          {{-- === AUTOCOMPLETE MARQUE === --}}
+                          <div class="col-md-4 mb-3" x-data="{ open: false }">
+                              <label class="form-label">{{ __('product.marque') }}</label>
+
+                              <div class="input-group">
+                                  <span class="input-group-text"><i class="bx bx-category"></i></span>
+
+                                  <input type="text"
+                                      class="form-control"
+                                      placeholder="{{ __('product.selectionner_marque') }}"
+                                      wire:model.live.debounce.300ms="brandSearch"
+                                      @focus="open = true"
+                                      @click.outside="open = false">
+                              </div>
+
+                              {{-- Résultats --}}
+                              <div class="card shadow-sm mt-1" x-show="open" style="max-height: 180px; overflow: auto;">
+                                  @forelse ($brandResults as $bra)
+                                      <a href="javascript:void(0)"
+                                        wire:click="chooseBrand({{ $bra['id'] }}, '{{ $bra['name'] }}')"
+                                        class="list-group-item list-group-item-action d-flex align-items-center">
+                                          <i class="bx bx-folder me-2 text-primary"></i>
+                                          {{ $bra['name'] }}
+                                      </a>
+                                  @empty
+
+                                  @endforelse
+                              </div>
+
+                              @error('brand_name') <div class="text-danger small">{{ $message }}</div> @enderror
                           </div>
-                          <div class="col-md-4 mb-3">
-                              {{-- Clé : unite --}}
-                              <label for="unit_id" class="form-label">{{ __('product.unite') }}</label>
-                              <select class="form-select @error('unit_id') is-invalid @enderror" wire:model="unit_id">
-                                  {{-- Clé : selectionner_unite --}}
-                                  <option value="">{{ __('product.selectionner_unite') }}</option>
-                                  @foreach($units as $unit)
-                                      <option value="{{ $unit->id }}">{{ $unit->name }}</option>
-                                  @endforeach
-                              </select>
-                              @error('unit_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+
+                          {{-- === AUTOCOMPLETE UNITE === --}}
+                          <div class="col-md-4 mb-3" x-data="{ open: false }">
+                              <label class="form-label">{{ __('product.unite') }}</label>
+
+                              <div class="input-group">
+                                  <span class="input-group-text"><i class="bx bx-category"></i></span>
+
+                                  <input type="text"
+                                      class="form-control"
+                                      placeholder="{{ __('product.selectionner_unite') }}"
+                                      wire:model.live.debounce.300ms="unitSearch"
+                                      @focus="open = true"
+                                      @click.outside="open = false">
+                              </div>
+
+                              {{-- Résultats --}}
+                              <div class="card shadow-sm mt-1" x-show="open" style="max-height: 180px; overflow: auto;">
+                                  @forelse ($unitResults as $unit)
+                                      <a href="javascript:void(0)"
+                                        wire:click="chooseUnit({{ $unit['id'] }}, '{{ $unit['name'] }}')"
+                                        class="list-group-item list-group-item-action d-flex align-items-center">
+                                          <i class="bx bx-folder me-2 text-primary"></i>
+                                          {{ $unit['name'] }}
+                                      </a>
+                                  @empty
+
+                                  @endforelse
+                              </div>
+
+                              @error('unit_name') <div class="text-danger small">{{ $message }}</div> @enderror
                           </div>
                       </div>
 
                       {{-- Prix d'achat et de vente --}}
                       <div class="row">
-                          <div class="col-md-6 mb-3">
+                          <div class="col-md-4 mb-3">
                               {{-- Clé : prix_achat --}}
                               <label for="purchase_price" class="form-label">{{ __('product.prix_achat') }}</label>
                               <input type="number" step="0.01" class="form-control @error('purchase_price') is-invalid @enderror" wire:model="purchase_price" placeholder="0.00">
                               @error('purchase_price') <div class="invalid-feedback">{{ $message }}</div> @enderror
                           </div>
-                          <div class="col-md-6 mb-3">
+                          <div class="col-md-4 mb-3">
                               {{-- Clé : prix_vente_label --}}
                               <label for="sale_price" class="form-label">{{ __('product.prix_vente_label') }}</label>
                               <input type="number" step="0.01" class="form-control @error('sale_price') is-invalid @enderror" wire:model="sale_price" placeholder="0.00">
                               @error('sale_price') <div class="invalid-feedback">{{ $message }}</div> @enderror
                           </div>
-                      </div>
-
-                      {{-- Stock minimum --}}
-                      <div class="row">
-                          <div class="col-md-12 mb-3">
+                      
+                          <div class="col-md-4 mb-3">
                               {{-- Clé : stock_minimum --}}
                               <label for="min_stock" class="form-label">{{ __('product.stock_minimum') }}</label>
                               <input type="number" class="form-control @error('min_stock') is-invalid @enderror" wire:model="min_stock" placeholder="0">

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Store extends Model
 {
@@ -63,4 +64,12 @@ class Store extends Model
     {
         return $this->belongsTo(Tenant::class);
     }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('tenant', function($query) {
+            $query->where('tenant_id', Auth::user()->tenant_id);
+        });
+    }
+
 }
