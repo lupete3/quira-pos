@@ -61,6 +61,8 @@
 
   @php
     $tva = round(($sale->total_paid * 16 /100) , 2);
+    $discount = $sale->total_amount - ($sale->total_paid / 1.16);
+    $discount = round($discount, 2);
   @endphp
 
   <!-- Totaux -->
@@ -70,7 +72,7 @@
   </div>
   <div class="item-qty-price">
     <span>{{ __('facture.discount') }} :</span><br>
-    <span>{{ round(($sale->discount ?? 0), 2) }}</span>
+    <span>{{ round(($discount ?? 0), 2) }}</span>
   </div>
   <div class="item-qty-price">
     <span>{{ __('facture.vat') }} :</span><br>
@@ -79,13 +81,13 @@
 
   <div class="item-qty-price">
     <span>{{ __('facture.price_ttc') }} :</span><br>
-    <span>{{ round(($sale->total_amount + ($sale->discount ?? 0)), 2) }}</span>
+    <span>{{ round(($sale->total_amount + ($discount ?? 0)), 2) }}</span>
   </div>
   <div class="item-total">
     <span>{{ __('facture.total_paid') }} :</span> {{ round($sale->total_paid, 2) }}{{ company()->devise ?? '' }}
   </div>
   <div class="item-total">
-    <span>{{ __('facture.remaining') }} :</span> {{ round(($sale->total_amount - $sale->total_paid + ($sale->discount ?? 0)), 2) }}{{ company()->devise ?? '' }}
+    <span>{{ __('facture.remaining') }} :</span> {{ round(($sale->total_amount - $sale->total_paid + ($discount ?? 0)), 2) }}{{ company()->devise ?? '' }}
   </div>
   <p><strong>{{ __('facture.agent') }} :</strong> {{ $sale->user?->name ?? __('facture.undefined') }}</p>
 
