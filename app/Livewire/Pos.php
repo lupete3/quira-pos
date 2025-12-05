@@ -193,9 +193,20 @@ class Pos extends Component
 
             $product = Product::find($item['id']);
             if ($product && $store) {
-                $product->stores()->decrement('quantity', $item['quantity'], [
-                    'store_id' => $store->id
-                ]);
+                // Récupérer la quantité actuelle du pivot
+              $currentQty = $product->stores()
+                  ->wherePivot('store_id', $store->id)
+                  ->first()
+                  ->pivot
+                  ->quantity;
+
+              // Nouvelle quantité
+              $newQty = max(0, $currentQty - $item['quantity']);
+
+              // Mise a jour pivot
+              $product->stores()->updateExistingPivot($store->id, [
+                  'quantity' => $newQty
+              ]);
             }
         }
 
@@ -239,6 +250,7 @@ class Pos extends Component
 
     } catch (\Throwable $th) {
         DB::rollBack();
+        dd($th);
         notyf()->error(__('pos.vente_erreur'));
     }
 
