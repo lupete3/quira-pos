@@ -39,7 +39,7 @@
 
       <!-- Tableau de bord -->
       <li class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
-        <a class="menu-link" href="{{ route('dashboard') }}" wire:navigate>
+        <a class="menu-link" href="{{ route('dashboard') }}" >
           <i class="menu-icon tf-icons bx bx-home"></i>
           <div class="text-truncate">{{ __('menu.tableau_de_bord') }}</div>
         </a>
@@ -47,7 +47,7 @@
 
       <!-- Magasin -->
       <li class="menu-item {{ request()->routeIs('pos.index') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('pos.index') }}" wire:navigate>
+          <a class="menu-link" href="{{ route('pos.index') }}" >
               <i class="menu-icon tf-icons bx bx-cart-alt"></i>
               <div class="text-truncate">{{ __('menu.magasin') }}</div>
           </a>
@@ -57,7 +57,7 @@
 
       <!-- Points de vente -->
       <li class="menu-item {{ request()->is('stores*') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('stores.index') }}" wire:navigate>
+          <a class="menu-link" href="{{ route('stores.index') }}" >
               <i class="menu-icon tf-icons bx bx-store"></i>
               <div class="text-truncate">{{ __('menu.points_de_vente') }}</div>
           </a>
@@ -72,19 +72,19 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item {{ request()->routeIs('categories.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('categories.index') }}" wire:navigate>{{ __('menu.categories') }}</a>
+            <a class="menu-link" href="{{ route('categories.index') }}" >{{ __('menu.categories') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('units.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('units.index') }}" wire:navigate>{{ __('menu.unites') }}</a>
+            <a class="menu-link" href="{{ route('units.index') }}" >{{ __('menu.unites') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('brands.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('brands.index') }}" wire:navigate>{{ __('menu.marques') }}</a>
+            <a class="menu-link" href="{{ route('brands.index') }}" >{{ __('menu.marques') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('products.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('products.index') }}" wire:navigate>{{ __('menu.produits') }}</a>
+            <a class="menu-link" href="{{ route('products.index') }}" >{{ __('menu.produits') }}</a>
           </li>
           {{-- <li class="menu-item {{ request()->routeIs('transfers.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('transfers.index') }}" wire:navigate>{{ __('menu.transfert_produits') }}</a>
+            <a class="menu-link" href="{{ route('transfers.index') }}" >{{ __('menu.transfert_produits') }}</a>
           </li> --}}
         </ul>
       </li>
@@ -99,10 +99,10 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item {{ request()->routeIs('clients.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('clients.index') }}" wire:navigate>{{ __('menu.clients') }}</a>
+            <a class="menu-link" href="{{ route('clients.index') }}" >{{ __('menu.clients') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('suppliers.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('suppliers.index') }}" wire:navigate>{{ __('menu.fournisseurs') }}</a>
+            <a class="menu-link" href="{{ route('suppliers.index') }}" >{{ __('menu.fournisseurs') }}</a>
           </li>
         </ul>
       </li>
@@ -115,10 +115,10 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item {{ request()->routeIs('sales.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('sales.index') }}" wire:navigate>{{ __('menu.historique') }}</a>
+            <a class="menu-link" href="{{ route('sales.index') }}" >{{ __('menu.historique') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('salereturns.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('salereturns.index') }}" wire:navigate>{{ __('menu.retours') }}</a>
+            <a class="menu-link" href="{{ route('salereturns.index') }}" >{{ __('menu.retours') }}</a>
           </li>
         </ul>
       </li>
@@ -133,13 +133,13 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item {{ request()->routeIs('purchases.create') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('purchases.create') }}" wire:navigate>{{ __('menu.nouvel_achat') }}</a>
+            <a class="menu-link" href="{{ route('purchases.create') }}" >{{ __('menu.nouvel_achat') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('purchases.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('purchases.index') }}" wire:navigate>{{ __('menu.historique') }}</a>
+            <a class="menu-link" href="{{ route('purchases.index') }}" >{{ __('menu.historique') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('purchasereturns.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('purchasereturns.index') }}" wire:navigate>{{ __('menu.retours') }}</a>
+            <a class="menu-link" href="{{ route('purchasereturns.index') }}" >{{ __('menu.retours') }}</a>
           </li>
         </ul>
       </li>
@@ -154,11 +154,11 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item {{ request()->routeIs('clientdebts.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('clientdebts.index') }}" wire:navigate>{{ __('menu.clients') }}</a>
+            <a class="menu-link" href="{{ route('clientdebts.index') }}" >{{ __('menu.clients') }}</a>
           </li>
           @if (Auth::user()->role_id == 1)
           <li class="menu-item {{ request()->routeIs('supplierdebts.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('supplierdebts.index') }}" wire:navigate>{{ __('menu.fournisseurs') }}</a>
+            <a class="menu-link" href="{{ route('supplierdebts.index') }}" >{{ __('menu.fournisseurs') }}</a>
           </li>
           @endif
         </ul>
@@ -167,7 +167,7 @@
       @if (Auth::user()->role_id == 1)
       <!-- Inventaire -->
       <li class="menu-item {{ request()->routeIs('inventories*') ? 'active' : '' }}">
-        <a class="menu-link" href="{{ route('inventories.index') }}" wire:navigate>
+        <a class="menu-link" href="{{ route('inventories.index') }}" >
           <i class="menu-icon tf-icons bx bx-box"></i>
           <div class="text-truncate">{{ __('menu.inventaire') }}</div>
         </a>
@@ -183,11 +183,11 @@
         <ul class="menu-sub">
           @if (Auth::user()->role_id == 1)
           <li class="menu-item {{ request()->routeIs('expensecategory.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('expensecategory.index') }}" wire:navigate>{{ __('menu.categories_depense') }}</a>
+            <a class="menu-link" href="{{ route('expensecategory.index') }}" >{{ __('menu.categories_depense') }}</a>
           </li>
           @endif
           <li class="menu-item {{ request()->routeIs('expenses.index') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('expenses.index') }}" wire:navigate>{{ __('menu.depenses') }}</a>
+            <a class="menu-link" href="{{ route('expenses.index') }}" >{{ __('menu.depenses') }}</a>
           </li>
         </ul>
       </li>
@@ -199,19 +199,19 @@
           <div class="text-truncate">{{ __('menu.rapports') }}</div>
         </a>
         <ul class="menu-sub">
-          <li class="menu-item {{ request()->routeIs('reports.products') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.products') }}" wire:navigate>{{ __('menu.produits_rapport') }}</a></li>
-          <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.sales') }}" wire:navigate>{{ __('menu.ventes_rapport') }}</a></li>
-          <li class="menu-item {{ request()->routeIs('reports.stock') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.stock') }}" wire:navigate>{{ __('menu.stock') }}</a></li>
+          <li class="menu-item {{ request()->routeIs('reports.products') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.products') }}" >{{ __('menu.produits_rapport') }}</a></li>
+          <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.sales') }}" >{{ __('menu.ventes_rapport') }}</a></li>
+          <li class="menu-item {{ request()->routeIs('reports.stock') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.stock') }}" >{{ __('menu.stock') }}</a></li>
           @if (Auth::user()->role_id == 1)
-          <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.purchases') }}" wire:navigate>{{ __('menu.achats_rapport') }}</a></li>
-          <li class="menu-item {{ request()->routeIs('reports.customers') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.customers') }}" wire:navigate>{{ __('menu.clients_rapport') }}</a></li>
-          <li class="menu-item {{ request()->routeIs('reports.suppliers') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.suppliers') }}" wire:navigate>{{ __('menu.fournisseurs_rapport') }}</a></li>
+          <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.purchases') }}" >{{ __('menu.achats_rapport') }}</a></li>
+          <li class="menu-item {{ request()->routeIs('reports.customers') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.customers') }}" >{{ __('menu.clients_rapport') }}</a></li>
+          <li class="menu-item {{ request()->routeIs('reports.suppliers') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.suppliers') }}" >{{ __('menu.fournisseurs_rapport') }}</a></li>
           @endif
 
-          <li class="menu-item {{ request()->routeIs('reports.expense') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.expense') }}" wire:navigate>{{ __('menu.depenses_rapport') }}</a></li>
+          <li class="menu-item {{ request()->routeIs('reports.expense') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.expense') }}" >{{ __('menu.depenses_rapport') }}</a></li>
           @if (Auth::user()->role_id == 1)
-          <li class="menu-item {{ request()->routeIs('reports.cash') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.cash') }}" wire:navigate>{{ __('menu.caisses') }}</a></li>
-          {{-- <li class="menu-item {{ request()->routeIs('reports.profitloss') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.profitloss') }}" wire:navigate>{{ __('menu.profits_pertes') }}</a></li> --}}
+          <li class="menu-item {{ request()->routeIs('reports.cash') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.cash') }}" >{{ __('menu.caisses') }}</a></li>
+          {{-- <li class="menu-item {{ request()->routeIs('reports.profitloss') ? 'active' : '' }}"><a class="menu-link" href="{{ route('reports.profitloss') }}" >{{ __('menu.profits_pertes') }}</a></li> --}}
           @endif
         </ul>
       </li>
@@ -219,7 +219,7 @@
       @if (Auth::user()->role_id == 1)
       <!-- Utilisateurs -->
       <li class="menu-item {{ request()->routeIs('users*') ? 'active' : '' }}">
-        <a class="menu-link" href="{{ route('users.index') }}" wire:navigate>
+        <a class="menu-link" href="{{ route('users.index') }}" >
           <i class="menu-icon tf-icons bx bx-user-circle"></i>
           <div class="text-truncate">{{ __('menu.utilisateurs') }}</div>
         </a>
@@ -233,13 +233,13 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item {{ request()->routeIs('settings.profile') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('settings.profile') }}" wire:navigate>{{ __('menu.profil') }}</a>
+            <a class="menu-link" href="{{ route('settings.profile') }}" >{{ __('menu.profil') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('settings.password') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('settings.password') }}" wire:navigate>{{ __('menu.mot_de_passe') }}</a>
+            <a class="menu-link" href="{{ route('settings.password') }}" >{{ __('menu.mot_de_passe') }}</a>
           </li>
           <li class="menu-item {{ request()->routeIs('company.settings') ? 'active' : '' }}">
-            <a class="menu-link" href="{{ route('company.settings') }}" wire:navigate>{{ __('menu.parametres_entreprise') }}</a>
+            <a class="menu-link" href="{{ route('company.settings') }}" >{{ __('menu.parametres_entreprise') }}</a>
           </li>
         </ul>
       </li>

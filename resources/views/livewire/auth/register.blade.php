@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Language;
+use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -109,6 +110,17 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     'status' => 'active',
                 ]);
             }
+
+            Client::create(
+                [
+                    'tenant_id' => $tenant->id,
+                    'name' => 'CLIENT',
+                    'email' => 'client@quira.com',
+                    'phone' => '000000000',
+                    'address' => '',
+                    'debt' => 0,
+                ]
+            );
 
             // 7️⃣ Affecter le rôle "stock_keeper"
             $store->users()->syncWithoutDetaching([
