@@ -13,7 +13,7 @@
     <!-- Search -->
     <div class="navbar-nav align-items-center me-auto ">
       <div class="nav-item d-flex align-items-center">
-        
+
       </div>
     </div>
     <!-- /Search -->
@@ -35,7 +35,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
-              <a class="dropdown-item" href="{{ route('settings.profile') }}" wire:navigate>
+              <a class="dropdown-item" href="{{ route('settings.profile') }}">
                 <div class="d-flex">
                   <div class="flex-shrink-0 me-3">
                     <div class="avatar avatar-online">
@@ -57,12 +57,12 @@
               <div class="dropdown-divider my-1"></div>
             </li>
             <li>
-              <a class="dropdown-item {{ request()->routeIs('settings.profile') ? 'active' : '' }}" href="{{ route('settings.profile') }}" wire:navigate>
+              <a class="dropdown-item {{ request()->routeIs('settings.profile') ? 'active' : '' }}" href="{{ route('settings.profile') }}">
                 <i class="icon-base bx bx-user icon-md me-3"></i><span>{{ __('navbar.mon_profil') }}</span>
               </a>
             </li>
             <li>
-              <a class="dropdown-item {{ request()->routeIs('settings.password') ? 'active' : '' }}" href="{{ route('settings.password') }}" wire:navigate>
+              <a class="dropdown-item {{ request()->routeIs('settings.password') ? 'active' : '' }}" href="{{ route('settings.password') }}">
                 <i class="icon-base bx bx-cog icon-md me-3"></i><span>{{ __('navbar.parametres') }}</span>
               </a>
             </li>

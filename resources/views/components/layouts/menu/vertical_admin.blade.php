@@ -18,7 +18,7 @@
 
     <!-- Tableau de bord -->
     <li class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
-      <a class="menu-link" href="{{ route('dashboard') }}" wire:navigate>
+      <a class="menu-link" href="{{ route('dashboard') }}" >
         <i class="menu-icon tf-icons bx bx-home"></i>
         <div class="text-truncate">{{ __('Tableau de Bord') }}</div>
       </a>
@@ -26,7 +26,7 @@
 
     <!-- Clients -->
     <li class="menu-item {{ request()->routeIs('tenant.index') ? 'active' : '' }}">
-        <a class="menu-link" href="{{ route('tenant.index') }}" wire:navigate>
+        <a class="menu-link" href="{{ route('tenant.index') }}" >
             <i class="menu-icon tf-icons bx bx-user"></i> <!-- 👤 Icône clients -->
             <div class="text-truncate">{{ __('Clients') }}</div>
         </a>
@@ -34,7 +34,7 @@
 
     <!-- Plan Abonnement -->
     <li class="menu-item {{ request()->routeIs('plan.index') ? 'active' : '' }}">
-        <a class="menu-link" href="{{ route('plan.index') }}" wire:navigate>
+        <a class="menu-link" href="{{ route('plan.index') }}" >
             <i class="menu-icon tf-icons bx bx-package"></i> <!-- 📦 Icône plan -->
             <div class="text-truncate">{{ __('Plan Abonnement') }}</div>
         </a>
@@ -42,7 +42,7 @@
 
     <!-- Souscription -->
     <li class="menu-item {{ request()->routeIs('souscription.index') ? 'active' : '' }}">
-        <a class="menu-link" href="{{ route('souscription.index') }}" wire:navigate>
+        <a class="menu-link" href="{{ route('souscription.index') }}" >
             <i class="menu-icon tf-icons bx bx-receipt"></i> <!-- 🧾 Icône souscription -->
             <div class="text-truncate">{{ __('Souscription') }}</div>
         </a>
@@ -50,7 +50,7 @@
 
     <!-- Overview -->
     <li class="menu-item {{ request()->routeIs('overviewsuperadmin.index') ? 'active' : '' }}">
-        <a class="menu-link" href="{{ route('overviewsuperadmin.index') }}" wire:navigate>
+        <a class="menu-link" href="{{ route('overviewsuperadmin.index') }}" >
             <i class="menu-icon tf-icons bx bx-receipt"></i> <!-- 🧾 Icône statistique -->
             <div class="text-truncate">{{ __('Statistiques') }}</div>
         </a>
@@ -59,7 +59,7 @@
 
     <!-- Utilisateurs -->
     <li class="menu-item {{ request()->routeIs('users*') ? 'active' : '' }}">
-      <a class="menu-link" href="{{ route('users.index') }}" wire:navigate>
+      <a class="menu-link" href="{{ route('users.index') }}" >
         <i class="menu-icon tf-icons bx bx-user-circle"></i>
         <div class="text-truncate">{{ __('Utilisateurs') }}</div>
       </a>
@@ -73,13 +73,13 @@
       </a>
       <ul class="menu-sub">
         <li class="menu-item {{ request()->routeIs('settings.profile') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('settings.profile') }}" wire:navigate>{{ __('Profil') }}</a>
+          <a class="menu-link" href="{{ route('settings.profile') }}" >{{ __('Profil') }}</a>
         </li>
         <li class="menu-item {{ request()->routeIs('settings.password') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('settings.password') }}" wire:navigate>{{ __('Mot de Passe') }}</a>
+          <a class="menu-link" href="{{ route('settings.password') }}" >{{ __('Mot de Passe') }}</a>
         </li>
         <li class="menu-item {{ request()->routeIs('company.settings') ? 'active' : '' }}">
-          <a class="menu-link" href="{{ route('company.settings') }}" wire:navigate>{{ __('Paramètres Entreprise') }}</a>
+          <a class="menu-link" href="{{ route('company.settings') }}" >{{ __('Paramètres Entreprise') }}</a>
         </li>
       </ul>
     </li>
