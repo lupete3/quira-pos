@@ -58,4 +58,7 @@ return [
     'mot_de_passe' => 'Password',
     'parametres_entreprise' => 'Company Settings',
 
+    'matieres_premieres' => 'Raw Materials',
+    'row_material_report' => 'Raw Material Report',
+
 ];

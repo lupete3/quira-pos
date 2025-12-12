@@ -1,0 +1,56 @@
+<?php
+
+return [
+    'list_title' => 'Raw Materials List',
+    'search_placeholder' => 'Search...',
+    'export' => 'Export',
+    'add' => 'Add',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'stock_entry' => 'Stock Entry',
+    'designation' => 'Designation',
+    'purchase_price' => 'Purchase Price',
+    'total_stock' => 'Total Stock',
+    'actions' => 'Actions',
+    'not_found' => 'No raw materials found.',
+    'add_title' => 'Add Raw Material',
+    'edit_title' => 'Edit Raw Material',
+    'save' => 'Save',
+    'update' => 'Update',
+    'close' => 'Close',
+    'cancel' => 'Cancel',
+    'min_stock' => 'Minimum Stock (Alert)',
+
+    // Stock Entry Modal
+    'stock_movement' => 'Stock Movement',
+    'movement_type' => 'Movement Type',
+    'entry_stock' => 'Stock Entry (+)',
+    'exit_stock' => 'Stock Exit (-)',
+    'store' => 'Store',
+    'choose_store' => 'Choose a store...',
+    'quantity' => 'Quantity',
+    'description_reason' => 'Description / Reason',
+
+    // Report
+    'report_title' => 'Raw Materials Stock Report',
+    'date_range' => 'Date Range',
+    'all_materials' => 'All Materials',
+    'type' => 'Type',
+    'user' => 'User',
+    'date' => 'Date',
+
+    // Report Component
+    'all_stores' => 'All Stores',
+    'raw_material' => 'Raw Material',
+    'all' => 'All',
+    'from_date' => 'From',
+    'to_date' => 'To',
+    'export_pdf' => 'Export PDF',
+    'description' => 'Description',
+    'entry' => 'Entry',
+    'exit' => 'Exit',
+    'no_movements_found' => 'No movements found.',
+    'access_denied_store' => 'Access denied to this store.',
+    'stock_movement_success' => 'Stock movement recorded.',
+    'total_value' => 'Total Value',
+];

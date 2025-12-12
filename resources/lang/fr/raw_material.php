@@ -1,0 +1,56 @@
+<?php
+
+return [
+    'list_title' => 'Liste des Matières Premières',
+    'search_placeholder' => 'Rechercher...',
+    'export' => 'Exporter',
+    'add' => 'Ajouter',
+    'edit' => 'Modifier',
+    'delete' => 'Supprimer',
+    'stock_entry' => 'Entrée Stock',
+    'designation' => 'Désignation',
+    'purchase_price' => 'Prix d\'achat',
+    'total_stock' => 'Stock Total',
+    'actions' => 'Actions',
+    'not_found' => 'Aucune matière première trouvée.',
+    'add_title' => 'Ajouter Matière Première',
+    'edit_title' => 'Modifier Matière Première',
+    'save' => 'Enregistrer',
+    'update' => 'Mise à jour',
+    'close' => 'Fermer',
+    'cancel' => 'Annuler',
+    'min_stock' => 'Stock Minimum (Alerte)',
+
+    // Stock Entry Modal
+    'stock_movement' => 'Mouvement de Stock',
+    'movement_type' => 'Type de mouvement',
+    'entry_stock' => 'Entrée en Stock (+)',
+    'exit_stock' => 'Sortie de Stock (-)',
+    'store' => 'Magasin',
+    'choose_store' => 'Choisir un magasin...',
+    'quantity' => 'Quantité',
+    'description_reason' => 'Description / Motif',
+
+    // Report
+    'report_title' => 'Rapport des Matières Premières',
+    'date_range' => 'Période',
+    'all_materials' => 'Toutes les matières',
+    'type' => 'Type',
+    'user' => 'Utilisateur',
+    'date' => 'Date',
+
+    // Report Component
+    'all_stores' => 'Tous les magasins',
+    'raw_material' => 'Matière Première',
+    'all' => 'Toutes',
+    'from_date' => 'Du',
+    'to_date' => 'Au',
+    'export_pdf' => 'Exporter PDF',
+    'description' => 'Description',
+    'entry' => 'Entrée',
+    'exit' => 'Sortie',
+    'no_movements_found' => 'Aucun mouvement trouvé.',
+    'access_denied_store' => 'Accès refusé à ce magasin.',
+    'stock_movement_success' => 'Mouvement de stock enregistré.',
+    'total_value' => 'Valeur Totale',
+];

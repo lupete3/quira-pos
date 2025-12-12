@@ -58,4 +58,7 @@ return [
     'mot_de_passe' => 'Mot de Passe',
     'parametres_entreprise' => 'Paramètres Entreprise',
 
+    'matieres_premieres' => 'Matières Premières',
+    'row_material_report' => 'Rapport Matières Premières',
+
 ];

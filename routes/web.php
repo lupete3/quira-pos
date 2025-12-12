@@ -18,10 +18,10 @@ Route::get('dashboard', [DashboardController::class, 'index'])
   ->name('dashboard');
 
 Route::middleware(['auth', 'verified', 'check.subscription', 'check.superadmin'])->group(function () {
-    Route::get('plans', [PlanController::class, 'index'])->name('plan.index');
-    Route::get('tenants', [TenantController::class, 'index'])->name('tenant.index');
-    Route::get('souscription', [SubscriptionController::class, 'index'])->name('souscription.index');
-    Route::get('clients-overview', [DashboardController::class, 'superAdminOverview'])->name('overviewsuperadmin.index');
+  Route::get('plans', [PlanController::class, 'index'])->name('plan.index');
+  Route::get('tenants', [TenantController::class, 'index'])->name('tenant.index');
+  Route::get('souscription', [SubscriptionController::class, 'index'])->name('souscription.index');
+  Route::get('clients-overview', [DashboardController::class, 'superAdminOverview'])->name('overviewsuperadmin.index');
 });
 
 Route::middleware(['auth', 'verified', 'check.subscription'])->group(function () {
@@ -45,6 +45,10 @@ Route::middleware(['auth', 'verified', 'check.subscription'])->group(function ()
 
   // Products
   Route::get('products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+
+  // Raw Materials
+  Route::get('raw-materials', \App\Livewire\RawMaterialList::class)->name('rawmaterials.index');
+  Route::get('reports/raw-materials', \App\Livewire\RawMaterialReport::class)->name('reports.rawmaterials');
 
   // Clients
   Route::get('clients', [\App\Http\Controllers\ClientController::class, 'index'])->name('clients.index');
@@ -110,9 +114,9 @@ Route::middleware(['auth', 'verified', 'check.subscription'])->group(function ()
 });
 
 Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
+  return response()->view('errors.404', [], 404);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 
