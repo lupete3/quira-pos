@@ -22,9 +22,10 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
+                @php $id = 1 @endphp
                 @forelse ($users as $user)
                     <tr wire:key="{{ $user->id }}">
-                        <td>{{ $user->id }}</td>
+                        <td>{{ $id++ }}</td>
                         <td><strong>{{ $user->name }}</strong></td>
                         <td>{{ $user->email }}</td>
                         <td><span class="badge bg-label-info">{{ $user->role->name ?? 'N/A' }}</span></td>

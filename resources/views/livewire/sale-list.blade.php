@@ -36,16 +36,15 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
+                @php $id = 1; @endphp
                 @forelse ($sales as $sale)
                     <tr wire:key="{{ $sale->id }}">
-                        <td>{{ $sale->id }}</td>
-                        {{-- Clé : na --}}
+                        <td>{{ $id++ }}</td>
                         <td>{{ $sale->client->name ?? __('sale.na') }}</td>
                         <td>{{ $sale->sale_date }}</td>
                         <td>{{ number_format($sale->total_amount, 2) }} {{ company()?->devise }}</td>
                         <td>{{ number_format($sale->total_paid, 2) }} {{ company()?->devise }}</td>
                         <td>
-                          {{-- Statuts de paiement --}}
                           @if ($sale->total_amount - $sale->total_paid <= 0)
                             <span class="badge bg-label-success me-1">{{ __('sale.paye_statut') }}</span>
                           @elseif ($sale->total_paid > 0 && $sale->total_amount - $sale->total_paid > 0)
@@ -57,7 +56,7 @@
                         <td>{{ $sale->store->name }}</td>
                         <td>
                             <button class="btn btn-info btn-sm" wire:click="viewDetails({{ $sale->id }})" data-bs-toggle="modal" data-bs-target="#saleDetailsModal">
-                                <i class="bx bx-show me-1"></i> {{-- Clé : voir --}}
+                                <i class="bx bx-show me-1"></i>
                                 {{ __('sale.voir') }}
                             </button>
                         </td>
@@ -65,7 +64,6 @@
                 @empty
                     <tr>
                         <td colspan="7" class="text-center">
-                            {{-- Clé : aucune_vente --}}
                             {{ __('sale.aucune_vente') }}
                         </td>
                     </tr>
@@ -74,7 +72,6 @@
         </table>
     </div>
 
-    {{-- Pagination --}}
     <div class="mt-3">
         {{ $sales->links() }}
     </div>
