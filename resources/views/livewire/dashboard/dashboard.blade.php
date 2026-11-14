@@ -124,7 +124,7 @@
         <!-- ===== Charts & Recent Sales ===== -->
         <div class="row g-4 mb-4">
             <!-- Sales Chart -->
-            <div class="col-lg-8">
+            <div class="col-lg-{{ Auth::user()->role_id == 3 ? 12 : 8 }}">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h5 class="mb-0">{{ __('dashboard.ventes_hebdomadaires') }}</h5>

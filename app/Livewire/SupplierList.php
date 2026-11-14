@@ -48,12 +48,16 @@ class SupplierList extends Component
         $this->email = $supplier->email;
         $this->phone = $supplier->phone;
         $this->address = $supplier->address;
-        $this->debt = $supplier->debt;
+        $this->debt = Auth::user()->role_id == 3 ? null : $supplier->debt;
         $this->isEditMode = true;
     }
 
     public function save()
     {
+        $debt = Auth::user()->role_id == 3
+            ? ($this->supplierId ? Supplier::findOrFail($this->supplierId)->debt : 0)
+            : ($this->debt ?? 0);
+
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:100|unique:suppliers,email,' . $this->supplierId,
@@ -77,7 +81,7 @@ class SupplierList extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'address' => $this->address,
-                'debt' => $this->debt ?? 0,
+                'debt' => $debt,
             ]
         );
 

@@ -87,7 +87,7 @@
                 </div>
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
-                      {{-- Stock par magasin --}}
+                      {{-- Stock par magasin dans le magasin --}}
                       <div class="row">
                           @foreach($stores as $store)
                               @if (Auth::user()->role_id != 3)
@@ -98,9 +98,9 @@
                                           wire:model="storeQuantities.{{ $store->id }}"
                                           placeholder="0" value="0">
                               </div>
+                              @endif
                           @endforeach
                       </div>
-
                       {{-- Nom et Référence --}}
                       <div class="row">
                           <div class="col-md-6 mb-3">
@@ -121,7 +121,6 @@
 
                       {{-- Catégorie, Marque et Unité --}}
                       <div class="row">
-                          
                           {{-- === AUTOCOMPLETE CATEGORIE === --}}
                           <div class="col-md-4 mb-3" x-data="{ open: false }">
                               <label class="form-label">{{ __('product.categorie_label') }}</label>

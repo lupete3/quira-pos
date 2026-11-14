@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Sale;
 use App\Models\Purchase;
 use App\Models\Expense;
+use Illuminate\Support\Facades\Auth;
 
 class ProfitLossReport extends Component
 {
@@ -35,10 +36,17 @@ class ProfitLossReport extends Component
     public function calculate()
     {
         $this->total_sales = Sale::whereBetween('created_at', [$this->start_date, $this->end_date])->sum('total_amount');
+        $this->total_expenses = Expense::whereBetween('expense_date', [$this->start_date, $this->end_date])->sum('amount');
+
+        if (Auth::user()->role_id == 3) {
+            $this->total_purchases = 0;
+            $this->profit_brut = 0;
+            $this->profit_net = 0;
+
+            return;
+        }
 
         $this->total_purchases = Purchase::whereBetween('created_at', [$this->start_date, $this->end_date])->sum('total_amount');
-
-        $this->total_expenses = Expense::whereBetween('expense_date', [$this->start_date, $this->end_date])->sum('amount');
 
         $this->profit_brut = $this->total_sales - $this->total_purchases;
         $this->profit_net = $this->profit_brut;

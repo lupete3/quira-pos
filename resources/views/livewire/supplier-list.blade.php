@@ -107,6 +107,7 @@
                                 <input type="text" class="form-control @error('phone') is-invalid @enderror" wire:model="phone" placeholder="{{ __('supplier.telephone_fournisseur') }}">
                                 @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            @if (Auth::user()->role_id != 3)
                             <div class="col-md-6 mb-3">
                                 {{-- Clé : dette_initiale --}}
                                 <label class="form-label">{{ __('supplier.dette_initiale') }}</label>

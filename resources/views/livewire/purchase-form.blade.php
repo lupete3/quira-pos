@@ -14,7 +14,6 @@
                     <input type="text" class="form-control" wire:model.live.debounce.300ms="search"
                            placeholder="{{ __('purchase.rechercher_produits') }}">
                 </div>
-                @endif
 
                 {{-- Liste des produits pour l'ajout au panier --}}
                 <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">

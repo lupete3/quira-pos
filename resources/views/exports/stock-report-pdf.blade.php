@@ -21,7 +21,7 @@
                 <th>{{ __('stockreport.category') }}</th>
                 <th>{{ __('stockreport.store') }}</th>
                 <th>{{ __('stockreport.current_stock') }}</th>
-                @if (Auth::user()->role_id != 3)<th>{{ __('stockreport.purchase_value') }}</th>@endif
+                @if (Auth::user()->role_id == 1)<th>{{ __('stockreport.purchase_value') }}</th>@endif
                 <th>{{ __('stockreport.sale_value') }}</th>
                 @if (Auth::user()->role_id != 3)<th>{{ __('stockreport.expected_profit') }}</th>@endif
             </tr>

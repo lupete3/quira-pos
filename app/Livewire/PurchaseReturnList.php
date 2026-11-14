@@ -21,7 +21,6 @@ class PurchaseReturnList extends Component
     public $quantity;
     public $reason;
     public $purchaseProducts = [];
-    public $firstDebt = 0;
 
     public function updatedPurchaseId($value)
     {
@@ -86,9 +85,9 @@ class PurchaseReturnList extends Component
             ->first();
 
         // Récupérer la dette initiale pour le calcul de l'ajustement global
-        if ($purchaseItem) {
-             $this->firstDebt = $purchaseItem->purchase->total_amount - $purchaseItem->purchase->total_paid;
-        }
+        $firstDebt = $purchaseItem
+            ? $purchaseItem->purchase->total_amount - $purchaseItem->purchase->total_paid
+            : 0;
 
         // Validation de la quantité à retourner vs quantité achetée
         if (!$purchaseItem || $this->quantity > $purchaseItem->quantity) {
@@ -97,7 +96,7 @@ class PurchaseReturnList extends Component
         }
 
         try {
-            DB::transaction(function () use ($purchaseItem) {
+            DB::transaction(function () use ($purchaseItem, $firstDebt) {
                 $purchase = $purchaseItem->purchase;
 
                 // 🔹 1. Enregistrer le retour
@@ -147,7 +146,7 @@ class PurchaseReturnList extends Component
                 // 🔹 6. Ajuster la dette du fournisseur
                 if ($purchase->supplier_id) {
                     // Nouvelle dette du fournisseur = (Dette actuelle - Dette initiale de cet achat) + Nouvelle dette de cet achat
-                    $newDebt = ($purchase->supplier->debt - $this->firstDebt) + $debt;
+                    $newDebt = ($purchase->supplier->debt - $firstDebt) + $debt;
                     $purchase->supplier->update([
                         'debt' => $newDebt,
                     ]);

@@ -22,6 +22,11 @@ class PurchaseForm extends Component
 
     public $store_id;
 
+    public function boot()
+    {
+        abort_if(Auth::user()->role_id == 3, 403);
+    }
+
     public function render()
     {
         $products = collect();
