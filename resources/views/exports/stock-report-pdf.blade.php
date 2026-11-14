@@ -21,7 +21,7 @@
                 <th>{{ __('stockreport.category') }}</th>
                 <th>{{ __('stockreport.store') }}</th>
                 <th>{{ __('stockreport.current_stock') }}</th>
-                <th>{{ __('stockreport.purchase_value') }}</th>
+                @if (Auth::user()->role_id == 1)<th>{{ __('stockreport.purchase_value') }}</th>@endif
                 <th>{{ __('stockreport.sale_value') }}</th>
                 <th>{{ __('stockreport.expected_profit') }}</th>
             </tr>
@@ -48,7 +48,7 @@
                         @endif
                     </td>
                     <td>{{ $stock }}</td>
-                    <td>{{ number_format($valeurAchat, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    @if (Auth::user()->role_id == 1)<td>{{ number_format($valeurAchat, 2, ',', ' ') }} {{ company()?->devise }}</td>@endif
                     <td>{{ number_format($valeurVente, 2, ',', ' ') }} {{ company()?->devise }}</td>
                     <td>{{ number_format($benefice, 2, ',', ' ') }} {{ company()?->devise }}</td>
                 </tr>
