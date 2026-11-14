@@ -54,12 +54,12 @@
       </li>
 
       <!-- Matières Premières -->
-      <li class="menu-item {{ request()->routeIs('rawmaterials.index') ? 'active' : '' }}">
+      {{-- <li class="menu-item {{ request()->routeIs('rawmaterials.index') ? 'active' : '' }}">
         <a class="menu-link" href="{{ route('rawmaterials.index') }}">
           <i class="menu-icon tf-icons bx bx-cube"></i>
           <div class="text-truncate">{{ __('menu.matieres_premieres') }}</div>
         </a>
-      </li>
+      </li> --}}
 
       @if (Auth::user()->role_id == 1)
 
@@ -217,8 +217,8 @@
               href="{{ route('reports.sales') }}">{{ __('menu.ventes_rapport') }}</a></li>
           <li class="menu-item {{ request()->routeIs('reports.stock') ? 'active' : '' }}"><a class="menu-link"
               href="{{ route('reports.stock') }}">{{ __('menu.stock') }}</a></li>
-          <li class="menu-item {{ request()->routeIs('reports.rawmaterials') ? 'active' : '' }}"><a class="menu-link"
-              href="{{ route('reports.rawmaterials') }}">{{ __('menu.row_material_report') }}</a></li>
+          {{-- <li class="menu-item {{ request()->routeIs('reports.rawmaterials') ? 'active' : '' }}"><a class="menu-link"
+              href="{{ route('reports.rawmaterials') }}">{{ __('menu.row_material_report') }}</a></li> --}}
           @if (Auth::user()->role_id == 1)
             <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}"><a class="menu-link"
                 href="{{ route('reports.purchases') }}">{{ __('menu.achats_rapport') }}</a></li>
