@@ -54,8 +54,7 @@
         {{-- Panier d'achat --}}
         <div class="card">
             <div class="card-header">
-                {{-- Clé : details_achat --}}
-                <h5 class="mb-0">{{ __('purchase.details_achat') }}</h5>
+                <h5 class="mb-0">{{ __('purchase.panier_achat') }}</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

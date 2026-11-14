@@ -30,14 +30,15 @@ class PurchaseForm extends Component
     public function render()
     {
         $products = collect();
+        $search = trim($this->search);
 
-        if (strlen($this->search) >= 2) {
+        if (mb_strlen($search) >= 3) {
             $tenantId = Auth::user()->tenant_id;
 
             $products = Product::where('tenant_id', $tenantId)
-                ->where(function ($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('reference', 'like', '%' . $this->search . '%');
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('reference', 'like', '%' . $search . '%');
                 })
                 ->take(5)
                 ->get();

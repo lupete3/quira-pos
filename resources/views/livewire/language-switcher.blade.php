@@ -14,8 +14,9 @@
 </li>
 
 <script>
-    Livewire.on('updateLocale', ({ locale }) => {
-        document.documentElement.lang = locale;
-        console.log('Langue mise à jour :', locale);
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('updateLocale', ({ locale }) => {
+            document.documentElement.lang = locale;
+        });
     });
 </script>

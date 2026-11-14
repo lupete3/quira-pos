@@ -4,6 +4,7 @@ return [
 
     // Titles and sections
     'produits' => 'Products',
+    'panier_achat' => 'Purchase Cart',
     'details_achat' => 'Purchase Details',
 
     // Search

@@ -4,6 +4,7 @@ return [
 
     // Titres et sections
     'produits' => 'Produits',
+    'panier_achat' => 'Panier d\'achat',
     'details_achat' => 'Détails de l\'achat',
 
     // Recherche

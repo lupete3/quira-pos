@@ -91,7 +91,7 @@
     </script>
 
     <script>
-      document.addEventListener("livewire:load", () => {
+      document.addEventListener("livewire:init", () => {
           Livewire.hook('request.failed', ({ status }) => {
               if (status === 419) {
                   alert("⚠️ Votre session a expiré, veuillez recharger la page.");
