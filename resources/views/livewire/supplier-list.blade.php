@@ -84,20 +84,21 @@
                     <div class="modal-body">
                         <div class="row">
                             @if (Auth::user()->role_id != 3)
-                            <div class="col-md-6 mb-3">
-                                {{-- Clé : nom --}}
-                                <label class="form-label">{{ __('supplier.nom') }}</label>
-                                {{-- Clé : nom_fournisseur --}}
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model="name" placeholder="{{ __('supplier.nom_fournisseur') }}">
-                                @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{-- Clé : email --}}
-                                <label class="form-label">{{ __('supplier.email') }}</label>
-                                {{-- Clé : email_fournisseur --}}
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model="email" placeholder="{{ __('supplier.email') }}">
-                                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
+                              <div class="col-md-6 mb-3">
+                                  {{-- Clé : nom --}}
+                                  <label class="form-label">{{ __('supplier.nom') }}</label>
+                                  {{-- Clé : nom_fournisseur --}}
+                                  <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model="name" placeholder="{{ __('supplier.nom_fournisseur') }}">
+                                  @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                              </div>
+                              <div class="col-md-6 mb-3">
+                                  {{-- Clé : email --}}
+                                  <label class="form-label">{{ __('supplier.email') }}</label>
+                                  {{-- Clé : email_fournisseur --}}
+                                  <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model="email" placeholder="{{ __('supplier.email') }}">
+                                  @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                              </div>
+                            @endif
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
