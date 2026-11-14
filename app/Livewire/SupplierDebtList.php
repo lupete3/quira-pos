@@ -34,6 +34,8 @@ class SupplierDebtList extends Component
 
     public function selectSupplier($supplierId)
     {
+        abort_if(Auth::user()->role_id == 3, 403);
+
         $this->selectedSupplier = Supplier::find($supplierId);
 
         // Achats non totalement payés

@@ -9,9 +9,11 @@
             <tr>
                 <th>{{ __('purchasereport.number') }}</th>
                 <th>{{ __('purchasereport.supplier') }}</th>
-                <th>{{ __('purchasereport.total_amount') }}</th>
-                <th>{{ __('purchasereport.paid') }}</th>
-                <th>{{ __('purchasereport.remaining') }}</th>
+                @if (Auth::user()->role_id != 3)
+                    <th>{{ __('purchasereport.total_amount') }}</th>
+                    <th>{{ __('purchasereport.paid') }}</th>
+                    <th>{{ __('purchasereport.remaining') }}</th>
+                @endif
                 <th>{{ __('purchasereport.status') }}</th>
                 <th>{{ __('purchasereport.date') }}</th>
             </tr>
@@ -21,9 +23,11 @@
             <tr>
                 <td>{{ $purchase->id }}</td>
                 <td>{{ $purchase->supplier?->name ?? __('purchasereport.free_supplier') }}</td>
-                <td>{{ number_format($purchase->total_amount, 2) }} {{ company()?->devise }}</td>
-                <td>{{ number_format($purchase->total_paid, 2) }} {{ company()?->devise }}</td>
-                <td>{{ number_format($purchase->total_amount - $purchase->total_paid, 2) }} {{ company()?->devise }}</td>
+                @if (Auth::user()->role_id != 3)
+                    <td>{{ number_format($purchase->total_amount, 2) }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($purchase->total_paid, 2) }} {{ company()?->devise }}</td>
+                    <td>{{ number_format($purchase->total_amount - $purchase->total_paid, 2) }} {{ company()?->devise }}</td>
+                @endif
                 <td>
                     {{-- Utiliser directement la clé de statut pour la traduction --}}
                     {{ ucfirst(__('purchasereport.' . $purchase->status)) }}

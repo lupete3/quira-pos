@@ -32,31 +32,39 @@
                         <th>{{ __('supplier_report.supplier') }}</th>
                         <th>{{ __('supplier_report.contact') }}</th>
                         <th>{{ __('supplier_report.purchase_count') }}</th>
-                        <th>{{ __('supplier_report.total_purchases') }}</th>
-                        <th>{{ __('supplier_report.total_paid') }}</th>
-                        <th>{{ __('supplier_report.balance') }}</th>
+                        @if (Auth::user()->role_id != 3)
+                            <th>{{ __('supplier_report.total_purchases') }}</th>
+                            <th>{{ __('supplier_report.total_paid') }}</th>
+                            <th>{{ __('supplier_report.balance') }}</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($suppliers as $supplier)
                         @php
-                            $totalAchats = $supplier->purchases->sum('total_amount');
-                            $totalPaye = $supplier->purchases->sum('total_paid');
-                            $solde = $totalAchats - $totalPaye;
+                            if (Auth::user()->role_id != 3) {
+                                $totalAchats = $supplier->purchases->sum('total_amount');
+                                $totalPaye = $supplier->purchases->sum('total_paid');
+                                $solde = $totalAchats - $totalPaye;
+                            }
                         @endphp
                         <tr>
                             <td>{{ $supplier->name }}</td>
                             <td>{{ $supplier->phone }}</td>
                             <td>{{ $supplier->purchases->count() }}</td>
-                            <td>{{ number_format($totalAchats, 2, ',', ' ') }} {{ company()?->devise }}</td>
-                            <td>{{ number_format($totalPaye, 2, ',', ' ') }} {{ company()?->devise }}</td>
-                            <td class="{{ $solde > 0 ? 'text-danger fw-bold' : 'text-success' }}">
-                                {{ number_format($solde, 2, ',', ' ') }} {{ company()?->devise }}
-                            </td>
+                            @if (Auth::user()->role_id != 3)
+                                <td>{{ number_format($totalAchats, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                                <td>{{ number_format($totalPaye, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                            @endif
+                            @if (Auth::user()->role_id != 3)
+                                <td class="{{ $solde > 0 ? 'text-danger fw-bold' : 'text-success' }}">
+                                    {{ number_format($solde, 2, ',', ' ') }} {{ company()?->devise }}
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">{{ __('supplier_report.no_results_found') }}</td>
+                            <td colspan="{{ Auth::user()->role_id == 3 ? 3 : 6 }}" class="text-center">{{ __('supplier_report.no_results_found') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

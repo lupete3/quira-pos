@@ -21,7 +21,7 @@
                     <th>{{ __('supplier.nom') }}</th>
                     <th>{{ __('supplier.email') }}</th>
                     <th>{{ __('supplier.telephone') }}</th>
-                    <th>{{ __('supplier.dette') }}</th>
+                    @if (Auth::user()->role_id != 3)<th>{{ __('supplier.dette') }}</th>@endif
                     <th>{{ __('supplier.actions') }}</th>
                 </tr>
             </thead>
@@ -32,7 +32,7 @@
                         <td><strong>{{ $supplier->name }}</strong></td>
                         <td>{{ $supplier->email }}</td>
                         <td>{{ $supplier->phone }}</td>
-                        <td>{{ number_format($supplier->debt, 2) }} {{ company()?->devise }}</td>
+                        @if (Auth::user()->role_id != 3)<td>{{ number_format($supplier->debt, 2) }} {{ company()?->devise }}</td>@endif
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -55,7 +55,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">
+                        <td colspan="{{ Auth::user()->role_id == 3 ? 5 : 6 }}" class="text-center">
                             {{-- Clé : aucun_fournisseur --}}
                             {{ __('supplier.aucun_fournisseur') }}
                         </td>
@@ -83,6 +83,7 @@
                 <form wire:submit.prevent="save">
                     <div class="modal-body">
                         <div class="row">
+                            @if (Auth::user()->role_id != 3)
                             <div class="col-md-6 mb-3">
                                 {{-- Clé : nom --}}
                                 <label class="form-label">{{ __('supplier.nom') }}</label>
@@ -112,6 +113,7 @@
                                 <input type="number" step="0.01" class="form-control @error('debt') is-invalid @enderror" wire:model="debt" placeholder="0.00" readonly>
                                 @error('debt') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
+                            @endif
                         </div>
                         <div class="mb-3">
                             {{-- Clé : adresse --}}

@@ -107,7 +107,7 @@ class RawMaterialList extends Component
         $this->rawMaterialId = $id;
 
         $this->designation = $rawMaterial->designation;
-        $this->purchase_price = $rawMaterial->purchase_price;
+        $this->purchase_price = Auth::user()->role_id == 3 ? null : $rawMaterial->purchase_price;
         $this->min_stock = $rawMaterial->min_stock;
     }
 

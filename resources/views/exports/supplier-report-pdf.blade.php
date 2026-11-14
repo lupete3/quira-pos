@@ -16,9 +16,11 @@
                 <th>{{ __('supplierreport.supplier') }}</th>
                 <th>{{ __('supplierreport.contact') }}</th>
                 <th>{{ __('supplierreport.purchases_count') }}</th>
-                <th>{{ __('supplierreport.total_purchases') }}</th>
-                <th>{{ __('supplierreport.total_paid') }}</th>
-                <th>{{ __('supplierreport.balance') }}</th>
+                @if (Auth::user()->role_id != 3)
+                    <th>{{ __('supplierreport.total_purchases') }}</th>
+                    <th>{{ __('supplierreport.total_paid') }}</th>
+                    <th>{{ __('supplierreport.balance') }}</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -34,9 +36,11 @@
                     <td>{{ $supplier->name }}</td>
                     <td>{{ $supplier->phone }}</td>
                     <td>{{ $supplier->purchases->count() }}</td>
-                    <td>{{ number_format($totalAchats, 2, ',', ' ') }} {{ company()?->devise }}</td>
-                    <td>{{ number_format($totalPaye, 2, ',', ' ') }} {{ company()?->devise }}</td>
-                    <td>{{ number_format($solde, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    @if (Auth::user()->role_id != 3)
+                        <td>{{ number_format($totalAchats, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                        <td>{{ number_format($totalPaye, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                        <td>{{ number_format($solde, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>

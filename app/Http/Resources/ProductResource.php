@@ -31,7 +31,7 @@ class ProductResource extends JsonResource
                 'name' => $this->unit?->name,
                 'short_name' => $this->unit?->short_name,
             ],
-            'purchase_price' => $this->purchase_price,
+            'purchase_price' => $this->when($request->user()?->role_id !== 3, $this->purchase_price),
             'sale_price' => $this->sale_price,
             'stock_quantity' => $this->when(
                 isset($this->store_stock),

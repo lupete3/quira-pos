@@ -16,7 +16,7 @@
                 <th>{{ __('productreport.category') }}</th>
                 <th>{{ __('productreport.brand') }}</th>
                 <th>{{ __('productreport.stock') }}</th>
-                <th>{{ __('productreport.purchase_price') }}</th>
+                @if (Auth::user()->role_id != 3)<th>{{ __('productreport.purchase_price') }}</th>@endif
                 <th>{{ __('productreport.sale_price') }}</th>
                 <th>{{ __('productreport.stock_value') }}</th>
             </tr>
@@ -35,7 +35,7 @@
                     <td>{{ $prod->category?->name ?? __('productreport.undefined') }}</td>
                     <td>{{ $prod->brand?->name ?? __('productreport.undefined') }}</td>
                     <td>{{ $storeStock }}</td>
-                    <td>{{ number_format($prod->purchase_price, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    @if (Auth::user()->role_id != 3)<td>{{ number_format($prod->purchase_price, 2, ',', ' ') }} {{ company()?->devise }}</td>@endif
                     <td>{{ number_format($prod->sale_price, 2, ',', ' ') }} {{ company()?->devise }}</td>
                     <td>{{ number_format($storeStock * $prod->sale_price, 2, ',', ' ') }} {{ company()?->devise }}</td>
                 </tr>

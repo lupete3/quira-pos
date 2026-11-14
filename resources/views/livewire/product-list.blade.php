@@ -90,6 +90,7 @@
                       {{-- Stock par magasin --}}
                       <div class="row">
                           @foreach($stores as $store)
+                              @if (Auth::user()->role_id != 3)
                               <div class="col-md-4 mb-3">
                                   {{-- Utilisation de $store->name (ne nécessite pas de traduction) --}}
                                   <label class="form-label">{{ $store->name }} ({{ __('product.stock') }})</label>
@@ -226,6 +227,7 @@
                               <input type="number" step="0.01" class="form-control @error('purchase_price') is-invalid @enderror" wire:model="purchase_price" placeholder="0.00">
                               @error('purchase_price') <div class="invalid-feedback">{{ $message }}</div> @enderror
                           </div>
+                          @endif
                           <div class="col-md-4 mb-3">
                               {{-- Clé : prix_vente_label --}}
                               <label for="sale_price" class="form-label">{{ __('product.prix_vente_label') }}</label>

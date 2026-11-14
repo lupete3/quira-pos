@@ -35,6 +35,8 @@ class PurchaseList extends Component
 
     public function viewDetails($purchaseId)
     {
+        abort_if(Auth::user()->role_id == 3, 403);
+
         $this->selectedPurchase = Purchase::with(['items.product', 'supplier'])->find($purchaseId);
     }
 }

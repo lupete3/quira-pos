@@ -53,12 +53,15 @@ class ProductReport extends Component
       })
       ->sum(DB::raw('store_products.quantity'));
 
-    $total_stock_value = DB::table('store_products')
-      ->join('products', 'products.id', '=', 'store_products.product_id')
-      ->when($this->selectedStoreId, function ($q) {
-        $q->where('store_products.store_id', $this->selectedStoreId);
-      })
-      ->sum(DB::raw('store_products.quantity * products.purchase_price'));
+    $total_stock_value = 0;
+    if (Auth::user()->role_id != 3) {
+      $total_stock_value = DB::table('store_products')
+        ->join('products', 'products.id', '=', 'store_products.product_id')
+        ->when($this->selectedStoreId, function ($q) {
+          $q->where('store_products.store_id', $this->selectedStoreId);
+        })
+        ->sum(DB::raw('store_products.quantity * products.purchase_price'));
+    }
 
     $total_stock_potential = DB::table('store_products')
       ->join('products', 'products.id', '=', 'store_products.product_id')

@@ -215,6 +215,7 @@
             </div>
 
             <!-- Achats récents -->
+            @if (Auth::user()->role_id != 3)
             <div class="col-lg-4">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header d-flex align-items-center justify-content-between">
@@ -247,6 +248,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <!-- Actions rapides -->
             <div class="col-lg-12">

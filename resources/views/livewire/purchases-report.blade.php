@@ -19,8 +19,10 @@
                     <th>{{ __('ID') }}</th>
                     <th>{{ __('Fournisseur') }}</th>
                     <th>{{ __('Date') }}</th>
-                    <th>{{ __('Montant total') }}</th>
-                    <th>{{ __('Montant payé') }}</th>
+                    @if (Auth::user()->role_id != 3)
+                        <th>{{ __('Montant total') }}</th>
+                        <th>{{ __('Montant payé') }}</th>
+                    @endif
                     <th>{{ __('Statut') }}</th>
                 </tr>
             </thead>
@@ -30,8 +32,10 @@
                         <td>{{ $purchase->id }}</td>
                         <td>{{ $purchase->supplier->name ?? __('N/A') }}</td>
                         <td>{{ $purchase->purchase_date }}</td>
-                        <td>{{ number_format($purchase->total_amount, 2) }} {{ company()->devise }}</td>
-                        <td>{{ number_format($purchase->total_paid, 2) }} {{ company()->devise }}</td>
+                        @if (Auth::user()->role_id != 3)
+                            <td>{{ number_format($purchase->total_amount, 2) }} {{ company()->devise }}</td>
+                            <td>{{ number_format($purchase->total_paid, 2) }} {{ company()->devise }}</td>
+                        @endif
                         <td><span class="badge bg-label-primary me-1">{{ $purchase->status }}</span></td>
                     </tr>
                 @empty
@@ -43,8 +47,10 @@
             <tfoot>
                 <tr>
                     <th colspan="3" class="text-end">{{ __('Total :') }}</th>
-                    <th>{{ number_format($total_amount, 2) }} {{ company()->devise }}</th>
-                    <th>{{ number_format($total_paid, 2) }} {{ company()->devise }}</th>
+                    @if (Auth::user()->role_id != 3)
+                        <th>{{ number_format($total_amount, 2) }} {{ company()->devise }}</th>
+                        <th>{{ number_format($total_paid, 2) }} {{ company()->devise }}</th>
+                    @endif
                     <th></th>
                 </tr>
             </tfoot>

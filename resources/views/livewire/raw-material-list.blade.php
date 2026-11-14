@@ -27,9 +27,9 @@
                     <thead>
                         <tr>
                             <th>{{ __('raw_material.designation') }}</th>
-                            <th>{{ __('raw_material.purchase_price') }}</th>
+                            @if (Auth::user()->role_id != 3)<th>{{ __('raw_material.purchase_price') }}</th>@endif
                             <th>{{ __('raw_material.total_stock') }}</th>
-                            <th>{{ __('raw_material.total_value') }}</th>
+                            @if (Auth::user()->role_id != 3)<th>{{ __('raw_material.total_value') }}</th>@endif
                             <th>{{ __('raw_material.actions') }}</th>
                         </tr>
                     </thead>
@@ -37,7 +37,7 @@
                         @forelse ($rawMaterials as $material)
                             <tr wire:key="{{ $material->id }}">
                                 <td><strong>{{ $material->designation }}</strong></td>
-                                <td>{{ number_format($material->purchase_price, 2) }}</td>
+                                @if (Auth::user()->role_id != 3)<td>{{ number_format($material->purchase_price, 2) }}</td>@endif
                                 <td>
                                     @php
                                         $totalStock = $material->stores->sum('pivot.quantity');
@@ -47,9 +47,11 @@
                                         {{ $totalStock }}
                                     </span>
                                 </td>
+                                @if (Auth::user()->role_id != 3)
                                 <td>
                                     <strong>{{ number_format($totalStock * $material->purchase_price, 2) }}</strong>
                                 </td>
+                                @endif
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -58,27 +60,31 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             {{-- Edit --}}
-                                            <a class="dropdown-item" href="#" wire:click="edit({{ $material->id }})"
-                                                data-bs-toggle="modal" data-bs-target="#rawMaterialModal">
-                                                <i class="bx bx-edit-alt me-1"></i> {{ __('raw_material.edit') }}
-                                            </a>
+                                            @if (Auth::user()->role_id != 3)
+                                                <a class="dropdown-item" href="#" wire:click="edit({{ $material->id }})"
+                                                    data-bs-toggle="modal" data-bs-target="#rawMaterialModal">
+                                                    <i class="bx bx-edit-alt me-1"></i> {{ __('raw_material.edit') }}
+                                                </a>
+                                            @endif
                                             {{-- Stock Entry (Trigger separate component or modal) --}}
                                             <a class="dropdown-item" href="#"
                                                 onclick="Livewire.dispatch('openStockEntryModal', { materialId: {{ $material->id }} })">
                                                 <i class="bx bx-up-arrow-alt me-1"></i> {{ __('raw_material.stock_entry') }}
                                             </a>
                                             {{-- Delete --}}
-                                            <a class="dropdown-item" href="#"
-                                                wire:click="confirmDelete({{ $material->id }})">
-                                                <i class="bx bx-trash me-1"></i> {{ __('raw_material.delete') }}
-                                            </a>
+                                            @if (Auth::user()->role_id != 3)
+                                                <a class="dropdown-item" href="#"
+                                                    wire:click="confirmDelete({{ $material->id }})">
+                                                    <i class="bx bx-trash me-1"></i> {{ __('raw_material.delete') }}
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">
+                                <td colspan="{{ Auth::user()->role_id == 3 ? 3 : 5 }}" class="text-center">
                                     {{ __('raw_material.not_found') }}
                                 </td>
                             </tr>
@@ -113,6 +119,7 @@
                                 wire:model="designation">
                             @error('designation') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
+                        @if (Auth::user()->role_id != 3)
                         <div class="mb-3">
                             <label class="form-label">{{ __('raw_material.purchase_price') }}</label>
                             <input type="number" step="0.01"
@@ -120,6 +127,7 @@
                                 wire:model="purchase_price">
                             @error('purchase_price') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
+                        @endif
                         <div class="mb-3">
                             <label class="form-label">{{ __('raw_material.min_stock') }}</label>
                             <input type="number" class="form-control @error('min_stock') is-invalid @enderror"

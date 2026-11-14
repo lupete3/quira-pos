@@ -50,6 +50,7 @@
                 <h5>{{ $total_purchases }}</h5>
             </div>
         </div>
+        @if (Auth::user()->role_id != 3)
         <div class="col-12 col-md-3 mb-2">
             <div class="card p-2 shadow-sm">
                 <strong>{{ __('purchase_report.total_purchases') }}</strong>
@@ -68,6 +69,7 @@
                 <h5 class="text-danger">{{ number_format($total_due,2) }} {{ company()?->devise }}</h5>
             </div>
         </div>
+        @endif
     </div>
 
     <div class="card">
@@ -77,9 +79,11 @@
                     <tr>
                         <th>#</th>
                         <th>{{ __('purchase_report.supplier') }}</th>
-                        <th>{{ __('purchase_report.total_amount') }}</th>
-                        <th>{{ __('purchase_report.paid') }}</th>
-                        <th>{{ __('purchase_report.remaining') }}</th>
+                        @if (Auth::user()->role_id != 3)
+                            <th>{{ __('purchase_report.total_amount') }}</th>
+                            <th>{{ __('purchase_report.paid') }}</th>
+                            <th>{{ __('purchase_report.remaining') }}</th>
+                        @endif
                         <th>{{ __('purchase_report.status') }}</th>
                         <th>{{ __('purchase_report.date') }}</th>
                     </tr>
@@ -89,9 +93,11 @@
                         <tr>
                             <td>{{ $purchase->id }}</td>
                             <td>{{ $purchase->supplier?->name }}</td>
-                            <td>{{ number_format($purchase->total_amount,2) }}</td>
-                            <td class="text-success">{{ number_format($purchase->total_paid,2) }}</td>
-                            <td class="text-danger">{{ number_format($purchase->total_amount - $purchase->total_paid,2) }}</td>
+                            @if (Auth::user()->role_id != 3)
+                                <td>{{ number_format($purchase->total_amount,2) }}</td>
+                                <td class="text-success">{{ number_format($purchase->total_paid,2) }}</td>
+                                <td class="text-danger">{{ number_format($purchase->total_amount - $purchase->total_paid,2) }}</td>
+                            @endif
                             <td>
                                 <span class="badge
                                     @if($purchase->status=='validated') bg-success

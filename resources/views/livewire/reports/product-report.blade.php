@@ -67,12 +67,14 @@
                     <h5>{{ $total_products }}</h5>
                 </div>
             </div>
+            @if (Auth::user()->role_id != 3)
             <div class="col-12 col-md-3 mb-2">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('product_report.valeur_stock_achat') }}</strong>
                     <h5>{{ number_format($total_stock_value, 2) }} {{ company()?->devise }}</h5>
                 </div>
             </div>
+            @endif
             <div class="col-12 col-md-3 mb-2">
                 <div class="card p-2 shadow-sm">
                     <strong>{{ __('product_report.valeur_stock_vente') }}</strong>
@@ -97,7 +99,7 @@
                             <th>{{ __('product_report.categorie') }}</th>
                             <th>{{ __('product_report.marque') }}</th>
                             <th>{{ __('product_report.stock') }}</th>
-                            <th>{{ __('product_report.prix_achat') }}</th>
+                            @if (Auth::user()->role_id != 3)<th>{{ __('product_report.prix_achat') }}</th>@endif
                             <th>{{ __('product_report.prix_vente') }}</th>
                             <th>{{ __('product_report.valeur_stock') }}</th>
                         </tr>
@@ -119,13 +121,13 @@
                                         {{ $storeStock }}
                                     </span>
                                 </td>
-                                <td>{{ number_format($prod->purchase_price, 2) }}</td>
+                                @if (Auth::user()->role_id != 3)<td>{{ number_format($prod->purchase_price, 2) }}</td>@endif
                                 <td>{{ number_format($prod->sale_price, 2) }}</td>
                                 <td>{{ number_format($storeStock * $prod->sale_price, 2) }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center">{{ __('product_report.aucun_produit') }}</td>
+                                <td colspan="{{ Auth::user()->role_id == 3 ? 7 : 8 }}" class="text-center">{{ __('product_report.aucun_produit') }}</td>
                             </tr>
                         @endforelse
                     </tbody>

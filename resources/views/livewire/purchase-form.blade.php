@@ -1,3 +1,4 @@
+@if (Auth::user()->role_id != 3)
 <div class="row">
     {{-- Colonne Gauche: Liste des Produits et Panier --}}
     <div class="col-md-7">
@@ -13,6 +14,7 @@
                     <input type="text" class="form-control" wire:model.live.debounce.300ms="search"
                            placeholder="{{ __('purchase.rechercher_produits') }}">
                 </div>
+                @endif
 
                 {{-- Liste des produits pour l'ajout au panier --}}
                 <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -167,4 +169,5 @@
         </div>
     </div>
 </div>
+@endif
 

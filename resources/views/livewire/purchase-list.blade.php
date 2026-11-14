@@ -15,11 +15,13 @@
                     <th>{{ __('purchase_list.id') }}</th>
                     <th>{{ __('purchase_list.fournisseur') }}</th>
                     <th>{{ __('purchase_list.date') }}</th>
-                    <th>{{ __('purchase_list.montant_total') }}</th>
-                    <th>{{ __('purchase_list.paye') }}</th>
-                    <th>{{ __('purchase_list.statut') }}</th>
+                    @if (Auth::user()->role_id != 3)
+                        <th>{{ __('purchase_list.montant_total') }}</th>
+                        <th>{{ __('purchase_list.paye') }}</th>
+                    @endif
+                    @if (Auth::user()->role_id != 3)<th>{{ __('purchase_list.statut') }}</th>@endif
                     <th>{{ __('purchase_list.magasin') }}</th>
-                    <th>{{ __('purchase_list.actions') }}</th>
+                    @if (Auth::user()->role_id != 3)<th>{{ __('purchase_list.actions') }}</th>@endif
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -28,8 +30,11 @@
                         <td>{{ $purchase->id }}</td>
                         <td>{{ $purchase->supplier->name ?? __('N/A') }}</td>
                         <td>{{ $purchase->purchase_date }}</td>
-                        <td>{{ number_format($purchase->total_amount, 2) }} {{ company()?->devise }}</td>
-                        <td>{{ number_format($purchase->total_paid, 2) }} {{ company()?->devise }}</td>
+                        @if (Auth::user()->role_id != 3)
+                            <td>{{ number_format($purchase->total_amount, 2) }} {{ company()?->devise }}</td>
+                            <td>{{ number_format($purchase->total_paid, 2) }} {{ company()?->devise }}</td>
+                        @endif
+                        @if (Auth::user()->role_id != 3)
                         <td>
                             @if ($purchase->total_amount - $purchase->total_paid <= 0)
                                 {{-- Clé : payé --}}
@@ -42,7 +47,9 @@
                                 <span class="badge bg-label-primary me-1">{{ __('purchase_list.non_paye') }}</span
                             @endif
                         </td>
+                        @endif
                         <td>{{ $purchase->store->name ?? __('N/A') }}</td>
+                        @if (Auth::user()->role_id != 3)
                         <td>
                             <button class="btn btn-info btn-sm" wire:click="viewDetails({{ $purchase->id }})" data-bs-toggle="modal" data-bs-target="#purchaseDetailsModal">
                                 <i class="bx bx-show me-1"></i>
@@ -50,10 +57,11 @@
                                 {{ __('purchase_list.voir') }}
                             </button>
                         </td>
+                        @endif
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">
+                        <td colspan="{{ Auth::user()->role_id == 3 ? 4 : 8 }}" class="text-center">
                             {{-- Clé : aucun_achat --}}
                             {{ __('purchase_list.aucun_achat') }}
                         </td>
@@ -88,19 +96,21 @@
                                 <p><strong>{{ __('purchase_list.magasin') }}:</strong> {{ $selectedPurchase->store->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>{{ __('purchase_list.montant_total') }}:</strong> {{ number_format($selectedPurchase->total_amount, 2) }} {{ company()?->devise }}</p>
-                                <p><strong>{{ __('purchase_list.paye') }}:</strong> {{ number_format($selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
-                                {{-- Clé : reste_a_payer --}}
-                                <p><strong>{{ __('purchase_list.reste_a_payer') }}:</strong> {{ number_format($selectedPurchase->total_amount - $selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
-                                <p>
-                                    @if ($selectedPurchase->total_amount - $selectedPurchase->total_paid <= 0)
-                                        <span class="badge bg-label-success me-1">{{ __('purchase_list.payé') }}</span>
-                                    @elseif ($selectedPurchase->total_paid > 0 && $selectedPurchase->total_amount - $selectedPurchase->total_paid > 0)
-                                        <span class="badge bg-label-warning me-1">{{ __('purchase_list.partiellement_paye') }}</span>
-                                    @else
-                                        <span class="badge bg-label-primary me-1">{{ __('purchase_list.non_paye') }}</span
+                                @if (Auth::user()->role_id != 3)
+                                    <p><strong>{{ __('purchase_list.montant_total') }}:</strong> {{ number_format($selectedPurchase->total_amount, 2) }} {{ company()?->devise }}</p>
+                                    <p><strong>{{ __('purchase_list.paye') }}:</strong> {{ number_format($selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
+                                    {{-- Clé : reste_a_payer --}}
+                                    <p><strong>{{ __('purchase_list.reste_a_payer') }}:</strong> {{ number_format($selectedPurchase->total_amount - $selectedPurchase->total_paid, 2) }} {{ company()?->devise }}</p>
+                                    <p>
+                                        @if ($selectedPurchase->total_amount - $selectedPurchase->total_paid <= 0)
+                                            <span class="badge bg-label-success me-1">{{ __('purchase_list.payé') }}</span>
+                                        @elseif ($selectedPurchase->total_paid > 0 && $selectedPurchase->total_amount - $selectedPurchase->total_paid > 0)
+                                            <span class="badge bg-label-warning me-1">{{ __('purchase_list.partiellement_paye') }}</span>
+                                        @else
+                                            <span class="badge bg-label-primary me-1">{{ __('purchase_list.non_paye') }}</span>
+                                        @endif
+                                    </p>
                                     @endif
-                                </p>
                             </div>
                         </div>
                         <hr>
@@ -111,8 +121,10 @@
                                 <tr>
                                     <th>{{ __('purchase_list.produit') }}</th>
                                     <th>{{ __('purchase_list.quantite') }}</th>
-                                    <th>{{ __('purchase_list.prix_unitaire') }}</th>
-                                    <th>{{ __('purchase_list.total') }}</th>
+                                    @if (Auth::user()->role_id != 3)
+                                        <th>{{ __('purchase_list.prix_unitaire') }}</th>
+                                        <th>{{ __('purchase_list.total') }}</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -120,8 +132,10 @@
                                 <tr>
                                     <td>{{ $item->product->name }}</td>
                                     <td>{{ $item->quantity }}</td>
-                                    <td>{{ number_format($item->unit_price, 2) }} {{ company()?->devise }}</td>
-                                    <td>{{ number_format($item->total_price, 2) }} {{ company()?->devise }}</td>
+                                    @if (Auth::user()->role_id != 3)
+                                        <td>{{ number_format($item->unit_price, 2) }} {{ company()?->devise }}</td>
+                                        <td>{{ number_format($item->total_price, 2) }} {{ company()?->devise }}</td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>

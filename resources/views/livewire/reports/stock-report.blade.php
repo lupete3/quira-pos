@@ -31,9 +31,9 @@
                 <th>{{ __('stock_report.category') }}</th>
                 <th>{{ __('stock_report.store') }}</th>
                 <th>{{ __('stock_report.current_stock') }}</th>
-                @if (Auth::user()->role_id == 1)<th>{{ __('stock_report.purchase_value') }}</th>@endif
+                @if (Auth::user()->role_id != 3)<th>{{ __('stock_report.purchase_value') }}</th>@endif
                 <th>{{ __('stock_report.sale_value') }}</th>
-                <th>{{ __('stock_report.expected_profit') }}</th>
+                @if (Auth::user()->role_id != 3)<th>{{ __('stock_report.expected_profit') }}</th>@endif
             </tr>
         </thead>
         <tbody>
@@ -42,9 +42,11 @@
                     $stock = $store_id
                         ? ($prod->stores->first()->pivot->quantity ?? 0)
                         : $prod->stores->sum('pivot.quantity');
-                    $valeurAchat = $stock * $prod->purchase_price;
                     $valeurVente = $stock * $prod->sale_price;
-                    $benefice = $valeurVente - $valeurAchat;
+                    if (Auth::user()->role_id != 3) {
+                        $valeurAchat = $stock * $prod->purchase_price;
+                        $benefice = $valeurVente - $valeurAchat;
+                    }
                 @endphp
                 <tr>
                     <td>{{ $prod->name }}</td>
@@ -59,10 +61,22 @@
                     <td>{{ $stock }}</td>
                     @if (Auth::user()->role_id == 1)<td>{{ number_format($valeurAchat, 2, ',', ' ') }} {{ company()?->devise }}</td>@endif
                     <td>{{ number_format($valeurVente, 2, ',', ' ') }} {{ company()?->devise }}</td>
-                    <td>{{ number_format($benefice, 2, ',', ' ') }} {{ company()?->devise }}</td>
+                    @if (Auth::user()->role_id != 3)<td>{{ number_format($benefice, 2, ',', ' ') }} {{ company()?->devise }}</td>@endif
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr class="table-light fw-bold">
+                <th colspan="4" class="text-end">{{ __('Total') }}</th>
+                @if (Auth::user()->role_id == 1)
+                    <th>{{ number_format($totals['totalPurchaseValue'], 2, ',', ' ') }} {{ company()?->devise }}</th>
+                @endif
+                <th>{{ number_format($totals['totalSaleValue'], 2, ',', ' ') }} {{ company()?->devise }}</th>
+                @if (Auth::user()->role_id != 3)
+                    <th>{{ number_format($totals['totalExpectedProfit'], 2, ',', ' ') }} {{ company()?->devise }}</th>
+                @endif
+            </tr>
+        </tfoot>
     </table>
     </div>
 

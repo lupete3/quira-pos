@@ -49,11 +49,13 @@ class StockReport extends Component
             $query->with('stores');
         }
 
+        $totals = $this->calculateTotals((clone $query)->get());
         $products = $query->paginate($this->perPage);
 
         return view('livewire.reports.stock-report', [
             'products' => $products,
             'stores'   => $stores,
+            'totals'   => $totals,
         ]);
     }
 
@@ -75,14 +77,42 @@ class StockReport extends Component
         }
 
         $products = $query->get();
+        $totals = $this->calculateTotals($products);
 
         $pdf = Pdf::loadView('exports.stock-report-pdf', [
             'products' => $products,
             'store'    => $this->store_id ? Store::find($this->store_id) : null,
+            'totals'   => $totals,
         ])->setPaper('a4', 'portrait');
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->output();
         }, 'rapport-stock.pdf');
+    }
+
+    private function calculateTotals($products): array
+    {
+        $totalPurchaseValue = 0;
+        $totalSaleValue = 0;
+
+        foreach ($products as $product) {
+            $stock = $this->store_id
+                ? ($product->stores->first()->pivot->quantity ?? 0)
+                : $product->stores->sum('pivot.quantity');
+
+            $totalSaleValue += $stock * $product->sale_price;
+
+            if (Auth::user()->role_id != 3) {
+                $totalPurchaseValue += $stock * $product->purchase_price;
+            }
+        }
+
+        return [
+            'totalPurchaseValue' => $totalPurchaseValue,
+            'totalSaleValue' => $totalSaleValue,
+            'totalExpectedProfit' => Auth::user()->role_id != 3
+                ? $totalSaleValue - $totalPurchaseValue
+                : 0,
+        ];
     }
 }

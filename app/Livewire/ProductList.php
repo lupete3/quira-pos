@@ -86,7 +86,7 @@ class ProductList extends Component
       'categorySearch'  => $product->category->name ?? '',
       'brandSearch'     => $product->brand->name ?? '',
       'unitSearch'      => $product->unit->name ?? '',
-      'purchase_price' => $product->purchase_price,
+      'purchase_price' => Auth::user()->role_id == 3 ? null : $product->purchase_price,
       'sale_price'     => $product->sale_price,
       'stock_quantity' => $product->stock_quantity,
       'min_stock'      => $product->min_stock,

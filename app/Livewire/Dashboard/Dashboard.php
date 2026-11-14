@@ -88,17 +88,25 @@ class Dashboard extends Component
       : 0;
 
     // === ACHATS MOIS ACTUEL VS MOIS PASSÉ ===
-    $currentMonthPurchases = Purchase::where('tenant_id', Auth::user()->tenant_id)
-      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-      ->whereMonth('purchase_date', Carbon::now()->month)
-      ->whereYear('purchase_date', Carbon::now()->year)
-      ->sum('total_amount');
+    $currentMonthPurchases = 0;
+    $lastMonthPurchases = 0;
+    $recentPurchases = collect();
+    if (Auth::user()->role_id != 3) {
+      $currentMonthPurchases = Purchase::where('tenant_id', Auth::user()->tenant_id)
+        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+        ->whereMonth('purchase_date', Carbon::now()->month)
+        ->whereYear('purchase_date', Carbon::now()->year)
+        ->sum('total_amount');
 
-    $lastMonthPurchases = Purchase::where('tenant_id', Auth::user()->tenant_id)
-      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
-      ->whereMonth('purchase_date', Carbon::now()->subMonth()->month)
-      ->whereYear('purchase_date', Carbon::now()->subMonth()->year)
-      ->sum('total_amount');
+      $lastMonthPurchases = Purchase::where('tenant_id', Auth::user()->tenant_id)
+        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))
+        ->whereMonth('purchase_date', Carbon::now()->subMonth()->month)
+        ->whereYear('purchase_date', Carbon::now()->subMonth()->year)
+        ->sum('total_amount');
+
+      $recentPurchases = Purchase::with('supplier')->where('tenant_id', Auth::user()->tenant_id)
+        ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))->latest()->take(5)->get();
+    }
 
     $monthPurchasesGrowth = $lastMonthPurchases > 0
       ? (($currentMonthPurchases - $lastMonthPurchases) / $lastMonthPurchases) * 100
@@ -115,9 +123,6 @@ class Dashboard extends Component
 
     $recentSales = Sale::with('client')->where('tenant_id', Auth::user()->tenant_id)
       ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))->latest()->take(5)->get();
-    $recentPurchases = Purchase::with('supplier')->where('tenant_id', Auth::user()->tenant_id)
-      ->when($this->storeId, fn($q) => $q->where('store_id', $this->storeId))->latest()->take(5)->get();
-
     $columns = Schema::getColumnListing('products');
     $columns = array_map(fn($col) => "products.$col", $columns);
 

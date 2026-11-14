@@ -49,7 +49,7 @@
                         <th>{{ __('raw_material.designation') }}</th>
                         <th>{{ __('raw_material.type') }}</th>
                         <th>{{ __('raw_material.quantity') }}</th>
-                        <th>{{ __('raw_material.total_value') }}</th>
+                        @if (Auth::user()->role_id != 3)<th>{{ __('raw_material.total_value') }}</th>@endif
                         <th>{{ __('raw_material.user') }}</th>
                         <th>{{ __('raw_material.description') }}</th>
                     </tr>
@@ -72,15 +72,17 @@
                                     {{ $transaction->type === 'entry' ? '+' : '-' }}{{ $transaction->quantity }}
                                 </span>
                             </td>
+                            @if (Auth::user()->role_id != 3)
                             <td>
                                 {{ number_format($transaction->quantity * $transaction->rawMaterial->purchase_price, 2) }}
                             </td>
+                            @endif
                             <td>{{ $transaction->user->name ?? 'N/A' }}</td>
                             <td>{{ $transaction->description }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">{{ __('raw_material.no_movements_found') }}</td>
+                            <td colspan="{{ Auth::user()->role_id == 3 ? 7 : 8 }}" class="text-center">{{ __('raw_material.no_movements_found') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

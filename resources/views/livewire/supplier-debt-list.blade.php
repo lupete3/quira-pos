@@ -1,3 +1,4 @@
+@if (Auth::user()->role_id != 3)
 <div>
     {{-- Recherche --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -5,6 +6,7 @@
             {{-- Clé : rechercher --}}
             <input type="text" class="form-control" placeholder="{{ __('supplier_debt.rechercher') }}" wire:model.live.debounce.300ms="search">
         </div>
+        @endif
     </div>
 
     {{-- Tableau des dettes des fournisseurs --}}
