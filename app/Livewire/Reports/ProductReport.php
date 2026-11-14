@@ -151,21 +151,11 @@ class ProductReport extends Component
 
     // ✅ Filtre prix
     if ($this->min_price) {
-      $query->whereHas('stores', function ($q) {
-        if ($this->selectedStoreId) {
-          $q->where('store_id', $this->selectedStoreId);
-        }
-        $q->where('store_products.sale_price', '>=', $this->min_price);
-      });
+      $query->where('products.sale_price', '>=', $this->min_price);
     }
 
     if ($this->max_price) {
-      $query->whereHas('stores', function ($q) {
-        if ($this->selectedStoreId) {
-          $q->where('store_id', $this->selectedStoreId);
-        }
-        $q->where('store_products.sale_price', '<=', $this->max_price);
-      });
+      $query->where('products.sale_price', '<=', $this->max_price);
     }
 
     return $paginate ? $query->paginate(10) : $query->get();
