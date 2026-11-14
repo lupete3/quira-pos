@@ -1,4 +1,3 @@
-@if (Auth::user()->role_id != 3)
 <div class="row">
     {{-- Colonne Gauche: Liste des Produits et Panier --}}
     <div class="col-md-7">
@@ -167,5 +166,4 @@
         </div>
     </div>
 </div>
-@endif
 
