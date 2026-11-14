@@ -220,6 +220,7 @@
 
                       {{-- Prix d'achat et de vente --}}
                       <div class="row">
+                          @if (Auth::user()->role_id != 3)
                           <div class="col-md-4 mb-3">
                               {{-- Clé : prix_achat --}}
                               <label for="purchase_price" class="form-label">{{ __('product.prix_achat') }}</label>

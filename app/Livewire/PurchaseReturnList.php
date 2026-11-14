@@ -29,14 +29,15 @@ class PurchaseReturnList extends Component
         if ($value) {
             $tenantId = Auth::user()->tenant_id;
 
-            $purchase = Purchase::with('items.product')
-                ->where('tenant_id', $tenantId)
+            $purchase = Purchase::where('tenant_id', $tenantId)
                 ->find($value);
 
             if ($purchase) {
-                $this->purchaseProducts = $purchase->items;
+                $this->purchaseProducts = $purchase->items()
+                    ->select(['id', 'purchase_id', 'product_id', 'quantity'])
+                    ->with('product:id,name')
+                    ->get();
             } else {
-                // Ajout d'une erreur si l'ID d'achat n'est pas trouvé
                 $this->addError('purchase_id', __('purchase_return.purchase_id_requis'));
             }
         }
