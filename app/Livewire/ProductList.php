@@ -211,13 +211,13 @@ class ProductList extends Component
   }
 
   /**
-   * Enregistre la photo dans public/products/{tenant}/ (même logique que le logo,
+   * Enregistre la photo dans public/uploads/products/{tenant}/ (même logique que le logo,
    * compatible hébergement mutualisé sans lien symbolique storage).
    * Retourne le chemin relatif à public/, ou null en cas d'échec.
    */
   private function storePhoto($tenant): ?string
   {
-    $relativeDir = 'products/' . $tenant;
+    $relativeDir = Product::PHOTO_DIR . '/' . $tenant;
     $destination = public_path($relativeDir);
 
     if (!File::isDirectory($destination) && !File::makeDirectory($destination, 0755, true)) {

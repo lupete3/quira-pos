@@ -61,7 +61,7 @@ return [
     'changer_photo' => 'Change photo',
     'retirer_photo' => 'Remove photo',
     'format_photo' => 'JPG, PNG or WEBP – 2 MB max.',
-    'erreur_photo' => 'Unable to save the photo. Check permissions on the public/products folder.',
+    'erreur_photo' => 'Unable to save the photo. Check permissions on the public/uploads/products folder.',
 
     // Détail produit
     'detail_produit' => 'Product details',

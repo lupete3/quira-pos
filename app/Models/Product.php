@@ -27,6 +27,13 @@ class Product extends Model
 
     public const PHOTO_PLACEHOLDER = 'assets/img/product-placeholder.svg';
 
+    /**
+     * Dossier (relatif à public/) des photos produits.
+     * Ne doit JAMAIS porter le nom d'une route (ex. "products") : le .htaccess
+     * laisse le serveur gérer les vrais dossiers, ce qui provoquerait un 403.
+     */
+    public const PHOTO_DIR = 'uploads/products';
+
     protected static function booted(): void
     {
         static::deleted(function (Product $product) {
