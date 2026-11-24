@@ -54,4 +54,13 @@ return [
     'product_management' => 'Gestion des produits',
     'products' => 'Produits',
 
+    // Photo
+    'photo' => 'Photo',
+    'optionnel' => 'optionnel',
+    'ajouter_photo' => 'Ajouter une photo',
+    'changer_photo' => 'Changer la photo',
+    'retirer_photo' => 'Retirer la photo',
+    'format_photo' => 'JPG, PNG ou WEBP – 2 Mo maximum.',
+    'erreur_photo' => "Impossible d'enregistrer la photo. Vérifiez les permissions du dossier public/products.",
+
 ];

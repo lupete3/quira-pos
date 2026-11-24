@@ -54,4 +54,13 @@ return [
     'product_management' => 'Product Management',
     'products' => 'Products',
 
+    // Photo
+    'photo' => 'Photo',
+    'optionnel' => 'optional',
+    'ajouter_photo' => 'Add a photo',
+    'changer_photo' => 'Change photo',
+    'retirer_photo' => 'Remove photo',
+    'format_photo' => 'JPG, PNG or WEBP – 2 MB max.',
+    'erreur_photo' => 'Unable to save the photo. Check permissions on the public/products folder.',
+
 ];

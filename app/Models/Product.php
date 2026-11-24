@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 
 class Product extends Model
 {
@@ -21,7 +22,41 @@ class Product extends Model
         'stock_quantity',
         'min_stock',
         'stock_alert',
+        'photo',
     ];
+
+    public const PHOTO_PLACEHOLDER = 'assets/img/product-placeholder.svg';
+
+    protected static function booted(): void
+    {
+        static::deleted(function (Product $product) {
+            $product->deletePhotoFile();
+        });
+    }
+
+    /**
+     * URL publique de la photo, ou illustration par défaut si absente.
+     */
+    public function getPhotoUrlAttribute(): string
+    {
+        if ($this->photo && File::exists(public_path($this->photo))) {
+            return asset($this->photo);
+        }
+
+        return asset(self::PHOTO_PLACEHOLDER);
+    }
+
+    public function hasPhoto(): bool
+    {
+        return $this->photo && File::exists(public_path($this->photo));
+    }
+
+    public function deletePhotoFile(): void
+    {
+        if ($this->photo && File::exists(public_path($this->photo))) {
+            File::delete(public_path($this->photo));
+        }
+    }
 
     public function category()
     {

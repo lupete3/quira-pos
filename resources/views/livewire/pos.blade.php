@@ -55,6 +55,10 @@
                                 <div class="card border-0 shadow-lg h-100 product-item"
                                     wire:click.prevent="addItem({{ $product->id }})"
                                     style="cursor: pointer; transition: all 0.2s ease;">
+                                    <img src="{{ $product->photo_url }}" alt="{{ $product->name }}"
+                                         class="card-img-top" loading="lazy"
+                                         style="height: 110px; object-fit: cover; background: #f1f3f6;"
+                                         onerror="this.onerror=null;this.src='{{ asset(\App\Models\Product::PHOTO_PLACEHOLDER) }}';">
                                     <div class="card-body text-center p-3 d-flex flex-column justify-content-between">
                                         <div>
                                             <h6 class="fw-bold text-truncate mb-1">{{ $product->name }}</h6>

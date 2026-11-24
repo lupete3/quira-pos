@@ -8,12 +8,15 @@ use App\Models\Brand;
 use App\Models\Store;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class ProductList extends Component
 {
-  use WithPagination;
+  use WithPagination, WithFileUploads;
 
   protected $paginationTheme = 'bootstrap';
   protected $listeners = ['deleteConfirmed' => 'delete'];
@@ -26,6 +29,11 @@ class ProductList extends Component
     $purchase_price, $sale_price, $stock_quantity, $min_stock;
 
   public $isEditMode = false;
+
+  // Photo du produit
+  public $photo;               // fichier uploadé (TemporaryUploadedFile)
+  public $existingPhotoUrl;    // URL de la photo actuelle (édition)
+  public $removePhoto = false; // demande de suppression de la photo actuelle
 
   public $categorySearch = '';
   public $brandSearch = '';
@@ -96,6 +104,10 @@ class ProductList extends Component
     $this->brand_name     = $product->brand->name ?? '';
     $this->unit_name      = $product->unit->name ?? '';
 
+    $this->photo            = null;
+    $this->removePhoto      = false;
+    $this->existingPhotoUrl = $product->hasPhoto() ? $product->photo_url : null;
+
     $existing = $product->stores->pluck('pivot.quantity', 'id')->toArray();
 
     $this->storeQuantities = Store::all()
@@ -117,7 +129,24 @@ class ProductList extends Component
       'sale_price'     => 'required|numeric|min:0',
       'min_stock'      => 'nullable|integer|min:0',
       'storeQuantities.*' => 'nullable|integer|min:0',
+      'photo'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
     ]);
+
+    $existing  = $this->productId ? Product::find($this->productId) : null;
+    $photoPath = $existing?->photo;
+
+    if ($this->photo) {
+      $newPath = $this->storePhoto($tenant);
+      if (!$newPath) {
+        notyf()->error(__('product.erreur_photo'));
+        return;
+      }
+      $existing?->deletePhotoFile();
+      $photoPath = $newPath;
+    } elseif ($this->removePhoto && $existing) {
+      $existing->deletePhotoFile();
+      $photoPath = null;
+    }
 
     $product = Product::updateOrCreate(
       ['id' => $this->productId],
@@ -131,6 +160,7 @@ class ProductList extends Component
         'purchase_price'  => $this->purchase_price,
         'sale_price'      => $this->sale_price,
         'min_stock'       => $this->min_stock ?? 0,
+        'photo'           => $photoPath,
       ]
     );
 
@@ -162,6 +192,54 @@ class ProductList extends Component
     }
   }
 
+  public function updatedPhoto()
+  {
+    $this->resetErrorBag('photo');
+    $this->validateOnly('photo', [
+      'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
+    $this->removePhoto = false;
+  }
+
+  public function clearPhoto()
+  {
+    $this->photo = null;
+    if ($this->existingPhotoUrl) {
+      $this->removePhoto = true;
+      $this->existingPhotoUrl = null;
+    }
+  }
+
+  /**
+   * Enregistre la photo dans public/products/{tenant}/ (même logique que le logo,
+   * compatible hébergement mutualisé sans lien symbolique storage).
+   * Retourne le chemin relatif à public/, ou null en cas d'échec.
+   */
+  private function storePhoto($tenant): ?string
+  {
+    $relativeDir = 'products/' . $tenant;
+    $destination = public_path($relativeDir);
+
+    if (!File::isDirectory($destination) && !File::makeDirectory($destination, 0755, true)) {
+      return null;
+    }
+
+    $base      = Str::slug($this->reference ?: $this->name) ?: 'produit';
+    $extension = strtolower($this->photo->getClientOriginalExtension() ?: $this->photo->guessExtension() ?: 'jpg');
+    $fileName  = time() . '_' . Str::random(6) . '_' . Str::limit($base, 40, '') . '.' . $extension;
+
+    try {
+      if (!copy($this->photo->getRealPath(), $destination . '/' . $fileName)) {
+        return null;
+      }
+      @unlink($this->photo->getRealPath());
+    } catch (\Throwable $e) {
+      return null;
+    }
+
+    return $relativeDir . '/' . $fileName;
+  }
+
   private function getOrCreate($model, $name)
   {
     if (!$name) return null;
@@ -184,8 +262,12 @@ class ProductList extends Component
       'sale_price',
       'stock_quantity',
       'min_stock',
-      'storeQuantities'
+      'storeQuantities',
+      'photo',
+      'existingPhotoUrl',
+      'removePhoto',
     ]);
+    $this->resetErrorBag();
   }
 
   // ============================

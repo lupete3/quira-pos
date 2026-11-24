@@ -17,6 +17,7 @@
             <thead>
                 <tr>
                     {{-- Clés pour l'en-tête du tableau --}}
+                    <th style="width: 64px;">{{ __('product.photo') }}</th>
                     <th>{{ __('product.ref') }}</th>
                     <th>{{ __('product.nom') }}</th>
                     <th>{{ __('product.categorie') }}</th>
@@ -28,6 +29,12 @@
             <tbody class="table-border-bottom-0">
                 @forelse ($products as $product)
                     <tr wire:key="{{ $product->id }}">
+                        <td>
+                            <img src="{{ $product->photo_url }}" alt="{{ $product->name }}"
+                                 class="rounded border" loading="lazy"
+                                 style="width: 44px; height: 44px; object-fit: cover; background: #f1f3f6;"
+                                 onerror="this.onerror=null;this.src='{{ asset(\App\Models\Product::PHOTO_PLACEHOLDER) }}';">
+                        </td>
                         <td>{{ $product->reference }}</td>
                         <td><strong>{{ $product->name }}</strong></td>
                         {{-- Clé : na --}}
@@ -60,7 +67,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">
+                        <td colspan="7" class="text-center">
                             {{-- Clé : aucun_produit --}}
                             {{ __('product.aucun_produit') }}
                         </td>
@@ -101,6 +108,45 @@
                               @endif
                           @endforeach
                       </div>
+                      {{-- Photo du produit --}}
+                      <div class="d-flex align-items-center gap-3 mb-3">
+                          @php
+                              $previewUrl = null;
+                              if ($photo) {
+                                  try { $previewUrl = $photo->temporaryUrl(); } catch (\Throwable $e) { $previewUrl = null; }
+                              }
+                              $previewUrl = $previewUrl ?: $existingPhotoUrl;
+                          @endphp
+                          <div class="position-relative flex-shrink-0">
+                              <img src="{{ $previewUrl ?: asset(\App\Models\Product::PHOTO_PLACEHOLDER) }}"
+                                   alt="{{ __('product.photo') }}" class="rounded border"
+                                   style="width: 96px; height: 96px; object-fit: cover; background: #f1f3f6;">
+                              <div wire:loading.flex wire:target="photo"
+                                   class="position-absolute top-0 start-0 w-100 h-100 align-items-center justify-content-center rounded"
+                                   style="background: rgba(255,255,255,.7);">
+                                  <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                              </div>
+                          </div>
+                          <div class="flex-grow-1">
+                              <label class="form-label mb-1">{{ __('product.photo') }} <small class="text-muted">({{ __('product.optionnel') }})</small></label>
+                              <div class="d-flex flex-wrap gap-2">
+                                  <label class="btn btn-sm btn-outline-primary mb-0">
+                                      <i class="bx bx-upload me-1"></i>
+                                      {{ $previewUrl ? __('product.changer_photo') : __('product.ajouter_photo') }}
+                                      <input type="file" class="d-none" accept="image/png,image/jpeg,image/webp"
+                                             wire:model="photo" wire:key="photo-input-{{ $productId ?? 'new' }}">
+                                  </label>
+                                  @if ($previewUrl)
+                                      <button type="button" class="btn btn-sm btn-outline-danger" wire:click="clearPhoto">
+                                          <i class="bx bx-trash me-1"></i> {{ __('product.retirer_photo') }}
+                                      </button>
+                                  @endif
+                              </div>
+                              <small class="text-muted d-block mt-1">{{ __('product.format_photo') }}</small>
+                              @error('photo') <div class="text-danger small">{{ $message }}</div> @enderror
+                          </div>
+                      </div>
+
                       {{-- Nom et Référence --}}
                       <div class="row">
                           <div class="col-md-6 mb-3">
