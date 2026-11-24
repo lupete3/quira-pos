@@ -11,4 +11,6 @@
             @livewire('product-list')
         </div>
     </div>
+
+    @include('products.partials.photo-viewer')
 </x-layouts.app>

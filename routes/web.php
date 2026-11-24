@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified', 'check.subscription'])->group(function ()
 
   // Products
   Route::get('products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+  Route::get('products/{product}', [\App\Http\Controllers\ProductController::class, 'show'])->whereNumber('product')->name('products.show');
 
   // Raw Materials
   Route::get('raw-materials', \App\Livewire\RawMaterialList::class)->name('rawmaterials.index');

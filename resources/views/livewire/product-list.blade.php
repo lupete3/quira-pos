@@ -30,13 +30,24 @@
                 @forelse ($products as $product)
                     <tr wire:key="{{ $product->id }}">
                         <td>
-                            <img src="{{ $product->photo_url }}" alt="{{ $product->name }}"
-                                 class="rounded border" loading="lazy"
-                                 style="width: 44px; height: 44px; object-fit: cover; background: #f1f3f6;"
-                                 onerror="this.onerror=null;this.src='{{ asset(\App\Models\Product::PHOTO_PLACEHOLDER) }}';">
+                            <a href="#" data-photo-viewer class="d-inline-block"
+                               data-photo-src="{{ $product->photo_url }}"
+                               data-photo-title="{{ $product->name }}"
+                               data-photo-subtitle="{{ __('product.ref') }} {{ $product->reference }}"
+                               data-photo-detail-url="{{ route('products.show', $product) }}"
+                               title="{{ __('product.agrandir_photo') }}">
+                                <img src="{{ $product->photo_url }}" alt="{{ $product->name }}"
+                                     class="rounded border" loading="lazy"
+                                     style="width: 44px; height: 44px; object-fit: cover; background: #f1f3f6; cursor: zoom-in;"
+                                     onerror="this.onerror=null;this.src='{{ asset(\App\Models\Product::PHOTO_PLACEHOLDER) }}';">
+                            </a>
                         </td>
                         <td>{{ $product->reference }}</td>
-                        <td><strong>{{ $product->name }}</strong></td>
+                        <td>
+                            <a href="{{ route('products.show', $product) }}" class="text-body" title="{{ __('product.voir_details') }}">
+                                <strong>{{ $product->name }}</strong>
+                            </a>
+                        </td>
                         {{-- Clé : na --}}
                         <td>{{ $product->category->name ?? __('product.na') }}</td>
                         <td>{{ $product->sale_price }} {{ company()?->devise }}</td>
@@ -53,6 +64,10 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ route('products.show', $product) }}">
+                                        <i class="bx bx-show me-1"></i>
+                                        {{ __('product.voir_details') }}
+                                    </a>
                                     <a class="dropdown-item" href="#" wire:click="edit({{ $product->id }})" data-bs-toggle="modal" data-bs-target="#productModal">
                                         <i class="bx bx-edit-alt me-1"></i> {{-- Clé : modifier --}}
                                         {{ __('product.modifier') }}
