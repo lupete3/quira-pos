@@ -12,7 +12,13 @@
       </div>
 
       <!-- Right: links -->
-      <div class="d-none d-lg-inline-block">
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <a href="https://pftecho.com/politique-de-confidentialite/" class="footer-link" target="_blank" rel="noopener noreferrer">
+          {{ __('footer.privacy_policy') }}
+        </a>
+        <a href="https://pftecho.com/mentions-legales/" class="footer-link" target="_blank" rel="noopener noreferrer">
+          {{ __('footer.legal_notice') }}
+        </a>
         <a href="{{ config('variables.licenseUrl') ?? '#' }}" class="footer-link me-4" target="_blank">
           {{ __('footer.license') }}
         </a>

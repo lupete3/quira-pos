@@ -25,6 +25,14 @@
       <div class="d-flex align-items-center authentication-bg p-sm-12 p-6 h-100">
         <div class="w-px-400 mx-auto mt-sm-12 mt-8">
           {{ $slot }}
+          <div class="d-flex justify-content-center flex-wrap gap-3 mt-4 small">
+            <a href="https://pftecho.com/politique-de-confidentialite/" target="_blank" rel="noopener noreferrer">
+              {{ __('footer.privacy_policy') }}
+            </a>
+            <a href="https://pftecho.com/mentions-legales/" target="_blank" rel="noopener noreferrer">
+              {{ __('footer.legal_notice') }}
+            </a>
+          </div>
           {{-- <div class="divider my-6">
             <div class="divider-text">ou</div>
           </div>

@@ -7,4 +7,6 @@ return [
     'more_themes' => 'More Themes',
     'documentation' => 'Documentation',
     'support' => 'Support',
+    'privacy_policy' => 'Privacy policy',
+    'legal_notice' => 'Legal notice',
 ];
